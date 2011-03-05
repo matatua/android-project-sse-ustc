@@ -1,12 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
+    android:layout_height="fill_parent" 
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+
     >
-<TextView  
+	<TextView  
+	android:id="@+id/main_screen_textview"
     android:layout_width="fill_parent" 
+    android:gravity="center"
     android:layout_height="wrap_content" 
-    android:text="@string/hello"
+    android:layout_alignParentTop="true"
+    android:layout_marginTop="@dimen/main_screen_title_marginTop"
+    android:textSize="@dimen/main_screen_title_size"
+    android:text="@string/main_screen_title"
     />
-</LinearLayout>
+    
+    <LinearLayout android:layout_width="fill_parent"
+    	android:layout_height="fill_parent"
+    	android:orientation="vertical"
+    	android:layout_below="@id/main_screen_textview"
+    	android:layout_marginTop="@dimen/main_screen_buttons_container_maringTop">
+    	
+	    <LinearLayout android:orientation="horizontal"
+	    	android:layout_width="fill_parent"
+	    	android:layout_height="wrap_content"
+	    	android:layout_gravity="center_horizontal"
+	    	android:gravity="center"
+	    	android:layout_margin="@dimen/main_screen_buttons_row_margin"
+	    	>
+	    	<LinearLayout android:layout_width="wrap_content"
+	    		android:layout_height="wrap_content"
+	    		android:orientation="vertical"
+	    		android:gravity="center"
+	    		android:layout_marginRight="@dimen/main_screen_button_marginRight">
+	    	<ImageButton android:src="@drawable/icon" 
+	    		android:layout_width="wrap_content"
+	    		android:layout_height="wrap_content"
+	    		>
+	    	</ImageButton>
+	    	<TextView android:layout_width="wrap_content"
+		    		android:layout_height="wrap_content"
+		    		android:gravity="center"
+		    		android:text="@string/main_screen_button_calendar_text"
+		    		android:textSize="@dimen/main_screen_button_text_size"></TextView>	
+		    </LinearLayout>    
+		    <LinearLayout android:layout_width="wrap_content"
+	    		android:layout_height="wrap_content"
+	    		android:orientation="vertical"
+	    		android:gravity="center"
+	    		android:layout_marginLeft="@dimen/main_screen_button_marginLeft">
+	    	<ImageButton android:src="@drawable/icon" 
+	    		android:layout_width="wrap_content"
+	    		android:layout_height="wrap_content"
+	    		>
+	    	</ImageButton>    
+	    	<TextView android:layout_width="wrap_content"
+		    		android:layout_height="wrap_content"
+		    		android:gravity="center"
+		    		android:text="@string/main_screen_button_contact_text"
+		    		android:textSize="@dimen/main_screen_button_text_size"></TextView>	  
+		   </LinearLayout>  
+	    </LinearLayout>
+	    
+	    <LinearLayout android:orientation="horizontal"
+	    	android:layout_width="fill_parent"
+	    	android:layout_height="wrap_content"
+	    	android:layout_gravity="center_horizontal"
+	    	android:gravity="center"
+	    	android:layout_margin="@dimen/main_screen_buttons_row_margin">
+	    	
+	    	<LinearLayout android:layout_width="wrap_content"
+	    		android:layout_height="wrap_content"
+	    		android:orientation="vertical"
+	    		android:gravity="center"
+	    		android:layout_marginRight="@dimen/main_screen_button_marginRight">  	
+	    	<ImageButton android:src="@drawable/icon" 
+	    		android:layout_width="wrap_content"
+	    		android:layout_height="wrap_content"
+	    		
+	    		>
+	    	</ImageButton>
+	    	<TextView android:layout_width="wrap_content"
+		    		android:layout_height="wrap_content"
+		    		android:gravity="center"
+		    		android:text="@string/main_screen_button_share_text"
+		    		android:textSize="@dimen/main_screen_button_text_size"></TextView>	
+		    </LinearLayout>	  
+		    
+		    <LinearLayout android:layout_width="wrap_content"
+	    		android:layout_height="wrap_content"
+	    		android:orientation="vertical"
+	    		android:gravity="center"
+	    		android:layout_marginLeft="@dimen/main_screen_button_marginLeft">  	    
+	    	<ImageButton android:src="@drawable/icon" 
+	    		android:layout_width="wrap_content"
+	    		android:layout_height="wrap_content"
+	    		>
+	    	</ImageButton>
+			<TextView android:layout_width="wrap_content"
+		    		android:layout_height="wrap_content"
+		    		android:gravity="center"
+		    		android:text="@string/main_screen_button_backup_restore_text"
+		    		android:textSize="@dimen/main_screen_button_text_size"></TextView>	
+		    </LinearLayout>    	    	
+	    </LinearLayout>
+	    
+	    <LinearLayout android:orientation="horizontal"
+	    	android:layout_width="fill_parent"
+	    	android:layout_height="wrap_content"
+	    	android:layout_gravity="center_horizontal"
+	    	android:gravity="center"
+	    	android:layout_margin="@dimen/main_screen_buttons_row_margin"
+	    	>
+
+	    	<LinearLayout android:layout_width="wrap_content"
+	    		android:layout_height="wrap_content"
+	    		android:orientation="vertical"
+	    		android:gravity="center"
+	    		android:layout_marginRight="@dimen/main_screen_button_marginRight">	    	
+		    	<ImageButton android:src="@drawable/icon" 
+		    		android:layout_width="wrap_content"
+		    		android:layout_height="wrap_content"
+		    		>
+		    	</ImageButton>
+		    	<TextView android:layout_width="wrap_content"
+		    		android:layout_height="wrap_content"
+		    		android:gravity="center"
+		    		android:text="@string/main_screen_button_setting_text"
+		    		android:textSize="@dimen/main_screen_button_text_size"></TextView>	    	
+			</LinearLayout>
+	    	<LinearLayout android:layout_width="wrap_content"
+	    		android:layout_height="wrap_content"
+	    		android:orientation="vertical"
+	    		android:gravity="center"
+	    		android:layout_marginLeft="@dimen/main_screen_button_marginLeft">	    	
+		    	<ImageButton android:src="@drawable/icon" 
+		    		android:layout_width="wrap_content"
+		    		android:layout_height="wrap_content"
+		    		>
+		    	</ImageButton>
+		    	<TextView android:layout_width="wrap_content"
+		    		android:layout_height="wrap_content"
+		    		android:gravity="center"
+		    		android:text="@string/main_screen_button_help_text"
+		    		android:textSize="@dimen/main_screen_button_text_size"></TextView>
+	    	</LinearLayout>
+	    </LinearLayout>
+	 </LinearLayout>
+</RelativeLayout>

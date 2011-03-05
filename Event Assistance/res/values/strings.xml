@@ -2,4 +2,13 @@
 <resources>
     <string name="hello">Hello World, MainScreen!</string>
     <string name="app_name">Event Assistance</string>
+    <string name="main_screen_title">Event Assistance</string>
+    <string name="main_screen_button_contact_text">Contacts</string>
+    <string name="main_screen_button_event_text">Events</string>
+    <string name="main_screen_button_setting_text">Settings</string>
+    <string name="main_screen_button_calendar_text">Calendar</string>
+    <string name="main_screen_button_help_text">Help</string>
+    <string name="main_screen_button_backup_restore_text">Backup </string>
+    <string name="main_screen_button_share_text">Share</string>
+    
 </resources>
