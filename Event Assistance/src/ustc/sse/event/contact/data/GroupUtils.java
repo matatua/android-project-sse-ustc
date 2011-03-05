@@ -75,17 +75,45 @@ public class GroupUtils {
 		return updatedRow;
 	}
 	
-	public boolean deleteGroups(List<Integer> groupIds) {
+	public int deleteGroups(List<Integer> groupIds) {
 		ContentResolver cr = activity.getContentResolver();
-		
+		int deletedRow = 0;
 		for (Integer i : groupIds) {
-			ContentUris.withAppendedId(Groups.CONTENT_URI, i);
+			Uri url = ContentUris.withAppendedId(Groups.CONTENT_URI, i);
 			
-			cr.delete(url, where, selectionArgs)
+			deletedRow += cr.delete(url, null, null);
 		}
+		
+		cr.notifyChange(Groups.CONTENT_URI, null);
+		return deletedRow;
 	}
 	
-	public boolean addGroup(ContentValue cv) {
+	public Uri addGroup(ContentValues cv) {
+		ContentResolver cr = activity.getContentResolver();
 		
+		Uri url = Groups.CONTENT_URI;
+		Uri newItem = cr.insert(url, cv);
+		
+		cr.notifyChange(url, null);
+		
+		return newItem;
+	}
+	
+	public static ContentValues groupToContentValues(Group g) {
+		ContentValues cv = new ContentValues();
+		
+		cv.put(Groups._ID, g.getGroupId());
+		
+		if (g.getTitle() != null) {
+			cv.put(Groups.TITLE, g.getTitle());
+		}
+		if (g.getNote() != null) {
+			cv.put(Groups.NOTES, g.getNote());
+		}
+		
+		cv.put(Groups.SUMMARY_COUNT, g.getSummaryCount());
+		cv.put(Groups.SUMMARY_WITH_PHONES, g.getSummaryCountWithPhone());
+		
+		return cv;
 	}
 }

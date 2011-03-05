@@ -1,17 +1,22 @@
 package ustc.sse.event.contact.data;
 
+import java.sql.Blob;
+
 public class Contact {
 
-	private int rawContactId;
+	private long rawContactId;
+	private byte[] photo;
 	private String displayedName;
 	private String phoneNumber;
 	private String phoneType;
 	private String birthday;
 	private String note;
-	public int getRawContactId() {
+	private String eventType;
+	
+	public long getRawContactId() {
 		return rawContactId;
 	}
-	public void setRawContactId(int rawContactId) {
+	public void setRawContactId(long rawContactId) {
 		this.rawContactId = rawContactId;
 	}
 	public String getDisplayedName() {
@@ -43,6 +48,18 @@ public class Contact {
 	}
 	public void setNote(String note) {
 		this.note = note;
+	}
+	public byte[] getPhoto() {
+		return photo;
+	}
+	public void setPhoto(byte[] photo) {
+		this.photo = photo;
+	}
+	public String getEventType() {
+		return eventType;
+	}
+	public void setEventType(String eventType) {
+		this.eventType = eventType;
 	}
 	
 	
