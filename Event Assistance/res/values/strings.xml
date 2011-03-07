@@ -10,5 +10,6 @@
     <string name="main_screen_button_help_text">Help</string>
     <string name="main_screen_button_backup_restore_text">Backup </string>
     <string name="main_screen_button_share_text">Share</string>
+    <string name="contact_list_group_all">All</string>
     
 </resources>

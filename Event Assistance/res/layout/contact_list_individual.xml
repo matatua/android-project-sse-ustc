@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="match_parent"
+  android:orientation="horizontal">
+  
+  <ImageView android:layout_width="wrap_content"
+  				android:layout_height="wrap_content"
+  				android:id="@+id/contactIndividualImage"
+  				android:layout_gravity="left"
+  				android:layout_marginLeft="@dimen/contact_list_individual_image_marginLeft">
+  </ImageView>
+  <TextView android:layout_width="wrap_content"
+  			android:layout_height="wrap_content"
+  			android:id="@+id/hiddenIndividualId"
+  			android:visibility="invisible">
+  </TextView>
+  
+  <TextView android:layout_width="wrap_content"
+  			android:layout_height="wrap_content"
+  			android:id="@+id/contactIndividualName"
+  			android:layout_marginLeft="@dimen/contact_list_individual_name_marginLeft">
+  </TextView>
+</LinearLayout>

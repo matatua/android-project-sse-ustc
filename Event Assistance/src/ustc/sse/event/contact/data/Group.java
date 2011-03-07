@@ -12,6 +12,11 @@ public class Group {
 	private int summaryCountWithPhone;
 	private String note;
 	
+	public Group(long groupId) {
+		super();
+		this.groupId = groupId;
+	}
+	
 	public int getSummaryCount() {
 		return summaryCount;
 	}

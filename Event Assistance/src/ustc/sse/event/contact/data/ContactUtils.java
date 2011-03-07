@@ -6,6 +6,7 @@
 package ustc.sse.event.contact.data;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,7 +41,7 @@ public class ContactUtils {
 		this.activity = activity;
 	}
 
-	public List<Contact> getAllContacts() {
+	public List<Contact> getAllContactsBasicInfo() {
 		ContentResolver cr = activity.getContentResolver();
 		List<Contact> contacts = new ArrayList<Contact>();
 		Cursor cur = null;
@@ -63,6 +64,10 @@ public class ContactUtils {
 			
 		}
 		
+		for (Contact c : contacts) {
+			c.setDisplayedName(getDisplayName(c.getRawContactId()));
+			c.setPhoto(getPhoto(c.getRawContactId()));
+		}
 		cur.close();
 		return contacts;
 	}
@@ -91,7 +96,7 @@ public class ContactUtils {
 								  Long.toString(g.getGroupId())};
 		
 		cur = cr.query(dataUri, groupProjection, selection, selectionArgs, null);
-		activity.startManagingCursor(cur);
+		
 		
 		if (cur.moveToFirst()) {
 	
@@ -104,6 +109,13 @@ public class ContactUtils {
 			} while (cur.moveToNext());
 		}
 		
+		for (Contact c : contacts) {
+			c.setDisplayedName(getDisplayName(c.getRawContactId()));
+			c.setPhoto(getPhoto(c.getRawContactId()));
+			
+		}
+		
+		cur.close();
 		return contacts;
 	}
 	
@@ -133,7 +145,7 @@ public class ContactUtils {
 		String displayName = null;
 		
 		
-		String[] projection = {Data.MIMETYPE, StructuredName.DISPLAY_NAME};
+		String[] projection = {Data.RAW_CONTACT_ID, Data.MIMETYPE, StructuredName.DISPLAY_NAME};
 		String selection = Data.MIMETYPE + " = ? AND " + Data.RAW_CONTACT_ID + " = ? ";
 		String[] selectionArgs = {StructuredName.MIMETYPE, Long.toString(rawContactId)};
 		c = cr.query(Data.CONTENT_URI, projection, selection, selectionArgs, null);
@@ -152,7 +164,7 @@ public class ContactUtils {
 		Cursor c = null;
 		String note = null;
 		
-		String[] projection = {Data.MIMETYPE, Note.NOTE};
+		String[] projection = {Data.RAW_CONTACT_ID, Data.MIMETYPE, Note.NOTE};
 		String selection = Data.MIMETYPE + " = ? AND " + Data.RAW_CONTACT_ID + " = ? ";
 		String[] selectionArgs = {Note.MIMETYPE, Long.toString(rawContactId)};
 		
@@ -172,7 +184,7 @@ public class ContactUtils {
 		String phoneNumber = null;
 		String phoneType = null;
 		
-		String[] projection = {Data.MIMETYPE, Phone.NUMBER, Phone.TYPE};
+		String[] projection = {Data.RAW_CONTACT_ID, Data.MIMETYPE, Phone.NUMBER, Phone.TYPE};
 		String selection = Data.MIMETYPE + " = ? AND " + Data.RAW_CONTACT_ID + " = ? ";
 		String[] selectionArgs = {Phone.MIMETYPE, Long.toString(rawContactId)};
 		
@@ -192,7 +204,7 @@ public class ContactUtils {
 		Cursor c = null;
 		byte[] photo = null;
 		
-		String[] projection = {Data.MIMETYPE, Photo.PHOTO};
+		String[] projection = {Data.RAW_CONTACT_ID, Data.MIMETYPE, Photo.PHOTO};
 		String selection = Data.MIMETYPE + " = ? AND " + Data.RAW_CONTACT_ID + " = ? ";
 		String[] selectionArgs = {Photo.MIMETYPE, Long.toString(rawContactId)};
 		
@@ -211,7 +223,7 @@ public class ContactUtils {
 		Cursor c = null;
 		String birthday = null;
 		
-		String[] projection = {Data.MIMETYPE, Event.START_DATE, Event.TYPE};
+		String[] projection = {Data.RAW_CONTACT_ID, Data.MIMETYPE, Event.START_DATE, Event.TYPE};
 		String selection = Data.MIMETYPE + " = ? AND " 
 							+ Data.RAW_CONTACT_ID + " = ? "
 							+ Event.TYPE + " = ?";
@@ -259,5 +271,24 @@ public class ContactUtils {
 			contactList.add(c);
 		}
 		return contactList;
+	}
+	
+	/**
+	 * This method only convert contact's id, photo and name into a list of map;
+	 * @param contacts
+	 * @return
+	 */
+	public static List<Map<String, Object>> listToMap(List<Contact> contacts) {
+		List<Map<String, Object>> listMap = new ArrayList<Map<String,Object>>();
+		for (Contact c : contacts) {
+			Map<String, Object> m = new HashMap<String, Object>();
+			m.put(RawContacts._ID, c.getRawContactId());
+			m.put(StructuredName.DISPLAY_NAME, c.getDisplayedName());
+			m.put(Photo.PHOTO, c.getPhoto());
+			
+			listMap.add(m);
+		}
+		
+		return listMap;
 	}
 }

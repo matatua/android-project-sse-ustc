@@ -1,8 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ExpandableListView
+<RelativeLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent">
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent">
+  <LinearLayout android:layout_height="wrap_content"
+  				android:layout_width="fill_parent"
+  				android:layout_alignParentTop="true"
+  				android:id="@+id/groupSelector">
+  				
+  	  <ImageView android:layout_width="wrap_content"
+  	  			 android:layout_height="wrap_content"
+  	  			 android:src="@drawable/icon"
+  	  			 android:layout_gravity="left"
+  	  			 android:layout_marginLeft="@dimen/contact_list_group_selector_indicator_marginLeft"
+  	  			 android:id="@+id/groupSelectorIndicatorImage">
+  	  </ImageView>
+	  <TextView android:id="@+id/selectedGroupTitleText"
+	  			android:layout_width="wrap_content"
+	  			android:layout_height="wrap_content"
+	  			android:textSize="@dimen/contact_list_text_size"
+	  			android:layout_marginLeft="@dimen/contact_list_group_title_marginLeft">
+	  </TextView>
+	  <TextView android:id="@+id/groupSummaryCountText"
+	  			android:layout_width="wrap_content"
+	  			android:layout_height="wrap_content"
+	  			android:textSize="@dimen/contact_list_text_size"
+	  			android:layout_gravity="right"
+	  			android:layout_marginRight="@dimen/contact_list_group_summary_count_marginRight">
+	  </TextView>
+  </LinearLayout>
   
+  <FrameLayout android:layout_height="wrap_content"
+  				android:layout_width="fill_parent"
+  				android:layout_below="@id/groupSelector"
+  				android:layout_marginTop="@dimen/contact_list_view_marginTop">
+  	
+  	<ListView android:id="@+id/contactListView"
+  			  android:layout_width="fill_parent"
+  			  android:layout_height="wrap_content"
+  			  android:visibility="visible">
+  	</ListView>
+  	
+  	<ListView android:id="@+id/groupListView"
+  			  android:layout_width="fill_parent"
+  			  android:layout_height="wrap_content"
+  			  android:visibility="invisible"
+  			  >
+		<LinearLayout  android:layout_width="fill_parent"
+					  android:layout_height="match_parent"
+					  android:orientation="horizontal">
+		  
+		  <ImageView android:layout_height="wrap_content"
+		  			 android:layout_width="wrap_content"
+		  			 android:src="@drawable/icon"
+		  			 android:layout_gravity="left">
+		  </ImageView>
+		  <TextView android:layout_width="wrap_content"
+		  			android:layout_height="wrap_content"
+		  			android:id="@+id/hiddenGroupId"
+		  			android:visibility="invisible"
+		  			>
+		  </TextView>
+		  <TextView android:layout_width="wrap_content"
+		  			android:layout_height="wrap_content"
+		  			android:id="@+id/groupItemText"
+		  			android:textSize="@dimen/contact_list_text_size"
+		  			android:text="@string/contact_list_group_all"
+		  			android:layout_marginLeft="@dimen/contact_list_group_title_marginLeft"
+		  			android:tag="@string/contact_list_group_all">
+		  </TextView>
+		  
+		  <ImageView android:layout_width="wrap_content"
+		  			 android:layout_height="wrap_content"
+		  			 android:visibility="invisible"
+		  			 android:id="@+id/groupCheckImage"
+		  			 android:layout_gravity="right"
+		  			 android:src="@drawable/icon">
+		  </ImageView>
+		</LinearLayout>
+  	</ListView>
+  	
   
-</ExpandableListView>
+  </FrameLayout>
+  
+</RelativeLayout>

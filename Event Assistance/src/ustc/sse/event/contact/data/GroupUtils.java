@@ -63,6 +63,21 @@ public class GroupUtils {
 		return groups;
 	}
 	
+	public Cursor getGroupCursor() {
+		ContentResolver cr = activity.getContentResolver();
+		Cursor cur = null;
+		
+		Uri uri = Groups.CONTENT_URI;
+		String[] projection = {Groups._ID, Groups.TITLE, Groups.SUMMARY_COUNT, 
+				Groups.SUMMARY_WITH_PHONES, Groups.NOTES};
+		String sortOrder = " " + Groups.TITLE + " DESC ";
+		
+		cur = cr.query(uri, projection, null, null, sortOrder);
+		activity.startManagingCursor(cur);
+		
+		return cur;
+	}
+	
 	public int updateGroup(ContentValues cv) {
 		ContentResolver cr = activity.getContentResolver();
 		
