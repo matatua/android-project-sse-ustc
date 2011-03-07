@@ -1,22 +1,23 @@
 package ustc.sse.event.contact;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import ustc.sse.event.R;
 import ustc.sse.event.contact.data.Contact;
+import ustc.sse.event.contact.data.ContactIndividualViewBinder;
 import ustc.sse.event.contact.data.ContactUtils;
 import ustc.sse.event.contact.data.Group;
 import ustc.sse.event.contact.data.GroupUtils;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract.CommonDataKinds.Photo;
+import android.provider.ContactsContract.CommonDataKinds.StructuredName;
 import android.provider.ContactsContract.Groups;
 import android.provider.ContactsContract.RawContacts;
-import android.provider.ContactsContract.CommonDataKinds.StructuredName;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -101,13 +102,28 @@ public class ContactList extends Activity {
 														  R.layout.contact_list_individual, 
 														  from, 
 														  to);
-				adapter.setViewBinder(viewBinder);
+				adapter.setViewBinder(new ContactIndividualViewBinder());
 				
 				contactListView.setAdapter(adapter);
 				
 				groupListView.setVisibility(View.INVISIBLE);
 			}
 		});
+		contactListView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parentView, View view, int position,
+					long rowId) {
+				LinearLayout linearLayout = (LinearLayout) view;
+				TextView idTextView = (TextView) linearLayout.findViewById(R.id.hiddenIndividualId);
+				Long individualId = new Long(idTextView.getText().toString());
+				
+				Intent intent = new Intent(ContactList.this, ContactList.class);
+				intent.putExtra(RawContacts._ID, individualId);
+				ContactList.this.startActivity(intent);
+			}
+		});
+	
 	}
 	
 	private void loadLastSelectedGroup() {

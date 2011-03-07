@@ -14,4 +14,6 @@
     <dimen name="contact_list_group_summary_count_marginRight">5dp</dimen>
     <dimen name="contact_list_individual_image_marginLeft">3dp</dimen>
     <dimen name="contact_list_individual_name_marginLeft">5dp</dimen>
+    <dimen name="contact_detail_text_size">13sp</dimen>
+    <dimen name="contact_edit_text_size">13sp</dimen>
 </resources>

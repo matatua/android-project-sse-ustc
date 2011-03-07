@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  > 
+    
+  <LinearLayout android:layout_width="fill_parent"
+  				android:layout_height="wrap_content"
+  				android:orientation="horizontal"
+  				android:layout_alignParentTop="true"
+  				android:id="@+id/contact_edit_linearLayout1"
+  				>
+  				
+  	<ImageView android:layout_width="wrap_content"
+  				android:layout_height="wrap_content"
+  				android:id="@+id/contact_edit_image"
+  				android:src="@drawable/icon">
+  	</ImageView>
+  	<TextView android:layout_width="wrap_content"
+  				android:layout_height="wrap_content"
+  				android:textSize="@dimen/contact_edit_text_size"
+  				android:text="@string/contact_edit_name">
+  	</TextView>
+  	<TextView android:layout_width="wrap_content"
+  				android:layout_height="wrap_content"
+  				android:textSize="@dimen/contact_edit_text_size"
+  				android:id="@+id/contact_edit_name">
+  	</TextView>
+  </LinearLayout>
+  
+  <LinearLayout android:layout_width="fill_parent"
+  				android:layout_height="wrap_content"
+  				android:orientation="horizontal"
+  				android:layout_below="@id/contact_edit_linearLayout1">
+  	<TextView android:layout_width="wrap_content"
+  				android:layout_height="wrap_content"
+  				android:id="@+id/contact_edit_brithday_text"
+  				android:textSize="@dimen/contact_edit_text_size"
+  				android:text="@string/contact_edit_birthday_text"
+  				android:gravity="left">
+  	</TextView>
+  	<Button android:layout_width="wrap_content"
+  			android:layout_height="wrap_content"
+  			android:textSize="@dimen/contact_edit_text_size"
+  			android:id="@+id/contact_edit_birthday_button">
+  	</Button>
+  </LinearLayout>
+  
+  <LinearLayout android:layout_alignParentBottom="true"
+  				android:layout_width="fill_parent"
+  				android:layout_height="wrap_content"
+  				android:orientation="horizontal"
+  				android:gravity="center_horizontal"
+  				>
+  				
+  	<Button android:id="@+id/contact_edit_cancel_button"
+  			android:layout_width="wrap_content"
+  			android:layout_height="wrap_content"
+  			android:textSize="@dimen/contact_edit_text_size"
+  			android:text="@string/contact_edit_cancel"
+  			android:gravity="center"
+  			>
+  		
+  	</Button>
+  	
+  	<Button android:id="@+id/contact_edit_save_button"
+  			android:layout_width="wrap_content"
+  			android:layout_height="wrap_content"
+  			android:textSize="@dimen/contact_edit_text_size"
+  			android:text="@string/contact_edit_save"
+  			android:gravity="center">
+  	</Button>
+  	
+  </LinearLayout>
+</RelativeLayout>
