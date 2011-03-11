@@ -59,6 +59,7 @@ public class ContactList extends Activity {
 		loadLastSelectedGroup();
 		prepareGroupListView();
 		prepareGroupMemberListView();
+		initListener();
 	}
 	
 	@Override
