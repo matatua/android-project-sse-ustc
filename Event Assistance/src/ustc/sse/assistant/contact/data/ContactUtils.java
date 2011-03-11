@@ -3,7 +3,7 @@
  * @author 李健
  *
  */
-package ustc.sse.event.contact.data;
+package ustc.sse.assistant.contact.data;
 
 import java.util.ArrayList;
 import java.util.HashMap;

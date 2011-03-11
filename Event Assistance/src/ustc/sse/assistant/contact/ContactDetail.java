@@ -1,11 +1,11 @@
 /**
  * 
  */
-package ustc.sse.event.contact;
+package ustc.sse.assistant.contact;
 
-import ustc.sse.event.R;
-import ustc.sse.event.contact.data.Contact;
-import ustc.sse.event.contact.data.ContactUtils;
+import ustc.sse.assistant.R;
+import ustc.sse.assistant.contact.data.Contact;
+import ustc.sse.assistant.contact.data.ContactUtils;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;

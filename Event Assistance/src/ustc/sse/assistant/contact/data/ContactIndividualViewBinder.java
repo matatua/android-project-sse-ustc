@@ -1,6 +1,6 @@
-package ustc.sse.event.contact.data;
+package ustc.sse.assistant.contact.data;
 
-import ustc.sse.event.R;
+import ustc.sse.assistant.R;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.View;

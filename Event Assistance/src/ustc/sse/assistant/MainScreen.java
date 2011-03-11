@@ -3,10 +3,11 @@
  * 2011-3-2
  */
 
-package ustc.sse.event;
+package ustc.sse.assistant;
 
 import android.app.Activity;
 import android.os.Bundle;
+import ustc.sse.assistant.R;
 
 public class MainScreen extends Activity {
     /** Called when the activity is first created. */
