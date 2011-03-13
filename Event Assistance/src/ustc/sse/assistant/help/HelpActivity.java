@@ -1,5 +1,6 @@
-package ustc.sse.event;
+package ustc.sse.assistant.help;
 
+import ustc.sse.assistant.R;
 import android.app.Activity;
 import android.os.Bundle;
 
