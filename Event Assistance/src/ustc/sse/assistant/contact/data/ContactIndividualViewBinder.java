@@ -21,8 +21,13 @@ public class ContactIndividualViewBinder implements ViewBinder {
 			ImageView iv = (ImageView) view;
 			
 			byte[] photo = (byte[]) data;
-			Bitmap bm = BitmapFactory.decodeByteArray(photo, 0, photo.length);
-			iv.setImageBitmap(bm);
+			if (photo != null) {
+				Bitmap bm = BitmapFactory.decodeByteArray(photo, 0, photo.length);
+				iv.setImageBitmap(bm);
+			} else {
+				iv.setImageResource(R.drawable.default_contact_image);
+			}
+			
 		} else if (view instanceof TextView) {
 			TextView tv = (TextView) view;
 			if (tv.getId() == R.id.contactIndividualName) {

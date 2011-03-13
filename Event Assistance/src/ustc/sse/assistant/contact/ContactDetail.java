@@ -11,7 +11,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.RawContacts;
+import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -29,6 +31,7 @@ public class ContactDetail extends Activity {
 	private static final int EDIT_MENU_ITEM_ORDER = Menu.FIRST;
 	
 	private ContactUtils cu;
+	private Contact contact;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -48,22 +51,27 @@ public class ContactDetail extends Activity {
 	}
 	
 	private void loadContactDetail() {
-		Long rawContactId = getIntent().getLongExtra(RawContacts._ID, -1L);
-		Contact c = cu.getContactById(rawContactId);
-		Bitmap photo = BitmapFactory.decodeByteArray(c.getPhoto(), 0, c.getPhoto().length);
-		String name = c.getDisplayedName();
-		String birthday = c.getBirthday();
-		String note = c.getNote();
-		
-		ImageView photoImageView = (ImageView) findViewById(R.id.contact_detail_image);
-		photoImageView.setImageBitmap(photo);
+		Long contactId = getIntent().getLongExtra(Contacts._ID, -1L);
+		contact = cu.getContactById(contactId);
+		Bitmap photo = null;
+		String name = contact.getDisplayedName();
+		String birthday = contact.getBirthday();
+		String note = contact.getNote();
+					
+		if (contact.getPhoto() != null) {
+			photo = BitmapFactory.decodeByteArray(contact.getPhoto(), 0, contact.getPhoto().length);
+			ImageView photoImageView = (ImageView) findViewById(R.id.contact_detail_image);
+			photoImageView.setImageBitmap(photo);	
+		}
 		
 		TextView nameTextView = (TextView) findViewById(R.id.contact_detail_name);
 		nameTextView.setText(name);
 		
-		TextView birthdayTextView = (TextView) findViewById(R.id.contact_detail_birthday_text);
-		birthdayTextView.setText(birthday);
-		
+		if (birthday != null) {
+			TextView birthdayTextView = (TextView) findViewById(R.id.contact_detail_birthday_text);
+			birthdayTextView.setText(DateFormat.format(ContactEdit.DATE_FORMAT,
+					Long.parseLong(birthday)));
+		}
 		TextView noteTextView = (TextView) findViewById(R.id.contact_detail_note_text);
 		noteTextView.setText(note);
 	}

@@ -45,39 +45,9 @@
   			  android:layout_width="fill_parent"
   			  android:layout_height="wrap_content"
   			  android:visibility="invisible"
+  			 
   			  >
-		<LinearLayout  android:layout_width="fill_parent"
-					  android:layout_height="match_parent"
-					  android:orientation="horizontal">
-		  
-		  <ImageView android:layout_height="wrap_content"
-		  			 android:layout_width="wrap_content"
-		  			 android:src="@drawable/icon"
-		  			 android:layout_gravity="left">
-		  </ImageView>
-		  <TextView android:layout_width="wrap_content"
-		  			android:layout_height="wrap_content"
-		  			android:id="@+id/hiddenGroupId"
-		  			android:visibility="invisible"
-		  			>
-		  </TextView>
-		  <TextView android:layout_width="wrap_content"
-		  			android:layout_height="wrap_content"
-		  			android:id="@+id/groupItemText"
-		  			android:textSize="@dimen/contact_list_text_size"
-		  			android:text="@string/contact_list_group_all"
-		  			android:layout_marginLeft="@dimen/contact_list_group_title_marginLeft"
-		  			android:tag="@string/contact_list_group_all">
-		  </TextView>
-		  
-		  <ImageView android:layout_width="wrap_content"
-		  			 android:layout_height="wrap_content"
-		  			 android:visibility="invisible"
-		  			 android:id="@+id/groupCheckImage"
-		  			 android:layout_gravity="right"
-		  			 android:src="@drawable/icon">
-		  </ImageView>
-		</LinearLayout>
+
   	</ListView>
   	
   

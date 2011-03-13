@@ -13,7 +13,7 @@
   	<ImageView android:layout_width="wrap_content"
   				android:layout_height="wrap_content"
   				android:id="@+id/contact_detail_image"
-  				android:src="@drawable/icon">
+  				android:src="@drawable/contact_detail_name">
   	</ImageView>
   	
   	<TextView android:layout_width="wrap_content"
@@ -30,7 +30,7 @@
   	<ImageView android:layout_width="wrap_content"
   				android:layout_height="wrap_content"
   				android:id="@+id/contact_detail_birthday_image"
-  				android:src="@drawable/icon">
+  				android:src="@drawable/contact_detail_birthday">
   	</ImageView>
   	
   	<TextView android:layout_width="wrap_content"
@@ -48,7 +48,7 @@
   	<ImageView android:layout_width="wrap_content"
   				android:layout_height="wrap_content"
   				android:id="@+id/contact_detail_note_image"
-  				android:src="@drawable/icon">
+  				android:src="@drawable/contact_detail_note">
   	</ImageView>
   	
   	<TextView android:layout_width="wrap_content"

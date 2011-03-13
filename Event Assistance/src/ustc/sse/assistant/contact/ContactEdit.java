@@ -12,9 +12,12 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
+import android.content.OperationApplicationException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.RemoteException;
+import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.RawContacts;
 import android.text.format.DateFormat;
 import android.view.View;
@@ -30,15 +33,20 @@ import android.widget.TextView;
  */
 public class ContactEdit extends Activity {
 	public static final int BIRTHDAY_DATE_PICKER = 0;
+	public static final String DATE_FORMAT = "yyyy-MM-dd";
 	
 	private ContactUtils cu;
 	private Contact contact;
+	
+	private Button birthdayChooseButton;
+	private boolean birthdayNull = true;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);		
 		setContentView(R.layout.contact_edit);
 		
+		birthdayChooseButton = (Button) findViewById(R.id.contact_edit_birthday_button);	
 		cu = new ContactUtils(this);
 		loadContactInformation();
 		initButtons();
@@ -48,20 +56,28 @@ public class ContactEdit extends Activity {
 	 * load this contact's information and fill into widgits
 	 */
 	private void loadContactInformation() {
-		Long rawContactId = getIntent().getLongExtra(RawContacts._ID, -1);
-		contact = cu.getContactById(rawContactId);
+		Long contactId = getIntent().getLongExtra(Contacts._ID, -1);
+		contact = cu.getContactById(contactId);
 		
-		Bitmap bitmap = BitmapFactory.decodeByteArray(contact.getPhoto(), 0, contact.getPhoto().length);
-		ImageView photoImageView = (ImageView) findViewById(R.id.contact_edit_image);
-		TextView nameTextView = (TextView) findViewById(R.id.contact_edit_name);
-		Button birthdayChooseButton = (Button) findViewById(R.id.contact_edit_birthday_button);
-		photoImageView.setImageBitmap(bitmap);
+		Bitmap bitmap;
+		ImageView photoImageView;		
+		if (contact.getPhoto() != null) {
+			bitmap = BitmapFactory.decodeByteArray(contact.getPhoto(), 0,
+					contact.getPhoto().length);
+			photoImageView = (ImageView) findViewById(R.id.contact_edit_image);
+			photoImageView.setImageBitmap(bitmap);
+		}
+		
+		TextView nameTextView = (TextView) findViewById(R.id.contact_edit_name);		
 		nameTextView.setText(contact.getDisplayedName());
 		
 		String birthdayInMilliSecond = contact.getBirthday();
 		
-		CharSequence birthday = DateFormat.format("yyyy-MM-dd", new Long(birthdayInMilliSecond));
-		birthdayChooseButton.setText(birthday);
+		if (birthdayInMilliSecond != null) {
+			birthdayNull = false;
+			CharSequence birthday = DateFormat.format(DATE_FORMAT, Long.parseLong(birthdayInMilliSecond));
+			birthdayChooseButton.setText(birthday);
+		} 
 	}
 	
 	/**
@@ -69,14 +85,18 @@ public class ContactEdit extends Activity {
 	 */
 	private void initButtons() {
 		Button saveButton = (Button) findViewById(R.id.contact_edit_save_button);
-		Button cancelButton = (Button) findViewById(R.id.contact_edit_cancel_button);
-		Button birthdayChooserButton = (Button) findViewById(R.id.contact_edit_birthday_button);
-		
+		Button cancelButton = (Button) findViewById(R.id.contact_edit_cancel_button);		
 		saveButton.setOnClickListener(new OnClickListener() {
 			//update the information and close this activity
 			@Override
 			public void onClick(View arg0) {
-				cu.updateContact(ContactUtils.contactsIntoList(contact));
+				try {
+					cu.updateContact(ContactUtils.contactsIntoList(contact), birthdayNull);
+				} catch (RemoteException e) {
+					e.printStackTrace();
+				} catch (OperationApplicationException e) {
+					e.printStackTrace();
+				}
 				ContactEdit.this.finish();
 			}
 		});
@@ -89,7 +109,7 @@ public class ContactEdit extends Activity {
 			}
 		});
 		//pop up the date picker dialog
-		birthdayChooserButton.setOnClickListener(new OnClickListener() {
+		birthdayChooseButton.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View arg0) {
@@ -116,16 +136,19 @@ public class ContactEdit extends Activity {
 			//set the birthday date picker button and the contact's birthday
 			@Override
 			public void onDateSet(DatePicker view, int year, int month, int day) {
-				Button birthdayChooserButton = (Button) findViewById(R.id.contact_edit_birthday_button);
 				Calendar inDate = Calendar.getInstance();
 				inDate.set(year, month, day);
-				birthdayChooserButton.setText(DateFormat.format("yyyy-MM-dd",
+				birthdayChooseButton.setText(DateFormat.format("yyyy-MM-dd",
 						inDate));
 				contact.setBirthday(Long.toString(inDate.getTimeInMillis()).toString());
 			}
 		};
+		
+		//set the right initial time
 		Calendar calendar = Calendar.getInstance();
-		calendar.setTimeInMillis(new Long(contact.getBirthday()));
+		if (contact.getBirthday() != null) {
+			calendar.setTimeInMillis(new Long(contact.getBirthday()));
+		}
 		int year = calendar.get(Calendar.YEAR);
 		int monthOfYear = calendar.get(Calendar.MONTH);
 		int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
@@ -135,8 +158,4 @@ public class ContactEdit extends Activity {
 		return dialog;
 	}
 
-	
-	
-	
-	
 }

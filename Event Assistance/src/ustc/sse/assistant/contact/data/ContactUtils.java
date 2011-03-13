@@ -11,20 +11,23 @@ import java.util.List;
 import java.util.Map;
 
 import android.app.Activity;
+import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.RemoteException;
 import android.provider.ContactsContract;
+import android.provider.ContactsContract.CommonDataKinds.Email;
 import android.provider.ContactsContract.CommonDataKinds.Event;
 import android.provider.ContactsContract.CommonDataKinds.GroupMembership;
 import android.provider.ContactsContract.CommonDataKinds.Note;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.CommonDataKinds.Photo;
-import android.provider.ContactsContract.CommonDataKinds.StructuredName;
+import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Data;
-import android.provider.ContactsContract.RawContacts;
 
 
 /**
@@ -46,18 +49,22 @@ public class ContactUtils {
 		List<Contact> contacts = new ArrayList<Contact>();
 		Cursor cur = null;
 		
-		Uri uri = ContactsContract.RawContacts.CONTENT_URI;
-		String[] projection = {RawContacts._ID};
+		Uri uri = ContactsContract.Contacts.CONTENT_URI;
+		String[] projection = {Contacts._ID, Contacts.DISPLAY_NAME, Contacts.PHOTO_ID};
 		
 		cur = cr.query(uri, projection, null, null, null);
 		
 		if (cur.moveToFirst()) {
 					
-			int rawContactIdIndex = cur.getColumnIndex(RawContacts._ID);
+			int contactIdIndex = cur.getColumnIndex(Contacts._ID);
+			int displayNameIndex = cur.getColumnIndex(Contacts.DISPLAY_NAME);
+			int photoIdIndex = cur.getColumnIndex(Contacts.PHOTO_ID);
 			
 			do {
 				Contact contact = new Contact();	
-				contact.setRawContactId(cur.getLong(rawContactIdIndex));
+				contact.setContactId(cur.getLong(contactIdIndex));
+				contact.setDisplayedName(cur.getString(displayNameIndex));
+				contact.setPhotoId(cur.getLong(photoIdIndex));
 				contacts.add(contact);
 			} while (cur.moveToNext());
 			
@@ -65,11 +72,32 @@ public class ContactUtils {
 		}
 		
 		for (Contact c : contacts) {
-			c.setDisplayedName(getDisplayName(c.getRawContactId()));
-			c.setPhoto(getPhoto(c.getRawContactId()));
+			Long photoId = c.getPhotoId();
+			if (photoId == 0 || photoId == null) {
+				continue;
+			}
+			c.setPhoto(getPhoto(photoId));
 		}
+		
 		cur.close();
 		return contacts;
+	}
+
+	/**
+	 * get the cursor including all contacts' primary display name and photo id
+	 * @return
+	 */
+	public Cursor getAllContactsBasicInfoCursor() {
+		ContentResolver cr = activity.getContentResolver();
+		
+		Cursor cur = null;
+		
+		Uri uri = ContactsContract.Contacts.CONTENT_URI;
+		String[] projection = {Contacts._ID, Contacts.DISPLAY_NAME, Contacts.PHOTO_ID};
+		
+		cur = cr.query(uri, projection, null, null, null);
+		activity.startManagingCursor(cur);
+		return cur;
 	}
 	
 	/**
@@ -85,33 +113,34 @@ public class ContactUtils {
 		Cursor cur = null;
 		
 		Uri dataUri = ContactsContract.Data.CONTENT_URI;
-		String[] groupProjection = {Data.RAW_CONTACT_ID, 
-									Data.MIMETYPE, 
-									GroupMembership.GROUP_ROW_ID};
+		String[] groupProjection = {Data.DISPLAY_NAME,
+									Data.PHOTO_ID,
+									Data.CONTACT_ID};
 		
-		String selection = Data.MIMETYPE + " = ? AND " 
-							+ GroupMembership.GROUP_ROW_ID + " = ? ";
+		String selection = Data.MIMETYPE + " = ?" + " AND " 
+									+ GroupMembership.GROUP_ROW_ID + " = ?";
 		
-		String[] selectionArgs = {GroupMembership.MIMETYPE, 
-								  Long.toString(g.getGroupId())};
-		
+		String[] selectionArgs = {GroupMembership.CONTENT_ITEM_TYPE, Long.toString(g.getGroupId())};
 		cur = cr.query(dataUri, groupProjection, selection, selectionArgs, null);
 		
 		
 		if (cur.moveToFirst()) {
 	
-			int rawContactIdIndex = cur.getColumnIndex(RawContacts._ID);
+			int displayNameIndex = cur.getColumnIndex(Data.DISPLAY_NAME);
+			int contactIndex = cur.getColumnIndex(Data.CONTACT_ID);
+			int photoIdIndex = cur.getColumnIndex(Data.PHOTO_ID);
 			
 			do {
 				Contact contact = new Contact();
-				contact.setRawContactId(cur.getLong(rawContactIdIndex));
+				contact.setContactId(cur.getLong(contactIndex));
+				contact.setPhotoId(cur.getLong(photoIdIndex));
+				contact.setDisplayedName(cur.getString(displayNameIndex));
 				contacts.add(contact);
 			} while (cur.moveToNext());
 		}
 		
 		for (Contact c : contacts) {
-			c.setDisplayedName(getDisplayName(c.getRawContactId()));
-			c.setPhoto(getPhoto(c.getRawContactId()));
+			c.setPhoto(getPhoto(c.getContactId()));
 			
 		}
 		
@@ -119,38 +148,39 @@ public class ContactUtils {
 		return contacts;
 	}
 	
-	public Contact getContactById(long rawContactId) {
-		String displayName = getDisplayName(rawContactId);
-		String note = getNote(rawContactId);
-		String phoneNumber = getPhoneAndType(rawContactId);
-		byte[] photo = getPhoto(rawContactId);
-		String birthday = getBirthday(rawContactId);
+	public Contact getContactById(long contactId) {
+		String displayName = getDisplayName(contactId);
+		String note = getNote(contactId);
+		String[] phoneAndType = getPrimaryPhone(contactId);
+		byte[] photo = getPhoto(contactId);
+		String birthday = getBirthday(contactId);
 		
 		Contact c = new Contact();
 		c.setBirthday(birthday);
 		c.setDisplayedName(displayName);
 		c.setNote(note);
 		c.setEventType(Integer.toString(Event.TYPE_BIRTHDAY));
-		c.setPhoneNumber(phoneNumber);
+		c.setPhoneNumber(phoneAndType[0]);
+		c.setPhoneType(phoneAndType[1]);
 		c.setPhoneType(Integer.toString(Phone.TYPE_MAIN));
-		c.setRawContactId(rawContactId);
+		c.setContactId(contactId);
 		c.setPhoto(photo);
 		
 		return c;
 	}
 	
-	private String getDisplayName(long rawContactId) {
+	private String getDisplayName(long contactId) {
 		ContentResolver cr = activity.getContentResolver();
 		Cursor c = null;
 		String displayName = null;
 		
 		
-		String[] projection = {Data.RAW_CONTACT_ID, Data.MIMETYPE, StructuredName.DISPLAY_NAME};
-		String selection = Data.MIMETYPE + " = ? AND " + Data.RAW_CONTACT_ID + " = ? ";
-		String[] selectionArgs = {StructuredName.MIMETYPE, Long.toString(rawContactId)};
-		c = cr.query(Data.CONTENT_URI, projection, selection, selectionArgs, null);
+		String[] projection = {Contacts.DISPLAY_NAME};
+		String selection = Contacts._ID + " = ? ";
+		String[] selectionArgs = {Long.toString(contactId)};
+		c = cr.query(Contacts.CONTENT_URI, projection, selection, selectionArgs, null);
 		
-		int displayNameIndex = c.getColumnIndex(StructuredName.DISPLAY_NAME);
+		int displayNameIndex = c.getColumnIndex(Contacts.DISPLAY_NAME);
 		if (c.moveToFirst()) {
 			displayName = c.getString(displayNameIndex);
 		}
@@ -159,14 +189,14 @@ public class ContactUtils {
 		return displayName;
 	}
 	
-	private String getNote(long rawContactId) {
+	private String getNote(long contactId) {
 		ContentResolver cr = activity.getContentResolver();
 		Cursor c = null;
 		String note = null;
 		
-		String[] projection = {Data.RAW_CONTACT_ID, Data.MIMETYPE, Note.NOTE};
-		String selection = Data.MIMETYPE + " = ? AND " + Data.RAW_CONTACT_ID + " = ? ";
-		String[] selectionArgs = {Note.MIMETYPE, Long.toString(rawContactId)};
+		String[] projection = {Note.NOTE};
+		String selection = Data.MIMETYPE + " = ?" + " AND " + Data.CONTACT_ID + " = ? ";
+		String[] selectionArgs = {Note.CONTENT_ITEM_TYPE, Long.toString(contactId)};
 		
 		c = cr.query(Data.CONTENT_URI, projection, selection, selectionArgs, null);
 		int noteColumnIndex = c.getColumnIndex(Note.NOTE);
@@ -178,57 +208,67 @@ public class ContactUtils {
 		return note;
 	}
 	
-	private String getPhoneAndType(long rawContactId) {
+	private String[] getPrimaryPhone(long contactId) {
 		ContentResolver cr = activity.getContentResolver();
 		Cursor c = null;
 		String phoneNumber = null;
 		String phoneType = null;
 		
-		String[] projection = {Data.RAW_CONTACT_ID, Data.MIMETYPE, Phone.NUMBER, Phone.TYPE};
-		String selection = Data.MIMETYPE + " = ? AND " + Data.RAW_CONTACT_ID + " = ? ";
-		String[] selectionArgs = {Phone.MIMETYPE, Long.toString(rawContactId)};
+		String[] projection = {Phone.NUMBER, Phone.TYPE};
+		String selection = Data.MIMETYPE + " = ? AND " + 
+							Data.CONTACT_ID + " = ? " + " AND " +
+							Data.IS_PRIMARY + " = ?";
+		String[] selectionArgs = {Phone.CONTENT_ITEM_TYPE, 
+									Long.toString(contactId),
+									Integer.toString(1)};
 		
 		c = cr.query(Data.CONTENT_URI, projection, selection, selectionArgs, null);
 		int phoneNumberColumnIndex = c.getColumnIndex(Phone.NUMBER);
+		int phoneTypeColumnIndex = c.getColumnIndex(Phone.TYPE);
 		//Pick the first Phone number, ignore other phone type and number
 		if (c.moveToFirst()) {
 			phoneNumber = c.getString(phoneNumberColumnIndex);
+			phoneType = c.getString(phoneTypeColumnIndex);
 		}
 		
 		c.close();
-		return phoneNumber;
+		return new String[]{phoneNumber, phoneType};
 	}
 	
-	private byte[] getPhoto(long rawContactId) {
-		ContentResolver cr = activity.getContentResolver();
-		Cursor c = null;
-		byte[] photo = null;
+	private byte[] getPhoto(Long photoId) {
+		Uri contactUri = ContentUris.withAppendedId(Contacts.CONTENT_URI, photoId);
+		Uri photoUri = Uri.withAppendedPath(contactUri, android.provider.ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);
+		byte[] data = null;
 		
-		String[] projection = {Data.RAW_CONTACT_ID, Data.MIMETYPE, Photo.PHOTO};
-		String selection = Data.MIMETYPE + " = ? AND " + Data.RAW_CONTACT_ID + " = ? ";
-		String[] selectionArgs = {Photo.MIMETYPE, Long.toString(rawContactId)};
-		
-		c = cr.query(Data.CONTENT_URI, projection, selection, selectionArgs, null);
-		int photoColumnIndex = c.getColumnIndex(Photo.PHOTO);
-		if (c.moveToFirst()) {
-			photo = c.getBlob(photoColumnIndex);
-		}
-		
-		c.close();
-		return photo;
+		 Cursor cursor = activity.getContentResolver().query(photoUri,
+		          new String[] {Photo.PHOTO}, null, null, null);
+		     if (cursor == null) {
+		         return null;
+		     }
+		     try {
+		         if (cursor.moveToFirst()) {
+		             data = cursor.getBlob(0);
+		            
+		         }
+		     } finally {
+		         cursor.close();
+		     }
+		     
+		     return data;
+
 	}
 	
-	private String getBirthday(long rawContactId) {
+	private String getBirthday(long contactId) {
 		ContentResolver cr = activity.getContentResolver();
 		Cursor c = null;
 		String birthday = null;
 		
-		String[] projection = {Data.RAW_CONTACT_ID, Data.MIMETYPE, Event.START_DATE, Event.TYPE};
+		String[] projection = {Event.START_DATE, Event.TYPE};
 		String selection = Data.MIMETYPE + " = ? AND " 
-							+ Data.RAW_CONTACT_ID + " = ? "
+							+ Data.CONTACT_ID + " = ? " + " AND "
 							+ Event.TYPE + " = ?";
-		String[] selectionArgs = {Event.MIMETYPE, 
-								  Long.toString(rawContactId),
+		String[] selectionArgs = {Event.CONTENT_ITEM_TYPE, 
+								  Long.toString(contactId),
 								  Integer.toString(Event.TYPE_BIRTHDAY)};
 		
 		c = cr.query(Data.CONTENT_URI, projection, selection, selectionArgs, null);
@@ -246,22 +286,32 @@ public class ContactUtils {
 	 * this method only update birthday, ignor other field
 	 * @param contacts
 	 * @return
+	 * @throws OperationApplicationException 
+	 * @throws RemoteException 
 	 */
-	public int updateContact(List<Contact> contacts) {
-		ContentResolver cr = activity.getContentResolver();
+	public int updateContact(List<Contact> contacts, boolean newData) throws RemoteException, OperationApplicationException {
+	
 		int updatedRow = 0;
-		Uri uri = ContactsContract.Data.CONTENT_URI;
-		
-		for (Contact c : contacts) {
-			Uri updatedUri = ContentUris.withAppendedId(uri, c.getRawContactId());
-			ContentValues values = new ContentValues();
-			values.put(Data.MIMETYPE, Event.MIMETYPE);
-			values.put(Event.TYPE, Event.TYPE_BIRTHDAY);
-			values.put(Event.START_DATE, c.getBirthday());
-			
-			updatedRow = cr.update(updatedUri, values, null, null);
+		ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
+		for (Contact c : contacts) {			
+			if (newData) {
+				ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
+				          .withValue(Data.CONTACT_ID, c.getContactId())
+				          .withValue(Data.MIMETYPE, Event.CONTENT_ITEM_TYPE)
+				          .withValue(Event.TYPE, Event.TYPE_BIRTHDAY)
+				          .withValue(Event.START_DATE, c.getBirthday())
+				          .build());
+			} else {
+				ops.add(ContentProviderOperation.newUpdate(Data.CONTENT_URI)
+				          .withSelection(Data.CONTACT_ID + " = ?", new String[]{String.valueOf(c.getContactId())})
+				          .withSelection(Data.MIMETYPE + " = ? ", new String[]{Event.CONTENT_ITEM_TYPE})
+				          .withSelection(Event.TYPE + " = ?", new String[]{Long.toString(Event.TYPE_BIRTHDAY)})
+				          .withValue(Event.START_DATE, c.getBirthday())
+				          .build());
+			}
 		}
 		
+		activity.getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
 		return updatedRow;
 	}
 
@@ -282,8 +332,8 @@ public class ContactUtils {
 		List<Map<String, Object>> listMap = new ArrayList<Map<String,Object>>();
 		for (Contact c : contacts) {
 			Map<String, Object> m = new HashMap<String, Object>();
-			m.put(RawContacts._ID, c.getRawContactId());
-			m.put(StructuredName.DISPLAY_NAME, c.getDisplayedName());
+			m.put(Contacts._ID, c.getContactId());
+			m.put(Contacts.DISPLAY_NAME, c.getDisplayedName());
 			m.put(Photo.PHOTO, c.getPhoto());
 			
 			listMap.add(m);
@@ -291,4 +341,19 @@ public class ContactUtils {
 		
 		return listMap;
 	}
+	
+	public static List<Map<String, Object>> contactsToGroups(List<Contact> contacts) {
+		List<Map<String, Object>> groupOfMembers = new ArrayList<Map<String,Object>>();
+		
+		for (Contact c : contacts) {
+			Map<String, Object> contactMapping = new HashMap<String, Object>();
+			contactMapping.put(Contacts._ID, c.getContactId());
+			contactMapping.put(Contacts.DISPLAY_NAME, c.getDisplayedName());
+			
+			groupOfMembers.add(contactMapping);
+		}
+		
+		return groupOfMembers;
+	}
+
 }

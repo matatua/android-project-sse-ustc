@@ -15,7 +15,7 @@
   	<ImageView android:layout_width="wrap_content"
   				android:layout_height="wrap_content"
   				android:id="@+id/contact_edit_image"
-  				android:src="@drawable/icon">
+  				android:src="@drawable/default_group_image">
   	</ImageView>
   	<TextView android:layout_width="wrap_content"
   				android:layout_height="wrap_content"
@@ -43,7 +43,8 @@
   	<Button android:layout_width="wrap_content"
   			android:layout_height="wrap_content"
   			android:textSize="@dimen/contact_edit_text_size"
-  			android:id="@+id/contact_edit_birthday_button">
+  			android:id="@+id/contact_edit_birthday_button"
+  			android:text="@string/contact_edit_birthday_button_text">
   	</Button>
   </LinearLayout>
   

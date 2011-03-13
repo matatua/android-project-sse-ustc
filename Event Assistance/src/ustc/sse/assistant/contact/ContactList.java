@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import ustc.sse.assistant.R;
-import ustc.sse.assistant.contact.data.Contact;
 import ustc.sse.assistant.contact.data.ContactIndividualViewBinder;
 import ustc.sse.assistant.contact.data.ContactUtils;
 import ustc.sse.assistant.contact.data.Group;
@@ -15,13 +14,14 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract.CommonDataKinds.Photo;
-import android.provider.ContactsContract.CommonDataKinds.StructuredName;
+import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Groups;
 import android.provider.ContactsContract.RawContacts;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -43,6 +43,9 @@ public class ContactList extends Activity {
 	private SharedPreferences sharedPreference;
 	private long lastSelectedGroup;
 	
+	private TextView groupTitleTextView;
+
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -50,6 +53,8 @@ public class ContactList extends Activity {
 		setContentView(R.layout.contact_list);
 		cu = new ContactUtils(this);
 		gu = new GroupUtils(this);
+		
+		
 			
 	}
 	
@@ -80,9 +85,15 @@ public class ContactList extends Activity {
 			
 			@Override
 			public void onClick(View arg0) {
-				//set the arrow image which directing below
-				iv.setImageResource(R.drawable.icon);
-				groupListView.setVisibility(View.VISIBLE);
+				if (groupListView.getVisibility() == View.INVISIBLE) {
+					//set the arrow image which directing below
+					iv.setImageResource(R.drawable.arrow_down);
+					groupListView.setVisibility(View.VISIBLE);
+					contactListView.setVisibility(View.INVISIBLE);
+				} else {
+					iv.setImageResource(R.drawable.arrow_right);
+					groupListView.setVisibility(View.INVISIBLE);
+				}
 			}
 		});
 		
@@ -94,13 +105,18 @@ public class ContactList extends Activity {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				
 				//change selector indicator image and group title and summary count
-				iv.setImageResource(R.drawable.icon);
-				//change and set a corresponding members
-			
-				ListAdapter adapter = generateContactListViewAdapter(id);
+				iv.setImageResource(R.drawable.arrow_right);
+				TextView selectedGroupTitleTV = (TextView) view.findViewById(R.id.groupItemText);
+				groupTitleTextView.setText(selectedGroupTitleTV.getText());
+				TextView hiddenGroupTextView = (TextView) view.findViewById(R.id.hiddenGroupId);
+				Long groupId = Long.parseLong(hiddenGroupTextView.getText().toString());
+				
+				ListAdapter adapter = generateContactListViewAdapter(groupId);
 				contactListView.setAdapter(adapter);
 				
+				//hide groups and show contacts
 				groupListView.setVisibility(View.INVISIBLE);
+				contactListView.setVisibility(View.VISIBLE);
 				lastSelectedGroup = id;
 				
 			}
@@ -115,7 +131,7 @@ public class ContactList extends Activity {
 				Long individualId = new Long(idTextView.getText().toString());
 				
 				Intent intent = new Intent(ContactList.this, ContactDetail.class);
-				intent.putExtra(RawContacts._ID, individualId);
+				intent.putExtra(Contacts._ID, individualId);
 				ContactList.this.startActivity(intent);
 			}
 		});
@@ -129,23 +145,34 @@ public class ContactList extends Activity {
 	
 	private void prepareGroupListView() {
 		groupListView = (ListView) findViewById(R.id.groupListView);
+		groupTitleTextView = (TextView) findViewById(R.id.selectedGroupTitleText);
 		
-		Cursor c = gu.getGroupCursor();
+		if (lastSelectedGroup == NONE_GROUP_ID) {
+			lastSelectedGroup = DEFAULT_GROUP;
+			groupTitleTextView.setText(R.string.contact_list_group_all);
+		} 		
+		
+
 		int layout = R.layout.contact_list_group_item;
-		String[] from = {Groups._ID, Groups.TITLE, Groups.SUMMARY_COUNT};
-		int[] to = {R.id.hiddenGroupId, R.id.groupItemText, R.id.groupSummaryCountText};
-		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, 
-															  layout, 
-															  c, 
-															  from, 
-															  to);
+		String[] from = {Groups._ID, Groups.TITLE};
+		int[] to = {R.id.hiddenGroupId, R.id.groupItemText};
+		List<Map<String, Object>> data = 
+			GroupUtils.groupsToList(gu.getAllGroups());
+		
+//		Cursor c = gu.getGroupCursor();
+//		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, 
+//															  layout, 
+//															  c, 
+//															  from, 
+//															  to);
+		SimpleAdapter adapter = new SimpleAdapter(this, data, layout, from, to);
 		
 		groupListView.setAdapter(adapter);
-		
 		
 	}
 	
 	private void prepareGroupMemberListView() {
+		contactListView = (ListView) findViewById(R.id.contactListView);
 		
 		ListAdapter adapter = null;
 		if (lastSelectedGroup == NONE_GROUP_ID) {
@@ -170,8 +197,8 @@ public class ContactList extends Activity {
 			contacts = ContactUtils.listToMap(cu.getContactsBasicInfoByGroup(new Group(groupId)));
 		}
 		
-		String[] from = {RawContacts._ID, 
-						 StructuredName.DISPLAY_NAME,
+		String[] from = {Contacts._ID, 
+						 Contacts.DISPLAY_NAME,
 						 Photo.PHOTO};
 		int[] to = {R.id.hiddenIndividualId,
 					R.id.contactIndividualName,

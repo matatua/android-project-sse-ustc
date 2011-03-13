@@ -1,10 +1,11 @@
 package ustc.sse.assistant.contact.data;
 
-import java.sql.Blob;
 
 public class Contact {
 
-	private long rawContactId;
+	private long photoId;
+	
+	private long contactId;
 	private byte[] photo;
 	private String displayedName;
 	private String phoneNumber;
@@ -13,11 +14,11 @@ public class Contact {
 	private String note;
 	private String eventType;
 	
-	public long getRawContactId() {
-		return rawContactId;
+	public long getContactId() {
+		return contactId;
 	}
-	public void setRawContactId(long rawContactId) {
-		this.rawContactId = rawContactId;
+	public void setContactId(long contactId) {
+		this.contactId = contactId;
 	}
 	public String getDisplayedName() {
 		return displayedName;
@@ -61,6 +62,11 @@ public class Contact {
 	public void setEventType(String eventType) {
 		this.eventType = eventType;
 	}
-	
+	public long getPhotoId() {
+		return photoId;
+	}
+	public void setPhotoId(long photoId) {
+		this.photoId = photoId;
+	}
 	
 }

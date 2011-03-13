@@ -2,11 +2,36 @@
 <LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
-  android:layout_height="fill_parent">
+  android:layout_height="match_parent">
   <ImageView android:layout_width="wrap_content"
   				android:layout_height="wrap_content"
-  				android:src="@drawable/group">
+  				android:src="@drawable/icon">
   </ImageView>
   
-  <TextView android:id="@+id/contact_list_selection_group"></TextView>
+  <TextView android:layout_width="wrap_content"
+  			android:layout_height="wrap_content"
+  			android:id="@+id/contact_selection_group_hidden_id"
+  			android:visibility="invisible">
+  </TextView>  
+  
+  <TextView android:id="@+id/contact_selection_group_title"
+  			android:layout_width="wrap_content"
+  			android:layout_height="wrap_content"
+  			android:textSize="@dimen/contact_selection_group_text_szie">
+  </TextView>
+  
+  <TextView android:id="@+id/contact_selection_group_capacity"
+  			android:layout_width="wrap_content"
+  			android:layout_height="wrap_content"
+  			android:visibility="invisible"
+  			android:textSize="@dimen/contact_selection_group_text_szie"
+  			android:layout_marginLeft="@dimen/contact_selection_group_capacity_marginLeft">
+  </TextView>
+  
+  <CheckBox android:id="@+id/contact_selection_group_check"
+  			android:checked="false"
+  			android:gravity="right"
+  			android:layout_width="wrap_content"
+  			android:layout_height="wrap_content">
+  </CheckBox>
 </LinearLayout>

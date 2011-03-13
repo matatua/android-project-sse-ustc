@@ -1,13 +1,16 @@
 package ustc.sse.assistant.contact.data;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import ustc.sse.assistant.R;
+import ustc.sse.assistant.contact.ContactList;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract.Groups;
@@ -33,26 +36,28 @@ public class GroupUtils {
 		Cursor cur = null;
 		
 		Uri uri = Groups.CONTENT_URI;
-		String[] projection = {Groups._ID, Groups.TITLE, Groups.SUMMARY_COUNT, 
-				Groups.SUMMARY_WITH_PHONES, Groups.NOTES};
+		String[] projection = {Groups._ID, Groups.TITLE, Groups.NOTES};
 		String sortOrder = " " + Groups.TITLE + " DESC ";
 		
 		cur = cr.query(uri, projection, null, null, sortOrder);
 		activity.startManagingCursor(cur);
 		
+		//add a default group named All
+		Group all = new Group();
+		all.setGroupId(ContactList.DEFAULT_GROUP);
+		all.setNote("Default group");
+		all.setTitle(activity.getString(R.string.contact_list_group_all));
+		groups.add(all);
+		
 		if (cur != null && cur.moveToFirst()) {
 			int groupIdIndex = cur.getColumnIndex(Groups._ID);
 			int titleIndex = cur.getColumnIndex(Groups.TITLE);
-			int summaryCountIndex = cur.getColumnIndex(Groups.SUMMARY_WITH_PHONES);
-			int summaryCountWithPhoneIndex = cur.getColumnIndex(Groups.SUMMARY_WITH_PHONES);
 			int notesIndex = cur.getColumnIndex(Groups.NOTES);
 			
 			do {
 				Group g = new Group();
 				g.setGroupId(cur.getLong(groupIdIndex));
 				g.setNote(cur.getString(notesIndex));
-				g.setSummaryCount(cur.getInt(summaryCountIndex));
-				g.setSummaryCountWithPhone(cur.getInt(summaryCountWithPhoneIndex));
 				g.setTitle(cur.getString(titleIndex));
 				
 				groups.add(g);
@@ -68,8 +73,7 @@ public class GroupUtils {
 		Cursor cur = null;
 		
 		Uri uri = Groups.CONTENT_URI;
-		String[] projection = {Groups._ID, Groups.TITLE, Groups.SUMMARY_COUNT, 
-				Groups.SUMMARY_WITH_PHONES, Groups.NOTES};
+		String[] projection = {Groups._ID, Groups.TITLE, Groups.NOTES};
 		String sortOrder = " " + Groups.TITLE + " DESC ";
 		
 		cur = cr.query(uri, projection, null, null, sortOrder);
@@ -130,5 +134,20 @@ public class GroupUtils {
 		cv.put(Groups.SUMMARY_WITH_PHONES, g.getSummaryCountWithPhone());
 		
 		return cv;
+	}
+	
+	public static List<Map<String, Object>> groupsToList(List<Group> groups) {
+		List<Map<String, Object>> listOfMaps = new ArrayList<Map<String,Object>>();
+		
+		for (Group group : groups) {
+			Map<String, Object> groupMapping = new HashMap<String, Object>();
+			groupMapping.put(Groups._ID, group.getGroupId());
+			groupMapping.put(Groups.TITLE, group.getTitle());
+			groupMapping.put(Groups.SUMMARY_COUNT, group.getSummaryCount());
+			groupMapping.put(Groups.SUMMARY_WITH_PHONES, group.getSummaryCountWithPhone());
+			
+			listOfMaps.add(groupMapping);			
+		}
+		return listOfMaps;
 	}
 }

@@ -3,11 +3,12 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="match_parent"
-  android:orientation="horizontal">
+  android:orientation="horizontal"
+  android:id="@+id/contact_list_group_item">
   
   <ImageView android:layout_height="wrap_content"
   			 android:layout_width="wrap_content"
-  			 android:src="@drawable/icon"
+  			 android:src="@drawable/default_group_image"
   			 android:layout_gravity="left">
   </ImageView>
   <TextView android:layout_width="wrap_content"
@@ -24,11 +25,4 @@
   			android:layout_marginLeft="@dimen/contact_list_group_title_marginLeft">
   </TextView>
   
-  <ImageView android:layout_width="wrap_content"
-  			 android:layout_height="wrap_content"
-  			 android:visibility="invisible"
-  			 android:id="@+id/groupCheckImage"
-  			 android:layout_gravity="right"
-  			 android:src="@drawable/icon">
-  </ImageView>
 </LinearLayout>
