@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+  	<LinearLayout 
+	    android:orientation="vertical"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content" >      
+		<TextView
+			android:text="author: event_team"
+			android:layout_width="fill_parent" 
+		    android:layout_height="wrap_content" 
+		    android:textSize="18dp"
+		    />
+	    <TextView
+	    	android:text="(c) Copyright: ustc.sse.event"
+	    	android:layout_width="fill_parent" 
+		    android:layout_height="wrap_content" 
+		    android:textSize="18dp"
+	    	/>
+	    <TextView
+	    	android:text=""
+	    	android:layout_width="fill_parent" 
+		    android:layout_height="wrap_content" 
+	    	/>
+   	</LinearLayout>	
+   	
+   	<TableLayout 
+	    android:orientation="vertical"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content" > 
+	   <TableRow>    
+		    <TextView 
+			    android:layout_width="fill_parent" 
+			    android:layout_height="wrap_content" 
+		    android:text="@string/main_screen_button_contact_text"
+		    android:textSize="20dp"
+		    />
+	    <TextView
+	    	android:layout_width="fill_parent" 
+		    android:layout_height="wrap_content" 
+		    android:text="@help_content/help_contact_text"
+	    	/>
+	    </TableRow>
+    </TableLayout> 
+   	
+   	<TableLayout 
+	    android:orientation="vertical"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content" > 
+	   <TableRow>    
+		    <TextView 
+			    android:layout_width="fill_parent" 
+			    android:layout_height="wrap_content" 
+			    android:text="@string/main_screen_button_event_text"
+			    android:textSize="20dp"
+			    />
+		   	<TextView
+				android:layout_width="fill_parent" 
+			    android:layout_height="wrap_content" 
+			    android:text="@help_content/help_event_text"
+			    />
+	    </TableRow>
+    </TableLayout>    
+    
+   	<TableLayout 
+	    android:orientation="vertical"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content" > 
+	   <TableRow>    
+		    <TextView 
+			    android:layout_width="fill_parent" 
+			    android:layout_height="wrap_content" 
+	    		android:text="@string/main_screen_button_setting_text"
+		    	android:textSize="20dp"
+		    />
+		    <TextView
+				android:layout_width="fill_parent" 
+			    android:layout_height="wrap_content" 
+			    android:text="@help_content/help_setting_text"
+			    />
+	   </TableRow>
+	</TableLayout>
+	
+   	<TableLayout 
+	    android:orientation="vertical"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content" > 
+	   <TableRow>    
+		    <TextView 
+			    android:layout_width="fill_parent" 
+			    android:layout_height="wrap_content"
+		    android:text="@string/main_screen_button_calendar_text"
+		    android:textSize="20dp"
+		    />
+	    <TextView
+			android:layout_width="fill_parent" 
+		    android:layout_height="wrap_content" 
+		    android:text="@help_content/help_calendar_text"
+		    />
+	   </TableRow>
+	</TableLayout>
+	
+   	<TableLayout 
+	    android:orientation="vertical"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content" > 
+	   <TableRow>    
+		    <TextView 
+			    android:layout_width="fill_parent" 
+			    android:layout_height="wrap_content"
+		    android:text="@string/main_screen_button_backup_restore_text"
+		    android:textSize="20dp"
+		    />
+	  	<TextView
+			android:layout_width="fill_parent" 
+		    android:layout_height="wrap_content" 
+		    android:text="@help_content/help_backup_restore_text"
+		    />
+	    </TableRow>
+    </TableLayout> 
+    
+   	<TableLayout 
+	    android:orientation="vertical"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content" > 
+	   <TableRow>    
+		    <TextView 
+			    android:layout_width="fill_parent" 
+			    android:layout_height="wrap_content" 
+			android:text="@string/main_screen_button_share_text"
+			android:textSize="20dp"
+			/>
+		<TextView  
+			android:layout_width="fill_parent" 
+			android:layout_height="wrap_content" 
+			android:text="@help_content/help_share_text"
+			/>
+	    </TableRow>
+    </TableLayout>   	
+   
+</LinearLayout>
