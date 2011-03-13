@@ -28,6 +28,7 @@ import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.CommonDataKinds.Photo;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Data;
+import android.provider.ContactsContract.RawContacts;
 
 
 /**
@@ -293,17 +294,20 @@ public class ContactUtils {
 	
 		int updatedRow = 0;
 		ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
-		for (Contact c : contacts) {			
+		for (Contact c : contacts) {
+			//get the first rawcontact id
+			Long rawContactId = getRawContactId(c.getContactId()).get(0);
+			
 			if (newData) {
 				ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
-				          .withValue(Data.CONTACT_ID, c.getContactId())
+				          .withValue(Data.RAW_CONTACT_ID, rawContactId)
 				          .withValue(Data.MIMETYPE, Event.CONTENT_ITEM_TYPE)
 				          .withValue(Event.TYPE, Event.TYPE_BIRTHDAY)
 				          .withValue(Event.START_DATE, c.getBirthday())
 				          .build());
 			} else {
 				ops.add(ContentProviderOperation.newUpdate(Data.CONTENT_URI)
-				          .withSelection(Data.CONTACT_ID + " = ?", new String[]{String.valueOf(c.getContactId())})
+				          .withSelection(Data.RAW_CONTACT_ID + " = ?", new String[]{rawContactId.toString()})
 				          .withSelection(Data.MIMETYPE + " = ? ", new String[]{Event.CONTENT_ITEM_TYPE})
 				          .withSelection(Event.TYPE + " = ?", new String[]{Long.toString(Event.TYPE_BIRTHDAY)})
 				          .withValue(Event.START_DATE, c.getBirthday())
@@ -354,6 +358,33 @@ public class ContactUtils {
 		}
 		
 		return groupOfMembers;
+	}
+	
+	/**
+	 * return all corresponding rawcontact id with a contact id
+	 * @param contactId
+	 * @return
+	 */
+	public List<Long> getRawContactId(Long contactId) {
+		ContentResolver cr = activity.getContentResolver();
+		
+		Cursor cursor = cr.query(RawContacts.CONTENT_URI,
+				 new String[]{RawContacts._ID},
+				 RawContacts.CONTACT_ID + " = ? ",
+				 new String[]{contactId.toString()},
+				 null);
+		
+		List<Long> rawContactIds = new ArrayList<Long>();
+		if (cursor != null) {
+			if (cursor.moveToFirst()) {
+				do {
+					Long rawContactId = cursor.getLong(0);
+					rawContactIds.add(rawContactId);
+				} while (cursor.moveToNext());
+			}
+		}
+		
+		return rawContactIds;
 	}
 
 }
