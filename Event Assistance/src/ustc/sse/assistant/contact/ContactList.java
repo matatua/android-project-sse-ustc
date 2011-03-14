@@ -89,7 +89,6 @@ public class ContactList extends Activity {
 					//set the arrow image which directing below
 					iv.setImageResource(R.drawable.arrow_down);
 					groupListView.setVisibility(View.VISIBLE);
-					contactListView.setVisibility(View.INVISIBLE);
 				} else {
 					iv.setImageResource(R.drawable.arrow_right);
 					groupListView.setVisibility(View.INVISIBLE);
@@ -217,7 +216,8 @@ public class ContactList extends Activity {
 	 */
 	private void saveLastSelectedGroupId() {
 		getPreferences(MODE_WORLD_WRITEABLE).edit()
-											.putLong(Groups._ID, lastSelectedGroup);
+											.putLong(Groups._ID, lastSelectedGroup)
+											.commit();
 		
 	}
 	
