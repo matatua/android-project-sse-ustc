@@ -41,7 +41,7 @@
 	    <TextView
 	    	android:layout_width="fill_parent" 
 		    android:layout_height="wrap_content" 
-		    android:text="@help_content/help_contact_text"
+		    android:text="@string/help_contact_text"
 	    	/>
 	    </TableRow>
     </TableLayout> 
@@ -60,7 +60,7 @@
 		   	<TextView
 				android:layout_width="fill_parent" 
 			    android:layout_height="wrap_content" 
-			    android:text="@help_content/help_event_text"
+			    android:text="@string/help_event_text"
 			    />
 	    </TableRow>
     </TableLayout>    
@@ -79,7 +79,7 @@
 		    <TextView
 				android:layout_width="fill_parent" 
 			    android:layout_height="wrap_content" 
-			    android:text="@help_content/help_setting_text"
+			    android:text="@string/help_setting_text"
 			    />
 	   </TableRow>
 	</TableLayout>
@@ -98,7 +98,7 @@
 	    <TextView
 			android:layout_width="fill_parent" 
 		    android:layout_height="wrap_content" 
-		    android:text="@help_content/help_calendar_text"
+		    android:text="@string/help_calendar_text"
 		    />
 	   </TableRow>
 	</TableLayout>
@@ -117,7 +117,7 @@
 	  	<TextView
 			android:layout_width="fill_parent" 
 		    android:layout_height="wrap_content" 
-		    android:text="@help_content/help_backup_restore_text"
+		    android:text="@string/help_backup_restore_text"
 		    />
 	    </TableRow>
     </TableLayout> 
@@ -136,7 +136,7 @@
 		<TextView  
 			android:layout_width="fill_parent" 
 			android:layout_height="wrap_content" 
-			android:text="@help_content/help_share_text"
+			android:text="@string/help_share_text"
 			/>
 	    </TableRow>
     </TableLayout>   	

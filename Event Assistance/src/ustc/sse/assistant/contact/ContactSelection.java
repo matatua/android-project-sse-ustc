@@ -38,7 +38,7 @@ public class ContactSelection extends ExpandableListActivity {
 		super.onCreate(savedInstanceState);
 		groupUtils = new GroupUtils(this);
 		contactUtils = new ContactUtils(this);
-	}
+	}  
 	
 	@Override
 	protected void onStart() {
@@ -46,7 +46,7 @@ public class ContactSelection extends ExpandableListActivity {
 		
 		initialAllMembersGroup();
 		initialAdapter();
-		initialCheckBox();
+		//initialCheckBox();
 		
 	}
 

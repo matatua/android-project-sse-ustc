@@ -45,7 +45,7 @@
   			  android:layout_width="fill_parent"
   			  android:layout_height="wrap_content"
   			  android:visibility="invisible"
-  			  
+  			  android:background="@color/group_list_background_color"
   			  >
 
   	</ListView>

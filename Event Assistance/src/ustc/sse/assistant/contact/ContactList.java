@@ -11,6 +11,7 @@ import ustc.sse.assistant.contact.data.GroupUtils;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract.CommonDataKinds.Photo;
@@ -33,15 +34,25 @@ import android.widget.TextView;
 public class ContactList extends Activity {
 	
 	public static final long NONE_GROUP_ID = -2;
-	public static final long DEFAULT_GROUP = -1;
+	public static final long DEFAULT_GROUP_ID = -1;
 	public static final String TAG = "ContactList";
+	
+	public static final Group DEFAULT_GROUP;
+	
+	static {
+		DEFAULT_GROUP = new Group();
+		DEFAULT_GROUP.setGroupId(DEFAULT_GROUP_ID);
+		DEFAULT_GROUP.setTitle("All");
+		
+	}
 	
 	private ContactUtils cu;
 	private GroupUtils gu;
 	private ListView groupListView;
 	private ListView contactListView;
 	private SharedPreferences sharedPreference;
-	private long lastSelectedGroup;
+	
+	private Group groupSelected;
 	
 	private TextView groupTitleTextView;
 
@@ -54,7 +65,9 @@ public class ContactList extends Activity {
 		cu = new ContactUtils(this);
 		gu = new GroupUtils(this);
 		
-		
+		groupListView = (ListView) findViewById(R.id.groupListView);
+		groupTitleTextView = (TextView) findViewById(R.id.selectedGroupTitleText);
+		contactListView = (ListView) findViewById(R.id.contactListView);
 			
 	}
 	
@@ -116,7 +129,7 @@ public class ContactList extends Activity {
 				//hide groups and show contacts
 				groupListView.setVisibility(View.INVISIBLE);
 				contactListView.setVisibility(View.VISIBLE);
-				lastSelectedGroup = id;
+				groupSelected.setGroupId(groupId);
 				
 			}
 		});
@@ -139,18 +152,25 @@ public class ContactList extends Activity {
 	
 	private void loadLastSelectedGroup() {
 		sharedPreference = getPreferences(MODE_WORLD_WRITEABLE);
-		lastSelectedGroup = sharedPreference.getLong(Groups._ID, NONE_GROUP_ID);
+		Long lastSelectedGroup = sharedPreference.getLong(Groups._ID, NONE_GROUP_ID);
+		
+		if (lastSelectedGroup == NONE_GROUP_ID) {
+			lastSelectedGroup = DEFAULT_GROUP_ID;
+			groupSelected = DEFAULT_GROUP;
+			groupTitleTextView.setText(R.string.contact_list_group_all);
+			
+		} else {
+			groupSelected = gu.getGroupById(lastSelectedGroup);
+			if (null == groupSelected) {
+				groupSelected = DEFAULT_GROUP;		
+			} 
+			groupTitleTextView.setText(groupSelected.getTitle());
+		}
 	}
 	
 	private void prepareGroupListView() {
-		groupListView = (ListView) findViewById(R.id.groupListView);
-		groupTitleTextView = (TextView) findViewById(R.id.selectedGroupTitleText);
-		
-		if (lastSelectedGroup == NONE_GROUP_ID) {
-			lastSelectedGroup = DEFAULT_GROUP;
-			groupTitleTextView.setText(R.string.contact_list_group_all);
-		} 		
-		
+
+		groupTitleTextView.setText(groupSelected.getTitle());
 
 		int layout = R.layout.contact_list_group_item;
 		String[] from = {Groups._ID, Groups.TITLE};
@@ -158,12 +178,6 @@ public class ContactList extends Activity {
 		List<Map<String, Object>> data = 
 			GroupUtils.groupsToList(gu.getAllGroups());
 		
-//		Cursor c = gu.getGroupCursor();
-//		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, 
-//															  layout, 
-//															  c, 
-//															  from, 
-//															  to);
 		SimpleAdapter adapter = new SimpleAdapter(this, data, layout, from, to);
 		
 		groupListView.setAdapter(adapter);
@@ -171,13 +185,9 @@ public class ContactList extends Activity {
 	}
 	
 	private void prepareGroupMemberListView() {
-		contactListView = (ListView) findViewById(R.id.contactListView);
-		
+	
 		ListAdapter adapter = null;
-		if (lastSelectedGroup == NONE_GROUP_ID) {
-			lastSelectedGroup = DEFAULT_GROUP;			
-		} 
-		adapter = generateContactListViewAdapter(lastSelectedGroup);
+		adapter = generateContactListViewAdapter(groupSelected.getGroupId());
 		
 		contactListView.setAdapter(adapter);
 		
@@ -190,7 +200,7 @@ public class ContactList extends Activity {
 	 */
 	private ListAdapter generateContactListViewAdapter(long groupId) {
 		List<Map<String, Object>> contacts = null;
-		if (groupId == DEFAULT_GROUP) {				
+		if (groupId == DEFAULT_GROUP_ID) {				
 			contacts = ContactUtils.listToMap(cu.getAllContactsBasicInfo());
 		} else {
 			contacts = ContactUtils.listToMap(cu.getContactsBasicInfoByGroup(new Group(groupId)));
@@ -216,7 +226,7 @@ public class ContactList extends Activity {
 	 */
 	private void saveLastSelectedGroupId() {
 		getPreferences(MODE_WORLD_WRITEABLE).edit()
-											.putLong(Groups._ID, lastSelectedGroup)
+											.putLong(Groups._ID, groupSelected.getGroupId())
 											.commit();
 		
 	}

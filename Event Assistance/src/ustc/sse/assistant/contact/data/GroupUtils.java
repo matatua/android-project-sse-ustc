@@ -44,7 +44,7 @@ public class GroupUtils {
 		
 		//add a default group named All
 		Group all = new Group();
-		all.setGroupId(ContactList.DEFAULT_GROUP);
+		all.setGroupId(ContactList.DEFAULT_GROUP_ID);
 		all.setNote("Default group");
 		all.setTitle(activity.getString(R.string.contact_list_group_all));
 		groups.add(all);
@@ -149,5 +149,33 @@ public class GroupUtils {
 			listOfMaps.add(groupMapping);			
 		}
 		return listOfMaps;
+	}
+
+	/**
+	 * get a group's title by id
+	 * @param groupId
+	 * @return
+	 */
+	public Group getGroupById(Long groupId) {
+		ContentResolver cr = activity.getContentResolver();
+		Group group = null;
+		Cursor c = cr.query(Groups.CONTENT_URI,
+							 new String[]{Groups._ID, Groups.TITLE}, 
+							 Groups._ID + " = ? ", 
+							 new String[]{groupId.toString()}, 
+							 null);
+		
+		if (c != null) {
+			if (c.moveToFirst()) {
+				group = new Group();
+				int groupTitleColumnIndex = c.getColumnIndex(Groups.TITLE);
+				String groupTitle = c.getString(groupTitleColumnIndex);
+				
+				group.setTitle(groupTitle);
+				group.setGroupId(groupId);
+			}
+		}
+		
+		return group;
 	}
 }
