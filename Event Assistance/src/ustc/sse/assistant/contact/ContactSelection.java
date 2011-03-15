@@ -102,7 +102,7 @@ public class ContactSelection extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				
+				getIntent().putExtra(SELECTED_CONTACT, listView.getCheckedItemIds());
 				ContactSelection.this.setResult(RESULT_OK, getIntent());
 				ContactSelection.this.finish();
 				
