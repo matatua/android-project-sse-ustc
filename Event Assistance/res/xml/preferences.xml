@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android">
+  <PreferenceCategory android:title="默认提醒方式选择">
+ 	<ListPreference
+        android:key="ListPreference"
+        android:title="选择你喜欢的提醒方式"
+        android:dialogTitle="提醒方式"
+        android:entries="@array/entries_list_preference1"
+        android:entryValues="@array/entriesvalue_list_preference1"
+    />
+   </PreferenceCategory>
+   <PreferenceCategory android:title="默认前日提醒">
+ 	<ListPreference
+        android:key="ListPreference"
+        android:title="默认前日提醒天数"
+        android:dialogTitle="提醒天数"
+        android:entries="@array/entries_list_preference2"
+        android:entryValues="@array/entriesvalue_list_preference2"
+    />
+    <ListPreference
+        android:key="ListPreference"
+        android:title="默认每天提醒次数"
+        android:dialogTitle="提醒次数"
+        android:entries="@array/entries_list_preference3"
+        android:entryValues="@array/entriesvalue_list_preference3"
+    />
+   </PreferenceCategory>
+   <PreferenceCategory android:title="备份与还原">
+        <CheckBoxPreference
+            android:key="CheckBox1"
+            android:title="自动备份开关"
+            android:summaryOn="备份功能: 开启"
+            android:summaryOff="备份功能: 关闭"
+            android:defaultValue="true"
+        />
+        <ListPreference
+        	android:key="ListPreference"
+        	android:title="自动备份时间"
+        	android:dialogTitle="备份时间"
+        	android:entries="@array/entries_list_preference4"
+        	android:entryValues="@array/entriesvalue_list_preference4"
+    	/>
+    	<ListPreference
+        	android:key="ListPreference"
+        	android:title="备份位置"
+        	android:dialogTitle="内插卡"
+        	android:defaultValue="0"
+        	android:entries="@array/entries_list_preference5"
+        	android:entryValues="@array/entriesvalue_list_preference5"
+    	/>
+    </PreferenceCategory>
+</PreferenceScreen>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string-array name="entries_list_preference1">
+   	 	<item>闹钟</item>
+    	<item>振动</item>
+    	<item>提示栏</item>
+	</string-array>
+	<string-array name="entries_list_preference2">
+   	 	<item>1天</item>
+    	<item>2天</item>
+    	<item>3天</item>
+    	<item>4天</item>
+    	<item>5天</item>
+    	<item>6天</item>
+    	<item>7天</item>
+    	<item>8天</item>
+    	<item>9天</item>
+    	<item>10天</item>
+    	<item>11天</item>
+    	<item>12天</item>
+    	<item>13天</item>
+    	<item>14天</item>
+    	<item>15天</item>
+	</string-array>
+	<string-array name="entries_list_preference3">
+   	 	<item>1次</item>
+    	<item>2次</item>
+    	<item>3次</item>
+    	<item>4次</item>
+    	<item>5次</item>
+    	<item>6次</item>
+    	<item>7次</item>
+    	<item>8次</item>
+    	<item>9次</item>
+    	<item>10次</item>
+    	<item>11次</item>
+    	<item>12次</item>
+	</string-array>
+	<string-array name="entries_list_preference4">
+   	 	<item>1天</item>
+    	<item>2天</item>
+    	<item>3天</item>
+    	<item>5天</item>
+    	<item>7天</item>
+    	<item>10天</item>
+	</string-array>
+	<string-array name="entries_list_preference5">
+   	 	<item>机身内存</item>
+    	<item>SD卡</item>
+	</string-array>
+	<string-array name="entriesvalue_list_preference1">
+    	<item>1</item>
+    	<item>2</item>
+    	<item>3</item>
+	</string-array>
+	<string-array name="entriesvalue_list_preference2">
+    	<item>4</item>
+    	<item>5</item>
+    	<item>6</item>
+    	<item>7</item>
+    	<item>8</item>
+    	<item>9</item>
+    	<item>10</item>
+    	<item>11</item>
+    	<item>12</item>
+    	<item>13</item>
+    	<item>14</item>
+    	<item>15</item>
+    	<item>16</item>
+    	<item>17</item>
+    	<item>18</item>
+	</string-array>
+	<string-array name="entriesvalue_list_preference3">
+    	<item>19</item>
+    	<item>20</item>
+    	<item>21</item>
+    	<item>22</item>
+    	<item>23</item>
+    	<item>24</item>
+    	<item>25</item>
+    	<item>26</item>
+    	<item>27</item>
+    	<item>28</item>
+    	<item>29</item>
+    	<item>30</item>
+	</string-array>
+	<string-array name="entriesvalue_list_preference4">
+    	<item>31</item>
+    	<item>32</item>
+    	<item>33</item>
+    	<item>34</item>
+    	<item>35</item>
+    	<item>36</item>
+	</string-array>
+	<string-array name="entriesvalue_list_preference5">
+    	<item>37</item>
+    	<item>38</item>
+	</string-array>
+</resources>
