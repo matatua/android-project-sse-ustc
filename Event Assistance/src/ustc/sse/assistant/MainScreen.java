@@ -6,6 +6,7 @@
 package ustc.sse.assistant;
 
 import ustc.sse.assistant.contact.ContactList;
+import ustc.sse.assistant.event.EventAdd;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,5 +34,16 @@ public class MainScreen extends Activity {
 				MainScreen.this.startActivity(contactIntent);
 			}
 		});
+    	
+    	ImageButton calendarImageButton = (ImageButton) findViewById(R.id.calendar_imageButton);
+    	calendarImageButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent eventIntent = new Intent(MainScreen.this, EventAdd.class);
+				MainScreen.this.startActivity(eventIntent);
+			}
+		});
+    	
     }
 }

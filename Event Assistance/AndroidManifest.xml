@@ -24,6 +24,7 @@
         <activity android:name=".contact.ContactDetail"></activity>
         <activity android:name=".contact.ContactList"></activity>
         <activity android:name=".contact.ContactEdit"></activity>
+        <activity android:name=".event.EventAdd"></activity>
 
     </application>
 

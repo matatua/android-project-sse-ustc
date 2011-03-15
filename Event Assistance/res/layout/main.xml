@@ -37,6 +37,7 @@
 	    	<ImageButton android:src="@drawable/icon" 
 	    		android:layout_width="wrap_content"
 	    		android:layout_height="wrap_content"
+	    		android:id="@+id/calendar_imageButton"
 	    		>
 	    	</ImageButton>
 	    	<TextView android:layout_width="wrap_content"

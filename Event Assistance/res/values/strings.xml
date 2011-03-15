@@ -16,5 +16,16 @@
     <string name="contact_edit_cancel">Cancel</string>
     <string name="contact_edit_save">Save</string>
     <string name="contact_edit_name">Name:</string>
-    <string name="contact_edit_birthday_button_text">Pick a data</string>
+    <string name="contact_edit_birthday_button_text">Pick a data</string>	
+	<string name="event_content">内容</string>
+	<string name="event_beginTime">开始时间</string>
+	<string name="event_endTime">结束时间</string>
+	<string name="event_location">发生地点</string>
+	<string name="event_note">备注</string>
+	<string name="event_alarm">当日提醒</string>
+	<string name="event_priorAlarm">提前</string>
+	<string name="event_repeat">重复次数</string>
+	<string name="event_alarmType">提醒方式</string>
+	<string name="event_save">保存</string>
+	<string name="event_cancel">取消</string>
 </resources> 

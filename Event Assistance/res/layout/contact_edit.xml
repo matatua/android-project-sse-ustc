@@ -56,9 +56,9 @@
   				>
   				
   	<Button android:id="@+id/contact_edit_cancel_button"
-  			android:layout_width="wrap_content"
+  			android:layout_weight="1"
+  			android:layout_width="0dp"
   			android:layout_height="wrap_content"
-  			android:layout_weight="1.0"
   			android:textSize="@dimen/contact_edit_text_size"
   			android:text="@string/contact_edit_cancel"
   			android:gravity="center"
@@ -67,9 +67,9 @@
   	</Button>
   	
   	<Button android:id="@+id/contact_edit_save_button"
-  			android:layout_width="wrap_content"
+  			android:layout_weight="1"
+  			android:layout_width="0dp"
   			android:layout_height="wrap_content"
-  			android:layout_weight="1.0"
   			android:textSize="@dimen/contact_edit_text_size"
   			android:text="@string/contact_edit_save"
   			android:gravity="center">
