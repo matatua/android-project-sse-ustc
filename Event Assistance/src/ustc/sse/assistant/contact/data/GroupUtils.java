@@ -13,6 +13,7 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
+import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Groups;
 
 /**
@@ -30,6 +31,11 @@ public class GroupUtils {
 		this.activity = activity;
 	}
 	
+	/**
+	 * this method return all the groups with _id, title, summary information.
+	 * Note: the first group is a default group added manually which including all the contacts.
+	 * @return
+	 */
 	public List<Group> getAllGroups() {
 		ContentResolver cr = activity.getContentResolver();
 		List<Group> groups = new ArrayList<Group>();
@@ -43,11 +49,13 @@ public class GroupUtils {
 		activity.startManagingCursor(cur);
 		
 		//add a default group named All
-		Group all = new Group();
-		all.setGroupId(ContactList.DEFAULT_GROUP_ID);
-		all.setNote("Default group");
-		all.setTitle(activity.getString(R.string.contact_list_group_all));
-		groups.add(all);
+		Group defaultGroup = new Group();
+		defaultGroup.setGroupId(ContactList.DEFAULT_GROUP_ID);
+		defaultGroup.setTitle(activity.getString(R.string.contact_list_group_all));
+		defaultGroup.setNote("Default group");
+		defaultGroup.setSummaryCount(0);
+		defaultGroup.setSummaryCountWithPhone(0);
+		groups.add(defaultGroup);
 		
 		if (cur != null && cur.moveToFirst()) {
 			int groupIdIndex = cur.getColumnIndex(Groups._ID);
@@ -80,6 +88,38 @@ public class GroupUtils {
 		activity.startManagingCursor(cur);
 		
 		return cur;
+	}
+	
+	public Integer getGroupSummaryCountInfo(Group group) {
+		ContentResolver cr = activity.getContentResolver();
+		Cursor cursor = null;
+		if (group.getGroupId() == ContactList.DEFAULT_GROUP_ID) {
+			cursor = cr.query(Contacts.CONTENT_URI,
+							  new String[]{Contacts._COUNT}, 
+							  null, 
+							  null, 
+							  null);
+			if (cursor != null) {
+				if (cursor.moveToFirst()) {
+					return cursor.getInt(0);
+				}
+			}
+		}
+		
+		//other user made group
+		Uri contentSummaryUri = Groups.CONTENT_SUMMARY_URI;
+		cursor = cr.query(contentSummaryUri, 
+								 new String[]{Groups.SUMMARY_COUNT}, 
+								 Groups._ID + " = ? ", 
+								 new String[]{Long.toString(group.getGroupId())}, 
+								 null);
+		if (cursor != null) {
+			if (cursor.moveToFirst()) {
+				int summaryCountIndex = cursor.getColumnIndex(Groups.SUMMARY_COUNT);				
+				return cursor.getInt(summaryCountIndex);
+			}
+		}
+		return null;
 	}
 	
 	public int updateGroup(ContentValues cv) {

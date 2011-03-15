@@ -11,24 +11,19 @@ import ustc.sse.assistant.contact.data.GroupUtils;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract.CommonDataKinds.Photo;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Groups;
-import android.provider.ContactsContract.RawContacts;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 public class ContactList extends Activity {
@@ -36,13 +31,16 @@ public class ContactList extends Activity {
 	public static final long NONE_GROUP_ID = -2;
 	public static final long DEFAULT_GROUP_ID = -1;
 	public static final String TAG = "ContactList";
-	
+	//Default group here means this group contains all the contacts
 	public static final Group DEFAULT_GROUP;
 	
 	static {
 		DEFAULT_GROUP = new Group();
 		DEFAULT_GROUP.setGroupId(DEFAULT_GROUP_ID);
 		DEFAULT_GROUP.setTitle("All");
+		DEFAULT_GROUP.setNote("DEFAULT_GROUP");
+		DEFAULT_GROUP.setSummaryCount(0);
+		DEFAULT_GROUP.setSummaryCountWithPhone(0);
 		
 	}
 	

@@ -15,16 +15,15 @@
             </intent-filter>
 
         </activity>
+        <activity android:name=".contact.ContactDetail"></activity>
+        <activity android:name=".contact.ContactList"></activity>
+        <activity android:name=".contact.ContactEdit"></activity>
         <activity android:name=".contact.ContactSelection">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"></action>
                 <category android:name="android.intent.category.LAUNCHER"></category>
             </intent-filter>
         </activity>
-        <activity android:name=".contact.ContactDetail"></activity>
-        <activity android:name=".contact.ContactList"></activity>
-        <activity android:name=".contact.ContactEdit"></activity>
-        <activity android:name=".event.EventAdd"></activity>
 
     </application>
 

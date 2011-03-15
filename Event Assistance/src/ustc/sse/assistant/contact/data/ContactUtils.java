@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ustc.sse.assistant.contact.ContactList;
+
 import android.app.Activity;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
@@ -108,6 +110,10 @@ public class ContactUtils {
 	 * @return
 	 */
 	public List<Contact> getContactsBasicInfoByGroup(Group g) {
+		if (ContactList.DEFAULT_GROUP_ID == g.getGroupId()) {
+			return getAllContactsBasicInfo();
+		}
+		
 		ContentResolver cr = activity.getContentResolver();
 	
 		List<Contact> contacts = new ArrayList<Contact>();
@@ -149,6 +155,40 @@ public class ContactUtils {
 		return contacts;
 	}
 	
+	/**
+	 * return the cursor including one particular group.
+	 * members' information contain contact id, display name.
+	 * @param g
+	 * @return
+	 */
+	public Cursor getContactsByGroup(Group g) {
+		if (ContactList.DEFAULT_GROUP_ID == g.getGroupId()) {
+			return getAllContactsBasicInfoCursor();
+		}
+		
+		ContentResolver cr = activity.getContentResolver();
+	
+		Cursor cur = null;
+		
+		Uri dataUri = ContactsContract.Data.CONTENT_URI;
+		String[] groupProjection = {Data.DISPLAY_NAME,
+									Data.PHOTO_ID,
+									Data.CONTACT_ID};
+		
+		String selection = Data.MIMETYPE + " = ?" + " AND " 
+									+ GroupMembership.GROUP_ROW_ID + " = ?";
+		
+		String[] selectionArgs = {GroupMembership.CONTENT_ITEM_TYPE, Long.toString(g.getGroupId())};
+		cur = cr.query(dataUri, groupProjection, selection, selectionArgs, null);
+		
+		activity.startManagingCursor(cur);
+		return cur;
+	}
+	/**
+	 * get a contact's full information by contact id
+	 * @param contactId
+	 * @return
+	 */
 	public Contact getContactById(long contactId) {
 		String displayName = getDisplayName(contactId);
 		String note = getNote(contactId);

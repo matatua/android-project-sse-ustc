@@ -21,10 +21,10 @@ public class MainScreen extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
-        initialImageButtons();
+        initImageButtons();
     }
     
-    private void initialImageButtons() {
+    private void initImageButtons() {
     	ImageButton contactImageButton = (ImageButton) findViewById(R.id.contact_imageButton);
     	contactImageButton.setOnClickListener(new OnClickListener() {
 			
