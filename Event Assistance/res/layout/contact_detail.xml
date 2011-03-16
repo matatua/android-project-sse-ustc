@@ -1,61 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="fill_parent"
-  android:layout_height="fill_parent"
-  android:orientation="vertical">
-  
-  <LinearLayout android:layout_width="fill_parent"
-  				android:layout_height="wrap_content"
-  				android:orientation="horizontal"
-  				>
-  				
-  	<ImageView android:layout_width="wrap_content"
-  				android:layout_height="wrap_content"
-  				android:id="@+id/contact_detail_image"
-  				android:src="@drawable/contact_detail_name">
-  	</ImageView>
-  	
-  	<TextView android:layout_width="wrap_content"
-  				android:layout_height="wrap_content"
-  				android:textSize="@dimen/contact_detail_text_size"
-  				android:id="@+id/contact_detail_name">
-  	</TextView>
-  </LinearLayout>
-  
-   <LinearLayout android:layout_width="fill_parent"
-  				android:layout_height="wrap_content"
-  				android:orientation="horizontal"
-  				>
-  	<ImageView android:layout_width="wrap_content"
-  				android:layout_height="wrap_content"
-  				android:id="@+id/contact_detail_birthday_image"
-  				android:src="@drawable/contact_detail_birthday">
-  	</ImageView>
-  	
-  	<TextView android:layout_width="wrap_content"
-  				android:layout_height="wrap_content"
-  				android:textSize="@dimen/contact_detail_text_size"
-  				android:id="@+id/contact_detail_birthday_text">
-  	</TextView> 			
-  				
-  </LinearLayout>
-  
-  <LinearLayout android:layout_width="fill_parent"
-  				android:layout_height="wrap_content"
-  				android:orientation="horizontal"
-  				>
-  	<ImageView android:layout_width="wrap_content"
-  				android:layout_height="wrap_content"
-  				android:id="@+id/contact_detail_note_image"
-  				android:src="@drawable/contact_detail_note">
-  	</ImageView>
-  	
-  	<TextView android:layout_width="wrap_content"
-  				android:layout_height="wrap_content"
-  				android:textSize="@dimen/contact_detail_text_size"
-  				android:id="@+id/contact_detail_note_text">
-  	</TextView> 			
-  				
-  </LinearLayout>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:orientation="vertical">
+
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:orientation="horizontal">
+
+		<ImageView android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:id="@+id/contact_detail_image"
+			android:src="@drawable/contact_detail_name">
+		</ImageView>
+		<LinearLayout android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:orientation="vertical">
+			<TextView android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:text="Name:"></TextView>
+
+
+			<TextView android:layout_height="wrap_content" android:textSize="@dimen/contact_detail_text_size"
+				android:id="@+id/contact_detail_name" android:layout_width="fill_parent" android:text="@string/contact_detail_none">
+			</TextView>
+
+		</LinearLayout>
+
+	</LinearLayout>
+
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:orientation="horizontal">
+		<ImageView android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:id="@+id/contact_detail_birthday_image"
+			android:src="@drawable/contact_detail_birthday">
+		</ImageView>
+
+		<LinearLayout android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:orientation="vertical">
+			<TextView android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:text="Birthday:"></TextView>
+
+			<TextView android:layout_height="wrap_content" android:textSize="@dimen/contact_detail_text_size"
+				android:id="@+id/contact_detail_birthday_text" android:layout_width="fill_parent"
+				android:text="@string/contact_detail_none">
+			</TextView>
+		</LinearLayout>
+
+
+	</LinearLayout>
+
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:orientation="horizontal">
+		<ImageView android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:id="@+id/contact_detail_note_image"
+			android:src="@drawable/contact_detail_note">
+		</ImageView>
+
+		<LinearLayout android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:orientation="vertical">
+			<TextView android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:text="Note:"></TextView>
+
+			<TextView android:layout_height="wrap_content" android:textSize="@dimen/contact_detail_text_size"
+				android:id="@+id/contact_detail_note_text" android:layout_width="fill_parent"
+				android:text="@string/contact_detail_none">
+			</TextView>
+		</LinearLayout>
+
+
+	</LinearLayout>
 </LinearLayout>

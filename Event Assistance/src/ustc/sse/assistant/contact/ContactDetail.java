@@ -73,7 +73,9 @@ public class ContactDetail extends Activity {
 					Long.parseLong(birthday)));
 		}
 		TextView noteTextView = (TextView) findViewById(R.id.contact_detail_note_text);
-		noteTextView.setText(note);
+		if (note != null) {
+			noteTextView.setText(note);
+		}
 	}
 	
 	@Override

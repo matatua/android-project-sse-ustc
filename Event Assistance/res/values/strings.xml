@@ -12,6 +12,7 @@
     <string name="main_screen_button_share_text">Share</string>
     <string name="contact_list_group_all">All</string>
     <string name="contact_detail_option_menu_edit">Edit</string>
+    <string name="contact_detail_none">None</string>
     <string name="contact_edit_birthday_text">Birthday:</string>
     <string name="contact_edit_cancel">Cancel</string>
     <string name="contact_edit_save">Save</string>

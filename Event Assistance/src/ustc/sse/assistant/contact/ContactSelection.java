@@ -5,6 +5,7 @@ import ustc.sse.assistant.contact.data.ContactUtils;
 import ustc.sse.assistant.contact.data.Group;
 import ustc.sse.assistant.contact.data.GroupUtils;
 import android.app.Activity;
+import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -40,6 +41,7 @@ public class ContactSelection extends Activity {
 		contactUtils = new ContactUtils(this);
 		groupUtils = new GroupUtils(this);
 		listView = (ListView) findViewById(R.id.contact_selection_list_view);
+		listView.setSmoothScrollbarEnabled(true);
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
