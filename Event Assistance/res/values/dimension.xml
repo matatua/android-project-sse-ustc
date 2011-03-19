@@ -3,7 +3,7 @@
     <dimen name="main_screen_title_size">24dp</dimen>
     <dimen name="main_screen_title_marginTop">10dp</dimen>
     <dimen name="main_screen_buttons_container_maringTop">5dp</dimen>
-    <dimen name="main_screen_buttons_row_margin">15dp</dimen>
+    <dimen name="main_screen_buttons_row_margin">0dp</dimen>
     <dimen name="main_screen_button_marginRight">15dp</dimen>
     <dimen name="main_screen_button_marginLeft">15dp</dimen>
     <dimen name="main_screen_button_text_size">15dp</dimen>

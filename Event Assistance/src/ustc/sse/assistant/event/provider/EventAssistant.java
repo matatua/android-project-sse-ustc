@@ -50,6 +50,8 @@ public class EventAssistant {
 		
 		public static final String CONTACT_ID = "contact_id";
 		
+		public static final String DISPLAY_NAME = "display_name";
+		
 		public static final String DEFAULT_SORT_ORDER = _ID + " DESC";
 
 	}

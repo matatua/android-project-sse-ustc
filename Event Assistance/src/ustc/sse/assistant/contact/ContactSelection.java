@@ -1,12 +1,17 @@
 package ustc.sse.assistant.contact;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import ustc.sse.assistant.R;
 import ustc.sse.assistant.contact.data.ContactUtils;
 import ustc.sse.assistant.contact.data.Group;
 import ustc.sse.assistant.contact.data.GroupUtils;
 import android.app.Activity;
-import android.app.ListActivity;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract.Contacts;
@@ -21,10 +26,11 @@ import android.widget.SimpleCursorAdapter;
 public class ContactSelection extends Activity {
 	
 	public static final Boolean IS_CONTAIN_GROUP = true;
-	public static final String  CONTAIN_GROUP = "CONTAIN_GROUP";
-	public static final String GROUP_ID	= "GROUP_ID";
+	public static final String  CONTAIN_GROUP = "contain_group";
+	public static final String GROUP_ID	= "gorup_id";
 	private static final int WAITING_CONTACT_ID = 100;
-	private static final String SELECTED_CONTACT = "SELECTED_CONTACT";
+	public static final String SELECTED_CONTACT_IDS = "selected_contact_ids";
+	public static final String SELECTED_CONTACT_DISPLAY_NAME = "selected_contact_display_name";
 	
 	private boolean allSelected = false;
 	private ContactUtils contactUtils;
@@ -33,6 +39,8 @@ public class ContactSelection extends Activity {
 	private Button selectAllButton;
 	private Button addButton;
 	
+	private Map<Integer, Long> checkedItemPositions;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +48,8 @@ public class ContactSelection extends Activity {
 		setContentView(R.layout.contact_selection);
 		contactUtils = new ContactUtils(this);
 		groupUtils = new GroupUtils(this);
+		checkedItemPositions = new HashMap<Integer, Long>();
+		
 		listView = (ListView) findViewById(R.id.contact_selection_list_view);
 		listView.setSmoothScrollbarEnabled(true);
 		listView.setOnItemClickListener(new OnItemClickListener() {
@@ -48,15 +58,24 @@ public class ContactSelection extends Activity {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				ContactSelection.this.addButton.setText("Add (" + ContactSelection.this.listView.getCheckedItemIds().length + ")");
+				//if not all items are checked
 				if (ContactSelection.this.listView.getCheckedItemIds().length != 
 						ContactSelection.this.listView.getAdapter().getCount()) {
 					allSelected = false;
 					ContactSelection.this.selectAllButton.setText("Select all");
 				} else {
+					//if all items are checked
 					allSelected = true;
 					ContactSelection.this.selectAllButton.setText("cancel selections");
-
 				}
+				
+				//put or remove the clicked item
+				if (checkedItemPositions.containsKey(position)) {
+					checkedItemPositions.remove(position);
+				} else {
+					checkedItemPositions.put(position, id);
+				}
+				
 			}
 		});
 		
@@ -67,11 +86,9 @@ public class ContactSelection extends Activity {
 		super.onStart();
 		
 		initButtons();
-		/*if (containGrouop()) {
-			initGroups();
-		}	*/
+	
 		initContacts();
-		//prepareCheckedItem();
+	
 	}
 
 	private void initButtons() {
@@ -84,13 +101,16 @@ public class ContactSelection extends Activity {
 				//select all the contact
 				if (!allSelected) {
 					for (int i = 0; i < ContactSelection.this.listView.getAdapter().getCount(); i++) {
-						ContactSelection.this.listView.setItemChecked(i, true);
+						listView.setItemChecked(i, true);
+						Long id = listView.getItemIdAtPosition(i);
+						checkedItemPositions.put(i, id);
 						allSelected = true;
 						selectAllButton.setText("Cancel selections");
 					}
 				} else {
 					for (int i = 0; i < ContactSelection.this.listView.getAdapter().getCount(); i++) {
 						ContactSelection.this.listView.setItemChecked(i, false); 
+						checkedItemPositions.clear();
 						allSelected = false;
 						selectAllButton.setText("Select all");
 					}
@@ -104,7 +124,21 @@ public class ContactSelection extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				getIntent().putExtra(SELECTED_CONTACT, listView.getCheckedItemIds());
+				List<Long> checkedItemIds = new ArrayList<Long>();
+				List<String> checkedItemsDisplayName = new ArrayList<String>();
+				Iterator<Entry<Integer, Long>> checkedItemsPositionIter = checkedItemPositions.entrySet().iterator();
+				while (checkedItemsPositionIter.hasNext()) {
+					Entry<Integer, Long> entry = checkedItemsPositionIter.next();
+					Integer position = entry.getKey();
+					Long id = entry.getValue();
+					Cursor cur = (Cursor) listView.getItemAtPosition(position);
+					String name = cur.getString(cur.getColumnIndex(Contacts.DISPLAY_NAME));
+					checkedItemIds.add(id);
+					checkedItemsDisplayName.add(name);
+				}
+				
+				getIntent().putExtra(SELECTED_CONTACT_IDS, checkedItemIds.toArray());
+				getIntent().putExtra(SELECTED_CONTACT_DISPLAY_NAME, checkedItemsDisplayName.toArray());
 				ContactSelection.this.setResult(RESULT_OK, getIntent());
 				ContactSelection.this.finish();
 				
@@ -113,17 +147,6 @@ public class ContactSelection extends Activity {
 		
 	}
 
-/*	private void prepareCheckedItem() {
-		long[] checkedItemId = getIntent().getLongArrayExtra(SELECTED_CONTACT);
-		if (checkedItemId != null) {
-			Map<Long, Integer> contactIdPositionMap = ((ContactSelectionListAdapter) listView.getAdapter()).getContactIdPositionMap();
-			for (long id : checkedItemId) {
-				Integer position = contactIdPositionMap.get(id);
-				listView.setItemChecked(position, true);
-			}
-		}
-	}*/
-
 	/**
 	 * here we store the selectedContact map in intent.
 	 * This map may be used.
@@ -131,52 +154,7 @@ public class ContactSelection extends Activity {
 	@Override
 	protected void onStop() {
 		super.onStop();
-		//execute when the activity not contain group
-		/*if (null != getIntent() && getIntent().getBooleanExtra(CONTAIN_GROUP, false)) {		
-			
-			getIntent().putExtra(SELECTED_CONTACT, listView.getCheckedItemIds());
-		
-		}*/
 	}
-	
-	/*
-	private boolean containGrouop() {
-		Intent intent = getIntent();
-		if (intent != null) {
-			return intent.getBooleanExtra(CONTAIN_GROUP, true);
-			
-		}
-		return true;
-	}*/
-	
-/*	private void initGroups() {
-		
-		List<Group> groups = groupUtils.getAllGroups();
-		for (Group g : groups) {
-			//make sure that the default group doesn't appear in this screen
-			if (g.getGroupId() != ContactList.DEFAULT_GROUP_ID) {
-				View groupView = getLayoutInflater().inflate(R.layout.contact_selection_group_view, null);
-				TextView titleTv = (TextView) groupView.findViewById(R.id.contact_selection_group_title);
-				titleTv.setText(g.getTitle());
-				groupView.setTag(g.getGroupId());
-				
-				groupView.setOnClickListener(new OnClickListener() {
-					
-					@Override
-					public void onClick(View v) {
-						Intent intent = new Intent(ContactSelection.this, ContactSelection.class);
-						intent.putExtra(CONTAIN_GROUP, false);
-						intent.putExtra(GROUP_ID, (Long) v.getTag());		
-						intent.putExtra(SELECTED_CONTACT, ContactSelection.this.listView.getCheckedItemIds());
-						ContactSelection.this.startActivityForResult(intent, WAITING_CONTACT_ID);
-					}
-				});
-				
-				listView.addHeaderView(groupView);
-			}
-		}
-	}*/
-	
 	
 	private void initContacts() {
 		Cursor contactsCursor = null;
@@ -203,58 +181,4 @@ public class ContactSelection extends Activity {
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		listView.setFocusable(false);
 	}
-	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-	/*	if (requestCode == WAITING_CONTACT_ID && data != null) {
-			long[] checkedItemId = data.getLongArrayExtra(SELECTED_CONTACT);
-			Map<Long, Integer> idPositionMap = ((ContactSelectionListAdapter) listView.getAdapter()).getContactIdPositionMap();
-
-			for (long id : checkedItemId) {
-				int position = idPositionMap.get(id);
-				listView.setItemChecked(position, true);
-			}
-					
-		}*/
-	}
-	
-	/*public static class ContactSelectionListAdapter extends SimpleCursorAdapter {
-
-		private Map<Long, Integer> contactIdPositionMap = new HashMap<Long, Integer>();
-		private int currentPosition;
-		
-		public ContactSelectionListAdapter(Context context, int layout,
-				Cursor c, String[] from, int[] to) {
-			super(context, layout, c, from, to);
-		}
-		
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			currentPosition = position;
-			return super.getView(position, convertView, parent);
-		}
-		
-		@Override
-		public View newView(Context context, Cursor cursor, ViewGroup parent) {
-			Long contactId = null;
-			if (cursor.getColumnIndex(Contacts._ID) != -1) {
-				contactId = cursor.getLong(cursor.getColumnIndex(Contacts._ID));
-			} else {
-				contactId = cursor.getLong(cursor.getColumnIndex(android.provider.ContactsContract.Data.CONTACT_ID));
-			}
-			contactIdPositionMap.put(contactId, currentPosition);
-			return super.newView(context, cursor, parent);
-		}
-		
-		@Override
-		protected void onContentChanged() {
-			contactIdPositionMap.clear();
-			super.onContentChanged();
-		}
-
-		public Map<Long, Integer> getContactIdPositionMap() {
-			return contactIdPositionMap;
-		}
-		
-	}*/
 }

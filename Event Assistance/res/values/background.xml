@@ -2,4 +2,5 @@
 <resources>
     <color name="group_list_background_color">#E6E6E6</color>
     <color name="default_background_color">#000000</color>
+    <color name="main_screen_image_button_pressed">#FFF8F8FF</color>
 </resources>
