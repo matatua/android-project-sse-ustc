@@ -1,7 +1,7 @@
 package ustc.sse.assistant.calendar;
 
-import Date.*;
 import ustc.sse.assistant.calendar.data.DateMapping;
+import ustc.sse.assistant.calendar.data.Lunar;
 import android.content.Context;
 
 public class OrderedSmartDateFactory implements SmartDateFactory {
@@ -29,22 +29,21 @@ public class OrderedSmartDateFactory implements SmartDateFactory {
 		} 
 		
 		//then check lunar calendar change the year,month and day into lunar year, month and day
-		RiqiTest date = new RiqiTest(year, month, day);
-		Integer lunarYear = date.getYear(); 
-		Integer lunarMonth = date.getMonth();
-		Integer lunarDay = date.getDay();
+		Lunar.getLunar(year, month, day);
+		Integer lunarYear = Lunar.getYear(); 
+		Integer lunarMonth = Lunar.getMonth();
+		Integer lunarDay = Lunar.getDay();
 		String yearText;
 		String monthText;
 		String dayText;
 		MappingDate lunarDate = new LunarDate(lunarYear, lunarMonth, lunarDay);
 
-		Lauar.getLunar(year.toString(), month.toString(), day.toString());
-		yearText = Lauar.getNongliYear() + "年";
-		monthText = Lauar.getNongliMonth() + "月";
-		dayText = Lauar.getNongliDay();
+		yearText = Lunar.getLunarYear() + "年";
+		monthText = Lunar.getLunarMonth() + "月";
+		dayText = Lunar.getLunarDay();
 
-		if(date.getIsLeap()){
-			monthText = "闰" + Lauar.getNongliMonth() + "月";
+		if(Lunar.getIsLeap()){
+			monthText = "闰" + Lunar.getLunarMonth() + "月";
 		}
 		
 		else {
