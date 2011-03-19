@@ -1,5 +1,6 @@
 package ustc.sse.assistant.calendar;
 
+import Date.*;
 import ustc.sse.assistant.calendar.data.DateMapping;
 import android.content.Context;
 
@@ -16,7 +17,7 @@ public class OrderedSmartDateFactory implements SmartDateFactory {
 	@Override
 	public SmartDate createSmartDate(Integer year, Integer month, Integer day) {
 		MappingDate gregorianDate = new GregorianDate(year, month, day);
-		String displayText = dateMapping.getFestivalDateMap().get(mappingDate);
+		String displayText = dateMapping.getFestivalDateMap().get(gregorianDate);
 		//first check festival in ordinary calendar
 		if (displayText != null) {
 			gregorianDate.setYearText(year.toString() + "年");
@@ -26,23 +27,45 @@ public class OrderedSmartDateFactory implements SmartDateFactory {
 			
 			return gregorianDate;
 		} 
+		
 		//then check lunar calendar change the year,month and day into lunar year, month and day
-		Integer lunarYear = ; 
-		Integer lunarMonth = ;
-		Integer lunarDay = ;
+		RiqiTest date = new RiqiTest(year, month, day);
+		Integer lunarYear = date.getYear(); 
+		Integer lunarMonth = date.getMonth();
+		Integer lunarDay = date.getDay();
+		String yearText;
+		String monthText;
+		String dayText;
 		MappingDate lunarDate = new LunarDate(lunarYear, lunarMonth, lunarDay);
-		displayText = dateMapping.getLunarDateMap().get(lunarDate);
+
+		Lauar.getLunar(year.toString(), month.toString(), day.toString());
+		yearText = Lauar.getNongliYear() + "年";
+		monthText = Lauar.getNongliMonth() + "月";
+		dayText = Lauar.getNongliDay();
+
+		if(date.getIsLeap()){
+			monthText = "闰" + Lauar.getNongliMonth() + "月";
+		}
+		
+		else {
+			displayText = dateMapping.getLunarDateMap().get(lunarDate);
+		}
+		
 		lunarDate.setYearText(yearText);
 		lunarDate.setMonthText(monthText);
 		lunarDate.setDayText(dayText);
+		lunarDate.setDisplayText(dayText);
 
 		if (displayText != null) {
 			lunarDate.setDisplayText(displayText);
 			//TODO use third party  lunar API to set yearText, monthText, and dayText
 			return lunarDate;
 		}
-		
-		lunarDate.setDisplayText(dayText);
+	
+		if(lunarDay == 1){
+			lunarDate.setDisplayText(monthText);	
+		}
+				
 		return lunarDate;
 	}
 	
