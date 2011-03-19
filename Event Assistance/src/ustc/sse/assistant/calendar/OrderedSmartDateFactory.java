@@ -1,8 +1,9 @@
 package ustc.sse.assistant.calendar;
 
+import java.util.Map;
+
 import ustc.sse.assistant.calendar.data.DateMapping;
 import ustc.sse.assistant.calendar.data.Lunar;
-import android.content.Context;
 
 public class OrderedSmartDateFactory implements SmartDateFactory {
 
@@ -10,8 +11,8 @@ public class OrderedSmartDateFactory implements SmartDateFactory {
 	
 	private DateMapping dateMapping;
 	
-	private OrderedSmartDateFactory(Context context) {
-		dateMapping = DateMapping.getInstance(context);
+	private OrderedSmartDateFactory() {
+		dateMapping = DateMapping.getInstance();
 	}
 	
 	@Override
@@ -47,7 +48,8 @@ public class OrderedSmartDateFactory implements SmartDateFactory {
 		}
 		
 		else {
-			displayText = dateMapping.getLunarDateMap().get(lunarDate);
+			Map<MappingDate, String> map = dateMapping.getLunarDateMap();
+			displayText = map.get(lunarDate);
 		}
 		
 		lunarDate.setYearText(yearText);
@@ -68,9 +70,9 @@ public class OrderedSmartDateFactory implements SmartDateFactory {
 		return lunarDate;
 	}
 	
-	public static SmartDateFactory getInstance(Context context) {
+	public static SmartDateFactory getInstance() {
 		if (orderedSmartDateFactory == null) {
-			orderedSmartDateFactory = new OrderedSmartDateFactory(context);
+			orderedSmartDateFactory = new OrderedSmartDateFactory();
 		}
 		return orderedSmartDateFactory;
 	}

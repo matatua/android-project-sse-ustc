@@ -104,8 +104,6 @@ public class AbstractDate implements SmartDate {
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
 		AbstractDate other = (AbstractDate) obj;
 		if (day == null) {
 			if (other.day != null)

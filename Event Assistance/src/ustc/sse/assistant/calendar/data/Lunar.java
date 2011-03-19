@@ -35,9 +35,6 @@ public final class Lunar
     53840, 54560, 56645, 46496, 22224, 21938, 18864, 
     42359, 42160, 43600, 111189, 27936, 44448 };
 
-  private static int[] solarMonth = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 
-    30, 31 };
-
   private static String[] Gan = { "甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", 
     "壬", "癸" };
 
@@ -46,11 +43,6 @@ public final class Lunar
 
   private static String[] Animals = { "鼠", "牛", "虎", "兔", "龙", "蛇", "马", "羊", 
     "猴", "鸡", "狗", "猪" };
-
-  private static int[] sTermInfo = { 0, 21208, 42467, 63836, 85337, 107014, 
-    128867, 150921, 173149, 195551, 218072, 240693, 263343, 285989, 
-    308563, 331033, 353350, 375494, 397447, 419210, 440795, 462224, 
-    483532, 504758 };
 
   private static String[] nStr1 = { "日", "一", "二", "三", "四", "五", "六", "七", 
     "八", "九", "十" };
@@ -97,7 +89,7 @@ public final class Lunar
 
   private static String cYear(int y)
   {
-    String s = " ";
+    String s = "";
 
     while (y > 0)
     {

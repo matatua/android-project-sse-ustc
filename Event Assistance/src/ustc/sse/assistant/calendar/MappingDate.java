@@ -29,8 +29,6 @@ public class MappingDate extends AbstractDate {
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
 		MappingDate other = (MappingDate) obj;
 		if (day == null) {
 			if (other.day != null)
