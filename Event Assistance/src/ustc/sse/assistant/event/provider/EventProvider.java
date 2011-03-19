@@ -6,6 +6,7 @@ package ustc.sse.assistant.event.provider;
 import java.util.HashMap;
 
 import ustc.sse.assistant.event.provider.EventAssistant.Event;
+import ustc.sse.assistant.event.provider.EventAssistant.EventContact;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -65,6 +66,13 @@ public class EventProvider extends ContentProvider {
 			+ Event.PRIOR_ALARM_DAY + " INTEGER,"
 			+ Event.PRIOR_REPEAT_TIME + " INTEGER,"
 			+ ");";
+			
+			sql += "CREATE TABLE " + EventContactProvider.EVENT_CONTACT_TABLE_NAME + " ( "
+				  	 	+ EventContact._ID + " INTEGER PRIMARY KEY,"
+				  	 	+ EventContact.CONTACT_ID + " INTEGER,"
+				  	 	+ EventContact.EVENT_ID + " INTEGER,"
+				  	 	+ EventContact.DISPLAY_NAME + " TEXT,"
+				  	 	+ ");";
 			db.execSQL(sql);
 		}
 
@@ -73,6 +81,7 @@ public class EventProvider extends ContentProvider {
 			  Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
 	                    + newVersion + ", which will destroy all old data");
 	            db.execSQL("DROP TABLE IF EXISTS " + EVENT_TABLE_NAME);
+	            db.execSQL("DROP TABLE IF EXISTS " + EventContactProvider.EVENT_CONTACT_TABLE_NAME);
 	            onCreate(db);			
 		}
 		
@@ -147,6 +156,7 @@ public class EventProvider extends ContentProvider {
 		if (initialValues == null) {
 			throw new NullPointerException("InitialValues is null");
 		}
+		
 		
 		SQLiteDatabase db = openHelper.getWritableDatabase();
 		long rowId = db.insert(EVENT_TABLE_NAME, Event.NOTE, initialValues);
