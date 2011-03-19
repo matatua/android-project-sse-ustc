@@ -15,30 +15,35 @@ public class OrderedSmartDateFactory implements SmartDateFactory {
 	
 	@Override
 	public SmartDate createSmartDate(Integer year, Integer month, Integer day) {
-		MappingDate mappingDate = new MappingDate(year, month, day);
+		MappingDate gregorianDate = new GregorianDate(year, month, day);
 		String displayText = dateMapping.getFestivalDateMap().get(mappingDate);
 		//first check festival in ordinary calendar
 		if (displayText != null) {
-			mappingDate.setYearText(year.toString() + "年");
-			mappingDate.setMonthText(month.toString() + "月");
-			mappingDate.setDayText(day.toString() + "日");
-			mappingDate.setDisplayText(displayText);
+			gregorianDate.setYearText(year.toString() + "年");
+			gregorianDate.setMonthText(month.toString() + "月");
+			gregorianDate.setDayText(day.toString() + "日");
+			gregorianDate.setDisplayText(displayText);
 			
-			return mappingDate;
+			return gregorianDate;
 		} 
 		//then check lunar calendar change the year,month and day into lunar year, month and day
 		Integer lunarYear = ; 
 		Integer lunarMonth = ;
 		Integer lunarDay = ;
-		mappingDate = new MappingDate(lunarYear, lunarMonth, lunarDay);
-		displayText = dateMapping.getLunarDateMap().get(mappingDate);
+		MappingDate lunarDate = new LunarDate(lunarYear, lunarMonth, lunarDay);
+		displayText = dateMapping.getLunarDateMap().get(lunarDate);
+		lunarDate.setYearText(yearText);
+		lunarDate.setMonthText(monthText);
+		lunarDate.setDayText(dayText);
+
 		if (displayText != null) {
-			mappingDate.setDisplayText(displayText);
+			lunarDate.setDisplayText(displayText);
 			//TODO use third party  lunar API to set yearText, monthText, and dayText
-			
-			return mappingDate;
+			return lunarDate;
 		}
-		return null;
+		
+		lunarDate.setDisplayText(dayText);
+		return lunarDate;
 	}
 	
 	public static SmartDateFactory getInstance(Context context) {

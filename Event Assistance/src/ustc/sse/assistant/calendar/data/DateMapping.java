@@ -25,7 +25,8 @@ public class DateMapping {
 		Resources resources = context.getApplicationContext().getResources();
 		
 		//TODO get corresponding data from resources and then put into maps
-
+		
+		
 		
 	}
 	
