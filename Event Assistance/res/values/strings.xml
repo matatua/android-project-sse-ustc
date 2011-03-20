@@ -30,4 +30,7 @@
 	<string name="event_alarmType">提醒方式</string>
 	<string name="event_save">保存</string>
 	<string name="event_cancel">取消</string>
+	<string name="event_authority">ustc.sse.provider.EventAssistant.event</string>
+	<string name="event_contact_authority">ustc.sse.provider.EventAssistant.eventcontact</string>
+	
 </resources> 

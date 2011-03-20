@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import ustc.sse.assistant.event.provider.EventAssistant.Event;
 import ustc.sse.assistant.event.provider.EventAssistant.EventContact;
-import ustc.sse.assistant.event.provider.EventProvider.EventAssistantDatabaseOpenHelper;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -40,8 +39,8 @@ public class EventContactProvider extends ContentProvider {
 	
 	static {
 		uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-		uriMatcher.addURI(EventAssistant.AUTHORITY, "eventcontact/#", EVENTS);
-		uriMatcher.addURI(EventAssistant.AUTHORITY, "eventcontact", EVENT_CONTACT);
+		uriMatcher.addURI(EventAssistant.EVENT_CONTACT_AUTHORITY, "eventcontact/#", EVENTS);
+		uriMatcher.addURI(EventAssistant.EVENT_CONTACT_AUTHORITY, "eventcontact", EVENT_CONTACT);
 		
 		eventContactProjectionMap = new HashMap<String, String>();
 		eventContactProjectionMap.put(EventContact._ID, EventContact._ID);

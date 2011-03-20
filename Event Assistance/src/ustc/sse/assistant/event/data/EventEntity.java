@@ -13,7 +13,7 @@ import android.content.ContentValues;
  */
 public class EventEntity {
 	
-	static final ContentValues eventToContentValues(String alarmTime, 
+	public static final ContentValues eventToContentValues(String alarmTime, 
 													String alarmType,
 													String beginTime,											
 													String endTime,

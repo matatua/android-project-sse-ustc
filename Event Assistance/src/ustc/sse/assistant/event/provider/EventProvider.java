@@ -6,22 +6,18 @@ package ustc.sse.assistant.event.provider;
 import java.util.HashMap;
 
 import ustc.sse.assistant.event.provider.EventAssistant.Event;
-import ustc.sse.assistant.event.provider.EventAssistant.EventContact;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.util.Log;
 
 /**
  * @author 李健
@@ -43,49 +39,6 @@ public class EventProvider extends ContentProvider {
 	public static final int EVENTS = 1;
 	public  static final int EVENT_ID = 2;
 	
-	
-	static public class EventAssistantDatabaseOpenHelper extends SQLiteOpenHelper {
-
-		public EventAssistantDatabaseOpenHelper(Context context) {
-			super(context, DATABASE_NAME, null, DATABASE_VERSION);
-		}
-
-		@Override
-		public void onCreate(SQLiteDatabase db) {
-			String sql = "CREATE TABLE " + EVENT_TABLE_NAME + "("  
-			+ Event._ID + " INTEGER PRIMARY KEY,"
-			+ Event.ALARM_TIME + " TEXT,"
-			+ Event.ALARM_TIME + " TEXT,"
-			+ Event.BEGIN_TIME + " TEXT,"
-			+ Event.CONTENT + "TEXT," 
-			+ Event.CREATE_TIME + " TEXT,"
-			+ Event.END_TIME + " TEXT,"
-			+ Event.LAST_MODIFY_TIME + " TEXT,"
-			+ Event.LOCATION + " TEXT," 
-			+ Event.NOTE + " TEXT,"
-			+ Event.PRIOR_ALARM_DAY + " INTEGER,"
-			+ Event.PRIOR_REPEAT_TIME + " INTEGER,"
-			+ ");";
-			
-			sql += "CREATE TABLE " + EventContactProvider.EVENT_CONTACT_TABLE_NAME + " ( "
-				  	 	+ EventContact._ID + " INTEGER PRIMARY KEY,"
-				  	 	+ EventContact.CONTACT_ID + " INTEGER,"
-				  	 	+ EventContact.EVENT_ID + " INTEGER,"
-				  	 	+ EventContact.DISPLAY_NAME + " TEXT,"
-				  	 	+ ");";
-			db.execSQL(sql);
-		}
-
-		@Override
-		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			  Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
-	                    + newVersion + ", which will destroy all old data");
-	            db.execSQL("DROP TABLE IF EXISTS " + EVENT_TABLE_NAME);
-	            db.execSQL("DROP TABLE IF EXISTS " + EventContactProvider.EVENT_CONTACT_TABLE_NAME);
-	            onCreate(db);			
-		}
-		
-	}
 	
 	private EventAssistantDatabaseOpenHelper openHelper;
 	
@@ -164,6 +117,7 @@ public class EventProvider extends ContentProvider {
 		if (rowId > 0) {
 			Uri eventUri = ContentUris.withAppendedId(Event.CONTENT_URI, rowId);
 			getContext().getContentResolver().notifyChange(eventUri, null);
+			return eventUri;
 		}
 		
 		throw new SQLException("Insert fail");
@@ -225,8 +179,8 @@ public class EventProvider extends ContentProvider {
 	
 	static {
 		uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-		uriMatcher.addURI(EventAssistant.AUTHORITY, "events", EVENTS);
-		uriMatcher.addURI(EventAssistant.AUTHORITY, "events/#", EVENT_ID);
+		uriMatcher.addURI(EventAssistant.EVENT_AUTHORITY, "events", EVENTS);
+		uriMatcher.addURI(EventAssistant.EVENT_AUTHORITY, "events/#", EVENT_ID);
 		
 		eventsProjectionMap = new HashMap<String, String>();
 		eventsProjectionMap.put(Event._ID, Event._ID);
