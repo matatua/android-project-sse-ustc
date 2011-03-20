@@ -1,120 +1,183 @@
 <?xml version="1.0" encoding="utf-8"?>
-    
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
-  				android:layout_height="wrap_content"
-  				android:orientation="horizontal"
-  				android:id="@+id/event_add_RelativeLayout"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+			android:scrollbars="none" android:layout_width="match_parent" android:layout_height="match_parent">
+<LinearLayout   android:layout_width="fill_parent"
+  				android:layout_height="fill_parent"
+  				android:orientation="vertical"
+  				android:id="@+id/event_add_linearLayout"
   				>
-  				
-  	<TextView android:layout_width="wrap_content"
+  	<LinearLayout android:layout_width="fill_parent"
+  					android:layout_height="wrap_content"
+  					android:orientation="horizontal">		
+	  	<TextView android:layout_width="wrap_content"
+	  				android:layout_height="wrap_content"
+	  				android:text="@string/event_content"
+	  				android:layout_gravity="left|center"
+	  				>
+	  	</TextView>
+	  	<EditText 	android:hint="@string/event_add_content_hint"
+	  	            android:id="@+id/event_add_content_editText"
+		            android:layout_width="0dp"
+		            android:layout_weight="1.0" 
+		            android:layout_height="wrap_content"
+		            android:minLines="2"
+		            android:maxLines="6"
+		            >
+		</EditText>
+	</LinearLayout>
+	
+	<LinearLayout android:layout_width="fill_parent"
+					android:orientation="horizontal" android:layout_height="wrap_content">
+	
+	  	<TextView android:layout_width="wrap_content"
+	  				android:layout_height="wrap_content"
+	  				android:text="@string/event_beginTime"	
+	  				android:layout_gravity="left|center"  				
+	  				>
+	  	</TextView>
+	  	
+  		<Button android:layout_width="wrap_content"
   				android:layout_height="wrap_content"
-  				android:textSize="@dimen/event_add_text_size"
-  				android:text="@string/event_content"
-  				android:id="@+id/event_content">
-  	</TextView>
-  	<EditText android:text="" 
-  	            android:id="@+id/event_content_add"
-	            android:layout_width="wrap_content" 
-	            android:layout_height="wrap_content"
-	            android:layout_toRightOf="@id/event_content">
-	</EditText>
-  	<TextView android:layout_width="wrap_content"
+  				android:id="@+id/event_add_beginTime_button">
+  		</Button>
+  	</LinearLayout>
+  	
+  	<LinearLayout android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:orientation="horizontal">
+	  	<TextView android:layout_width="wrap_content"
+	  				android:layout_height="wrap_content"
+	  				android:text="@string/event_endTime"
+	  				android:layout_gravity="center|left"
+	  				>
+	  	</TextView>
+  		<Button android:layout_width="wrap_content"
   				android:layout_height="wrap_content"
-  				android:textSize="@dimen/event_add_text_size"
-  				android:text="@string/event_beginTime"
-  				android:id="@+id/event_beginTime"
-  				android:layout_below="@id/event_content">
-  	</TextView>
-  	<TextView android:layout_width="wrap_content"
+  				android:id="@+id/event_add_endTime_button">
+  		</Button>
+  	</LinearLayout>
+  	
+  	<LinearLayout android:layout_width="fill_parent"
+  					android:layout_height="wrap_content"
+  					android:orientation="horizontal">
+	  	<TextView android:layout_width="wrap_content"
+	  				android:layout_height="wrap_content"
+	  				android:text="@string/event_location"
+	  				android:layout_gravity="left|center"
+	  				>
+	  	</TextView>
+	  	<EditText 	android:layout_weight="1.0"
+	  	            android:id="@+id/event_add_location_editText"
+		            android:layout_width="0dp" 
+		            android:layout_height="wrap_content"
+		          	android:hint="@string/event_add_location_hint"
+		            >
+		</EditText>
+	</LinearLayout>
+	
+	<LinearLayout android:layout_width="fill_parent"
+  					android:layout_height="wrap_content"
+  					android:orientation="horizontal">
+		<TextView android:layout_width="wrap_content"
+	  				android:layout_height="wrap_content"
+	  				android:text="@string/event_contact"
+	  				android:layout_gravity="left|center">	  				  				
+	  	</TextView>
+  		<EditText android:layout_width="0dp"
+  					android:layout_height="wrap_content"
+  					android:layout_weight="1.0"
+  					android:hint="@string/event_add_contact_hint"
+  					android:id="@+id/event_add_contact_editText">
+  		</EditText>
+  	</LinearLayout>
+  	
+   <LinearLayout android:layout_width="fill_parent"
+  					android:layout_height="wrap_content"
+  					android:orientation="horizontal">
+		<TextView android:layout_width="wrap_content"
+	  				android:layout_height="wrap_content"
+	  				android:text="@string/event_note"
+	  				>
+	  	</TextView>
+	  	<EditText   android:id="@+id/event_add_note_editText"
+		            android:layout_width="wrap_content" 
+		            android:layout_height="wrap_content"
+		            android:layout_weight="1.0"
+		            android:hint="@string/event_add_note_hint">
+		</EditText>
+	
+	</LinearLayout>
+	
+	 <LinearLayout android:layout_width="fill_parent"
+  					android:layout_height="wrap_content"
+  					android:orientation="horizontal">
+		<TextView android:layout_width="wrap_content"
   				android:layout_height="wrap_content"
-  				android:textSize="@dimen/event_add_text_size"
-  				android:text="@string/event_endTime"
-  				android:id="@+id/event_endTime"
-  				android:layout_below="@id/event_beginTime">
-  	</TextView>
-  	<TextView android:layout_width="wrap_content"
-  				android:layout_height="wrap_content"
-  				android:textSize="@dimen/event_add_text_size"
-  				android:text="@string/event_location"
-  				android:id="@+id/event_location"
-  				android:layout_below="@id/event_endTime">
-  	</TextView>
-  	<EditText android:text="" 
-  	            android:id="@+id/event_location_add"
-	            android:layout_width="wrap_content" 
-	            android:layout_height="wrap_content"
-	            android:layout_below="@id/event_endTime"
-	            android:layout_toRightOf="@id/event_location">
-	</EditText>
-	<TextView android:layout_width="wrap_content"
-  				android:layout_height="wrap_content"
-  				android:textSize="@dimen/event_add_text_size"
-  				android:text="@string/event_contact"
-  				android:id="@+id/event_contact"
-  				android:layout_below="@id/event_location">
-  	</TextView>
-	<TextView android:layout_width="wrap_content"
-  				android:layout_height="wrap_content"
-  				android:textSize="@dimen/event_add_text_size"
-  				android:text="@string/event_note"
-  				android:id="@+id/event_note"
-  				android:layout_below="@id/event_contact">
-  	</TextView>
-  	<EditText android:text="" 
-  	            android:id="@+id/event_note_add"
-	            android:layout_width="wrap_content" 
-	            android:layout_height="wrap_content"
-	            android:layout_toRightOf="@id/event_note">
-	</EditText>
-	<TextView android:layout_width="wrap_content"
-  				android:layout_height="wrap_content"
-  				android:textSize="@dimen/event_add_text_size"
-  				android:text="@string/event_alarm"
-  				android:id="@+id/event_alarm"
-  				android:layout_below="@id/event_note">
-  	</TextView>
-  	<TextView android:layout_width="wrap_content"
-  				android:layout_height="wrap_content"
-  				android:textSize="@dimen/event_add_text_size"
   				android:text="@string/event_priorAlarm"
   				android:id="@+id/event_priorAlarm"
-  				android:layout_below="@id/event_alarm">
-  	</TextView>
-  	<TextView android:layout_width="wrap_content"
+  				android:layout_gravity="left|center"
+				>
+  		</TextView>
+  		<Spinner android:layout_width="0dp"
   				android:layout_height="wrap_content"
-  				android:textSize="@dimen/event_add_text_size"
-  				android:text="@string/event_repeat"
-  				android:id="@+id/event_repeat"
-  				android:layout_below="@id/event_priorAlarm">
-  	</TextView>
-  	<TextView android:layout_width="wrap_content"
-  				android:layout_height="wrap_content"
-  				android:textSize="@dimen/event_add_text_size"
-  				android:text="@string/event_alarmType"
-  				android:id="@+id/event_alarmType"
-  				android:layout_below="@id/event_repeat">
-  	</TextView>
-
-   <Button android:id="@+id/event_add_cancel_button"
-  			android:layout_weight="1"
-  			android:layout_width="wrap_content"
-  			android:layout_height="wrap_content"
-  			android:textSize="@dimen/event_add_text_size"
-  			android:text="@string/event_cancel"
-  			android:gravity="center"
-  			android:layout_below="@id/event_alarmType">
-  	</Button>
+  				android:layout_weight="1.0"
+  				android:id="@+id/event_add_priori_alarm_day_spinner">
+  		</Spinner>
+  		
+  	</LinearLayout>
   	
-  	<Button android:id="@+id/event_add_save_button"
-  			android:layout_weight="1"
-  			android:layout_width="wrap_content"
-  			android:layout_height="wrap_content"
-  			android:textSize="@dimen/event_add_text_size"
-  			android:text="@string/event_save"
-  			android:gravity="center"
-  			android:layout_below="@id/event_alarmType"
-  			android:layout_toRightOf="@id/event_add_cancel_button">		
-  	</Button>
-  </RelativeLayout>
-
+  	<LinearLayout android:layout_width="fill_parent"
+  					android:layout_height="wrap_content"
+  					android:orientation="horizontal">
+	  	<TextView android:layout_width="wrap_content"
+	  				android:layout_height="wrap_content"
+	  				android:text="@string/event_repeat"
+	  				android:layout_gravity="left|center">
+	  	</TextView>
+  		<Spinner android:layout_width="0dp"
+  				android:layout_height="wrap_content"
+  				android:layout_weight="1.0"
+  				android:id="@+id/event_add_priori_alarm_repeat_spinner">
+  		</Spinner>
+  	</LinearLayout>
+  	
+  	<LinearLayout android:layout_width="fill_parent"
+  					android:layout_height="wrap_content"
+  					android:orientation="horizontal">
+	  	<TextView android:layout_width="wrap_content"
+	  				android:layout_height="wrap_content"
+	  				android:text="@string/event_alarmType"
+	  				android:layout_gravity="left|center">
+	  	</TextView>
+	  	
+	  	<Spinner android:layout_width="0dp"
+  				android:layout_height="wrap_content"
+  				android:layout_weight="1.0"
+  				android:id="@+id/event_add_alarm_type_spinner">
+  		</Spinner>
+	</LinearLayout>
+	
+	<LinearLayout android:layout_width="fill_parent"
+  					android:layout_height="wrap_content"
+  					android:orientation="horizontal">
+	   <Button android:id="@+id/event_add_cancel_button"
+	  			android:layout_weight="1"
+	  			android:layout_width="0dp"
+	  			android:layout_height="wrap_content"
+	  			android:text="@string/event_cancel"
+	  			android:gravity="center"
+	  			>
+	  	</Button>
+	  	
+	  	<Button android:id="@+id/event_add_save_button"
+	  			android:layout_weight="1"
+	  			android:layout_width="0dp"
+	  			android:layout_height="wrap_content"
+	  			android:text="@string/event_save"
+	  			android:gravity="center"
+	  			>		
+	  	</Button>
+  	</LinearLayout>
+</LinearLayout>
+</ScrollView>   
