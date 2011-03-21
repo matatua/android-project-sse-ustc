@@ -1,6 +1,5 @@
 package ustc.sse.assistant.calendar.data;
 
-import java.util.Calendar;
 import java.util.Date;
 
 public final class Lunar
@@ -133,11 +132,7 @@ public final class Lunar
 
     int sy = (SY - 4) % 12;
 
-    Calendar cl = Calendar.getInstance();
-
-    cl.set(SY, SM - 1, SD);
-
-    Date sDObj = cl.getTime();
+    Date sDObj = new Date(SY - 1900, SM - 1, SD);
 
     Lunar1(sDObj);
 
@@ -207,12 +202,8 @@ public final class Lunar
     int i;
     int leap = 0; int temp = 0;
 
-    Calendar cl = Calendar.getInstance();
-
-    cl.set(1900, 0, 31);
-
-    Date baseDate = cl.getTime();
-
+    Date baseDate = new Date(0, 0, 31);
+    
     int offset = (int)((objDate.getTime() - baseDate.getTime()) / 86400000L);
 
     dayCyl = offset + 40;
