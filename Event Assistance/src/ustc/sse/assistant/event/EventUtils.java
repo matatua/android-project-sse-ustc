@@ -15,32 +15,33 @@ public class EventUtils {
 	public static final long toTimeInMillisecond(int todayRemindTime) {
 		switch (todayRemindTime) {
 		case EventConstant.EVENT_TODAY_REMIND_TIME_FIFTEEN_MINUTE :
-			return 15 * 1000;
+			return 15 * 60 * 1000;
 		case EventConstant.EVENT_TODAY_REMIND_TIME_FIVE_MINUTE :
-			return 5 * 1000;
+			return 5 * 60 * 1000;
 		case EventConstant.EVENT_TODAY_REMIND_TIME_FOURTYFIVE_MINUTE :
-			return 45 * 1000;
+			return 45 * 60 * 1000;
 		case EventConstant.EVENT_TODAY_REMIND_TIME_ONE_HOUR :
-			return 60 * 1000;
+			return 60 * 60 * 1000;
 		case EventConstant.EVENT_TODAY_REMIND_TIME_ONE_MINUTE :
-			return 1000;
+			return 60 * 1000;
 		case EventConstant.EVENT_TODAY_REMIND_TIME_SIX_HOUR :
-			return 6 * 60 * 1000;
+			return 6 * 60 * 60 * 1000;
 		case EventConstant.EVENT_TODAY_REMIND_TIME_TEN_MINUTE :
-			return 10 * 1000;
+			return 10 * 60 * 1000;
 		case EventConstant.EVENT_TODAY_REMIND_TIME_THIRTY_MINUTE :
-			return 30 * 1000;
+			return 30 * 60 * 1000;
 		case EventConstant.EVENT_TODAY_REMIND_TIME_THREE_HOUR :
-			return 3 * 60 * 1000;
+			return 3 * 60 * 60 * 1000;
 		case EventConstant.EVENT_TODAY_REMIND_TIME_TWENTY_MINUTE :
-			return 20 * 1000;
+			return 20 * 60 * 1000;
 		case EventConstant.EVENT_TODAY_REMIND_TIME_TWO_HOUR :
-			return 2 * 60 * 1000;
+			return 2 * 60 * 60 * 1000;
 		case EventConstant.EVENT_TODAY_REMIND_TIME_NONE :
-		default:
 			return 0;
 		
+		
 		}
+		return 0;
 	}
 
 	public static final ContentValues eventToContentValues(

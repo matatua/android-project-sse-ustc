@@ -401,9 +401,11 @@ public class EventAdd extends Activity{
 
 		private void startAlarmService() {
 			AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-			long triggerAtTime = beginCalendar.getTimeInMillis() - EventUtils.toTimeInMillisecond(alarmTime);
+			long remindTimeInMillisecond = EventUtils.toTimeInMillisecond(alarmTime);
+			long triggerAtTime = beginCalendar.getTimeInMillis() - remindTimeInMillisecond;
 			
 			Intent intent = new Intent(EventAdd.this, EventBroadcastReceiver.class);
+			intent.setAction(Event.TAG + System.currentTimeMillis());
 			intent.putExtra(Event.CONTENT, content);
 			intent.putExtra(Event.ALARM_TIME, alarmTime);
 			intent.putExtra(Event.ALARM_TYPE, alarmType);
@@ -446,6 +448,14 @@ public class EventAdd extends Activity{
 			showDialog(END_TIME_DIALOG);
 		}
 	};
+
+	private DatePickerDialog datePickerDialog;
+
+	private TimePickerDialog timePickerDialog;
+
+	private DatePickerDialog datePickerDialog2;
+
+	private TimePickerDialog timePickerDialog2;
 	
 	protected Dialog onCreateDialog(int id) {
 		Calendar today = Calendar.getInstance();
@@ -454,6 +464,15 @@ public class EventAdd extends Activity{
 			@Override
 			public void onDateSet(DatePicker view, int year, int monthOfYear,
 					int dayOfMonth) {
+				Calendar compareCalendar = Calendar.getInstance();
+				compareCalendar.setTimeInMillis(endCalendar.getTimeInMillis());
+				compareCalendar.set(year, monthOfYear, dayOfMonth);
+				
+				if (compareCalendar.after(endCalendar)) {
+					endCalendar.set(year, monthOfYear, dayOfMonth);
+					endDateButton.setText(DateFormat.format(TIME_FORMAT, endCalendar));
+					datePickerDialog.updateDate(year, monthOfYear, dayOfMonth);
+				}
 				beginCalendar.set(year, monthOfYear, dayOfMonth);
 				beginDateButton.setText(DateFormat.format(DATE_FORMAT, beginCalendar));
 				
@@ -464,6 +483,17 @@ public class EventAdd extends Activity{
 			
 			@Override
 			public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+				Calendar compareCalendar = Calendar.getInstance();
+				compareCalendar.setTimeInMillis(endCalendar.getTimeInMillis());
+				compareCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+				compareCalendar.set(Calendar.MINUTE, minute);
+				if (compareCalendar.after(endCalendar)) {
+					endCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+					endCalendar.set(Calendar.MINUTE, minute);
+					endTimeButton.setText(DateFormat.format(TIME_FORMAT, endCalendar));
+					timePickerDialog.updateTime(hourOfDay, minute);
+				}
+						
 				beginCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
 				beginCalendar.set(Calendar.MINUTE, minute);
 				beginTimeButton.setText(DateFormat.format(TIME_FORMAT, beginCalendar));
@@ -505,28 +535,28 @@ public class EventAdd extends Activity{
 		};
 		switch (id) {
 		case BEGIN_DATE_DIALOG :
-			DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+			datePickerDialog = new DatePickerDialog(this,
 														beginDateCallBack, 
 														today.get(Calendar.YEAR), 
 														today.get(Calendar.MONTH), 
 														today.get(Calendar.DAY_OF_MONTH));
 			return datePickerDialog;
 		case BEGIN_TIME_DIALOG :
-			TimePickerDialog timePickerDialog = new TimePickerDialog(this, 
+			timePickerDialog = new TimePickerDialog(this, 
 															beginTimeCallBack, 
 															today.get(Calendar.HOUR_OF_DAY), 
 															today.get(Calendar.MINUTE), 
 															true);
 			return timePickerDialog;
 		case END_DATE_DIALOG :
-			DatePickerDialog datePickerDialog2 = new DatePickerDialog(this, 
+			datePickerDialog2 = new DatePickerDialog(this, 
 															endDateCallBack, 
 															today.get(Calendar.YEAR), 
 															today.get(Calendar.MONTH), 
 															today.get(Calendar.DAY_OF_MONTH));
 			return datePickerDialog2;
 		case END_TIME_DIALOG :
-			TimePickerDialog timePickerDialog2 = new TimePickerDialog(this, 
+			timePickerDialog2 = new TimePickerDialog(this, 
 															endTimeCallback, 
 															today.get(Calendar.HOUR_OF_DAY), 
 															today.get(Calendar.MINUTE), 

@@ -72,8 +72,8 @@ public class EventBroadcastReceiver extends BroadcastReceiver {
 	}
 	
 	private Notification makeNotification() {
-		String content = i.getStringExtra(Event.CONTENT);
-		CharSequence tickerText = "事件：" + content.substring(0, 20);
+		String content = getContentString();
+		CharSequence tickerText = "事件：" + content;
 		CharSequence contentTitle = "你的事件";
 		CharSequence contentText = content;
 		// TODO start the event detail UI
@@ -84,14 +84,22 @@ public class EventBroadcastReceiver extends BroadcastReceiver {
 		
 		return notification;
 	}
+
+	private String getContentString() {
+		String content = i.getStringExtra(Event.CONTENT);
+		if (content == null || content.length() == 0) {
+			content = "无内容";
+		}
+		return content;
+	}
 	
 	private void showToast() {
-		String content = i.getStringExtra(Event.CONTENT);
+		String content = getContentString();
 
-		CharSequence text = "事件：" + content.substring(0, 20);
+		CharSequence text = "事件：" + content;
 		if (toast == null) {
 			
-			Toast.makeText(ctx, text, Toast.LENGTH_LONG);
+			Toast.makeText(ctx, text, Toast.LENGTH_LONG).show();
 		} else {
 			toast.cancel();
 			toast.setText(text);
