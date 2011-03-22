@@ -7,7 +7,7 @@ import ustc.sse.assistant.event.data.EventEntity;
 import ustc.sse.assistant.event.provider.EventAssistant;
 import ustc.sse.assistant.event.provider.EventAssistant.Event;
 import ustc.sse.assistant.event.provider.EventProvider;
-import android.content.ContentUris;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
@@ -19,7 +19,7 @@ import android.test.ProviderTestCase2;
  */
 public class EventProviderTestCase extends ProviderTestCase2<EventProvider> {
 
-	private EventProvider provider;
+	private ContentResolver cr;
 	private Uri newUri;
 	
 	public EventProviderTestCase() {
@@ -29,17 +29,18 @@ public class EventProviderTestCase extends ProviderTestCase2<EventProvider> {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		provider = this.getProvider();
+		cr = this.getMockContentResolver();
 
 	}
 	
 	public void testPrecondition() {
-		assertNotNull(provider);
+		assertNotNull(cr);
 	}
 	
 	public void testInsertEvent() {
 		
-		ContentValues values = EventEntity.eventToContentValues("alarmTime",
+		ContentValues values = EventEntity.eventToContentValues("content",
+																"alarmTime",
 																 "alarmType", 
 																 "beginTime", 
 																 "endTime", 
@@ -50,13 +51,13 @@ public class EventProviderTestCase extends ProviderTestCase2<EventProvider> {
 																 2, 
 																 5);
 		
-		newUri = provider.insert(Event.CONTENT_URI, values);
+		newUri = cr.insert(Event.CONTENT_URI, values);
 		assertNotNull(newUri);
 	}
 	
 	public void testQuery() {
 		addRows(2, getContentValues());
-		Cursor cursor = provider.query(Event.CONTENT_URI, null, null, null, null);
+		Cursor cursor = cr.query(Event.CONTENT_URI, null, null, null, null);
 		assertEquals(cursor.getCount(), 2);
 	}
 	
@@ -65,14 +66,14 @@ public class EventProviderTestCase extends ProviderTestCase2<EventProvider> {
 		
 		ContentValues values = new ContentValues();
 		values.put(Event.NOTE, "updatedNote");
-		int count = provider.update(Event.CONTENT_URI, values, null, null);
+		int count = cr.update(Event.CONTENT_URI, values, null, null);
 		
 		assertEquals(3, count);
 	}
 	
 	public void testDelete() {
 		addRows(5, getContentValues());
-		int count = provider.delete(Event.CONTENT_URI, null, null);
+		int count = cr.delete(Event.CONTENT_URI, null, null);
 		assertEquals(5, count);
 		
 	}
@@ -84,13 +85,15 @@ public class EventProviderTestCase extends ProviderTestCase2<EventProvider> {
 	
 	private void addRows(int count, ContentValues values) {
 		for (int i = 0; i < count; ++i) {
-			provider.insert(Event.CONTENT_URI, values);
+			cr.insert(Event.CONTENT_URI, values);
 
 		}
 	}
 	
 	private ContentValues getContentValues() {
-		ContentValues values = EventEntity.eventToContentValues("alarmTime",
+		ContentValues values = EventEntity.eventToContentValues(
+				"content",
+				"alarmTime",
 				 "alarmType", 
 				 "beginTime", 
 				 "endTime", 

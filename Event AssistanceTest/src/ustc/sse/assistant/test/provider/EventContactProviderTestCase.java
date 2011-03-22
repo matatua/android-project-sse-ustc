@@ -6,6 +6,7 @@ package ustc.sse.assistant.test.provider;
 import ustc.sse.assistant.event.provider.EventAssistant;
 import ustc.sse.assistant.event.provider.EventAssistant.EventContact;
 import ustc.sse.assistant.event.provider.EventContactProvider;
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -19,7 +20,7 @@ import android.test.ProviderTestCase2;
 public class EventContactProviderTestCase extends
 		ProviderTestCase2<EventContactProvider> {
 	
-	private EventContactProvider provider;
+	private ContentResolver cr;
 
 	public EventContactProviderTestCase() {
 		super(EventContactProvider.class, EventAssistant.EVENT_CONTACT_AUTHORITY);
@@ -28,11 +29,11 @@ public class EventContactProviderTestCase extends
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		provider = this.getProvider();
+		cr = this.getMockContentResolver();
 	}
 	
 	public void testPrecondition() {
-		assertNotNull(provider);
+		assertNotNull(cr);
 	}
 	
 	public void testInsert() {
@@ -41,7 +42,7 @@ public class EventContactProviderTestCase extends
 		values.put(EventContact.EVENT_ID, 1);
 		values.put(EventContact.CONTACT_ID, 2);
 		
-		Uri uri = provider.insert(EventContact.CONTENT_URI, values);
+		Uri uri = cr.insert(EventContact.CONTENT_URI, values);
 		
 		assertNotNull(uri);
 	}
@@ -49,10 +50,10 @@ public class EventContactProviderTestCase extends
 	public void testQuery() {
 		insertRows(5, getContentValues());
 		Uri uri = ContentUris.withAppendedId(EventContact.CONTENT_URI, 1);
-		Cursor cursor = provider.query(uri, null, null, null, null);
+		Cursor cursor = cr.query(uri, null, null, null, null);
 		assertEquals(5, cursor.getCount());
 		
-		cursor = provider.query(uri, null, EventContact.DISPLAY_NAME + " = ? ", new String[]{"lijian"}, null);
+		cursor = cr.query(uri, null, EventContact.DISPLAY_NAME + " = ? ", new String[]{"lijian"}, null);
 	
 		assertEquals(5, cursor.getCount());
 	}
@@ -60,14 +61,14 @@ public class EventContactProviderTestCase extends
 	public void testDelete() {
 		insertRows(10, getContentValues());
 		Uri uri = ContentUris.withAppendedId(EventContact.CONTENT_URI, 1);
-		int count = provider.delete(uri, null, null);
+		int count = cr.delete(uri, null, null);
 		
 		assertEquals(10, count);
 	}
 	
 	public void testUpdate() {
 		try {
-			provider.update(null, null, null, null);
+			cr.update(EventContact.CONTENT_URI, null, null, null);
 		} catch (UnsupportedOperationException e) {
 			e.printStackTrace();
 		}
@@ -75,7 +76,7 @@ public class EventContactProviderTestCase extends
 	
 	private void insertRows(int count, ContentValues values) {
 		for (int i = 0; i < count; i++) {
-			provider.insert(EventContact.CONTENT_URI, values);
+			cr.insert(EventContact.CONTENT_URI, values);
 		}
 	}
 	
