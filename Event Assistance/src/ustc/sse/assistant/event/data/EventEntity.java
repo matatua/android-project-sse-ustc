@@ -13,7 +13,9 @@ import android.content.ContentValues;
  */
 public class EventEntity {
 	
-	public static final ContentValues eventToContentValues(String alarmTime, 
+	public static final ContentValues eventToContentValues(
+													String content,
+													String alarmTime, 
 													String alarmType,
 													String beginTime,											
 													String endTime,
@@ -36,6 +38,7 @@ public class EventEntity {
 		values.put(Event.NOTE, note);
 		values.put(Event.PRIOR_ALARM_DAY, priorAlarmDay);
 		values.put(Event.PRIOR_REPEAT_TIME, priorRepeatDay);
+		values.put(Event.CONTENT, content);
 		
 		return values;
 	}

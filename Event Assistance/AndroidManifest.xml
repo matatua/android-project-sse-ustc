@@ -6,7 +6,8 @@
 <uses-permission android:name="android.permission.READ_CONTACTS"></uses-permission>
 <uses-permission android:name="android.permission.WRITE_CONTACTS"></uses-permission>
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
-    <application android:icon="@drawable/icon" android:label="@string/app_name" android:debuggable="true">
+    <application android:icon="@drawable/icon" android:label="@string/app_name" 
+    			android:debuggable="true" android:theme="@android:style/Theme.Light.NoTitleBar">
         <activity android:name="MainScreen"
                   android:label="@string/app_name" android:screenOrientation="portrait">
             <intent-filter>
@@ -27,6 +28,8 @@
         <activity android:name=".event.EventAdd"></activity>
         <provider android:enabled="true" android:name=".event.provider.EventProvider" android:authorities="@string/event_authority" android:grantUriPermissions="true"></provider>
         <provider android:name=".event.provider.EventContactProvider" android:authorities="@string/event_contact_authority"></provider>
+        <activity android:name=".setting.Setting"></activity>
+        <activity android:name=".help.HelpActivity"></activity>
 
     </application>
 

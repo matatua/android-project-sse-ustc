@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string-array name="entries_list_preference1">
+	<string-array name="entries_list_alarm_type">
    	 	<item>闹钟</item>
     	<item>振动</item>
     	<item>提示栏</item>
 	</string-array>
-	<string-array name="entries_list_preference2">
+	<string-array name="entries_list_priori_day">
    	 	<item>1天</item>
     	<item>2天</item>
     	<item>3天</item>
@@ -22,7 +22,7 @@
     	<item>14天</item>
     	<item>15天</item>
 	</string-array>
-	<string-array name="entries_list_preference3">
+	<string-array name="entries_list_priori_repeat">
    	 	<item>1次</item>
     	<item>2次</item>
     	<item>3次</item>
@@ -36,7 +36,7 @@
     	<item>11次</item>
     	<item>12次</item>
 	</string-array>
-	<string-array name="entries_list_preference4">
+	<string-array name="entries_list_backup_time">
    	 	<item>1天</item>
     	<item>2天</item>
     	<item>3天</item>
@@ -44,16 +44,19 @@
     	<item>7天</item>
     	<item>10天</item>
 	</string-array>
-	<string-array name="entries_list_preference5">
+	<string-array name="entries_list_backup_location">
    	 	<item>机身内存</item>
     	<item>SD卡</item>
 	</string-array>
-	<string-array name="entriesvalue_list_preference1">
+	<integer-array name="entriesvalue_list_alarm_type">
+		<item>0</item>
+		<item>1</item>
+		<item>2</item>
+	</integer-array>
+	<integer-array name="entriesvalue_list_priori_day">
     	<item>1</item>
     	<item>2</item>
     	<item>3</item>
-	</string-array>
-	<string-array name="entriesvalue_list_preference2">
     	<item>4</item>
     	<item>5</item>
     	<item>6</item>
@@ -66,34 +69,31 @@
     	<item>13</item>
     	<item>14</item>
     	<item>15</item>
-    	<item>16</item>
-    	<item>17</item>
-    	<item>18</item>
-	</string-array>
-	<string-array name="entriesvalue_list_preference3">
-    	<item>19</item>
-    	<item>20</item>
-    	<item>21</item>
-    	<item>22</item>
-    	<item>23</item>
-    	<item>24</item>
-    	<item>25</item>
-    	<item>26</item>
-    	<item>27</item>
-    	<item>28</item>
-    	<item>29</item>
-    	<item>30</item>
-	</string-array>
-	<string-array name="entriesvalue_list_preference4">
-    	<item>31</item>
-    	<item>32</item>
-    	<item>33</item>
-    	<item>34</item>
-    	<item>35</item>
-    	<item>36</item>
-	</string-array>
-	<string-array name="entriesvalue_list_preference5">
-    	<item>37</item>
-    	<item>38</item>
+	</integer-array>
+	<integer-array name="entriesvalue_list_priori_repeat">
+    	<item>1</item>
+    	<item>2</item>
+    	<item>3</item>
+    	<item>4</item>
+    	<item>5</item>
+    	<item>6</item>
+    	<item>7</item>
+    	<item>8</item>
+    	<item>9</item>
+    	<item>10</item>
+    	<item>11</item>
+    	<item>12</item>
+	</integer-array>
+	<integer-array name="entriesvalue_list_backup_time">
+    	<item>1</item>
+    	<item>2</item>
+    	<item>3</item>
+    	<item>5</item>
+    	<item>7</item>
+    	<item>10</item>
+	</integer-array>
+	<string-array name="entriesvalue_list_backup_location">
+    	<item>memory</item>
+    	<item>sdcard</item>
 	</string-array>
 </resources>

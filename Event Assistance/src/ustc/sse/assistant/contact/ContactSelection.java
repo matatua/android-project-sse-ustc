@@ -136,9 +136,14 @@ public class ContactSelection extends Activity {
 					checkedItemIds.add(id);
 					checkedItemsDisplayName.add(name);
 				}
-				
-				getIntent().putExtra(SELECTED_CONTACT_IDS, checkedItemIds.toArray());
-				getIntent().putExtra(SELECTED_CONTACT_DISPLAY_NAME, checkedItemsDisplayName.toArray());
+				long[] ids = new long[checkedItemIds.size()];
+				String[] names = new String[checkedItemsDisplayName.size()];
+				for (int i = 0; i < checkedItemIds.size(); i++) {
+					ids[i] = checkedItemIds.get(i);
+					names[i] = checkedItemsDisplayName.get(i);
+				}
+				getIntent().putExtra(SELECTED_CONTACT_IDS, ids);
+				getIntent().putExtra(SELECTED_CONTACT_DISPLAY_NAME, names);
 				ContactSelection.this.setResult(RESULT_OK, getIntent());
 				ContactSelection.this.finish();
 				

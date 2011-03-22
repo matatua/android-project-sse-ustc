@@ -6,8 +6,8 @@
         android:key="ListPreference"
         android:title="选择你喜欢的提醒方式"
         android:dialogTitle="提醒方式"
-        android:entries="@array/entries_list_preference1"
-        android:entryValues="@array/entriesvalue_list_preference1"
+        android:entries="@array/entries_list_alarm_type"
+        android:entryValues="@array/entriesvalue_list_alarm_type"
     />
    </PreferenceCategory>
    <PreferenceCategory android:title="默认前日提醒">
@@ -15,15 +15,15 @@
         android:key="ListPreference"
         android:title="默认前日提醒天数"
         android:dialogTitle="提醒天数"
-        android:entries="@array/entries_list_preference2"
-        android:entryValues="@array/entriesvalue_list_preference2"
+        android:entries="@array/entries_list_priori_day"
+        android:entryValues="@array/entriesvalue_list_priori_day"
     />
     <ListPreference
         android:key="ListPreference"
         android:title="默认每天提醒次数"
         android:dialogTitle="提醒次数"
-        android:entries="@array/entries_list_preference3"
-        android:entryValues="@array/entriesvalue_list_preference3"
+        android:entries="@array/entries_list_priori_repeat"
+        android:entryValues="@array/entriesvalue_list_priori_repeat"
     />
    </PreferenceCategory>
    <PreferenceCategory android:title="备份与还原">
@@ -38,16 +38,16 @@
         	android:key="ListPreference"
         	android:title="自动备份时间"
         	android:dialogTitle="备份时间"
-        	android:entries="@array/entries_list_preference4"
-        	android:entryValues="@array/entriesvalue_list_preference4"
+        	android:entries="@array/entries_list_backup_time"
+        	android:entryValues="@array/entriesvalue_list_backup_time"
     	/>
     	<ListPreference
         	android:key="ListPreference"
         	android:title="备份位置"
         	android:dialogTitle="内插卡"
         	android:defaultValue="0"
-        	android:entries="@array/entries_list_preference5"
-        	android:entryValues="@array/entriesvalue_list_preference5"
+        	android:entries="@array/entries_list_backup_location"
+        	android:entryValues="@array/entriesvalue_list_backup_location"
     	/>
     </PreferenceCategory>
 </PreferenceScreen>

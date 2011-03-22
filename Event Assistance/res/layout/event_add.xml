@@ -9,7 +9,7 @@
   				>
   	<LinearLayout android:layout_width="fill_parent"
   					android:layout_height="wrap_content"
-  					android:orientation="horizontal">		
+  					android:orientation="vertical">		
 	  	<TextView android:layout_width="wrap_content"
 	  				android:layout_height="wrap_content"
 	  				android:text="@string/event_content"
@@ -18,8 +18,7 @@
 	  	</TextView>
 	  	<EditText 	android:hint="@string/event_add_content_hint"
 	  	            android:id="@+id/event_add_content_editText"
-		            android:layout_width="0dp"
-		            android:layout_weight="1.0" 
+		            android:layout_width="fill_parent"	     
 		            android:layout_height="wrap_content"
 		            android:minLines="2"
 		            android:maxLines="6"
@@ -28,7 +27,7 @@
 	</LinearLayout>
 	
 	<LinearLayout android:layout_width="fill_parent"
-					android:orientation="horizontal" android:layout_height="wrap_content">
+					android:orientation="vertical" android:layout_height="wrap_content">
 	
 	  	<TextView android:layout_width="wrap_content"
 	  				android:layout_height="wrap_content"
@@ -37,39 +36,56 @@
 	  				>
 	  	</TextView>
 	  	
-  		<Button android:layout_width="wrap_content"
-  				android:layout_height="wrap_content"
-  				android:id="@+id/event_add_beginTime_button">
-  		</Button>
+	  	<LinearLayout android:layout_width="fill_parent"
+	  					android:layout_height="fill_parent"
+	  					android:orientation="horizontal">
+	  		<Button android:layout_width="wrap_content"
+	  				android:layout_height="wrap_content"
+	  				android:id="@+id/event_add_beginTime_date_button">
+	  		</Button>
+	  		
+	  		<Button android:layout_width="wrap_content"
+	  				android:layout_height="wrap_content"
+	  				android:id="@+id/event_add_beginTime_time_button">
+	  		</Button>
+  		</LinearLayout>
   	</LinearLayout>
   	
   	<LinearLayout android:layout_width="fill_parent"
 					android:layout_height="wrap_content"
-					android:orientation="horizontal">
+					android:orientation="vertical">
 	  	<TextView android:layout_width="wrap_content"
 	  				android:layout_height="wrap_content"
 	  				android:text="@string/event_endTime"
 	  				android:layout_gravity="center|left"
 	  				>
 	  	</TextView>
-  		<Button android:layout_width="wrap_content"
-  				android:layout_height="wrap_content"
-  				android:id="@+id/event_add_endTime_button">
-  		</Button>
+	  	<LinearLayout android:layout_width="fill_parent"
+	  					android:layout_height="fill_parent"
+	  					android:orientation="horizontal">
+	  		<Button android:layout_width="wrap_content"
+	  				android:layout_height="wrap_content"
+	  				android:id="@+id/event_add_endTime_date_button">
+	  		</Button>
+	  		<Button android:layout_width="wrap_content"
+		  				android:layout_height="wrap_content"
+		  				android:id="@+id/event_add_endTime_time_button">
+	  		</Button>
+	  	</LinearLayout>
   	</LinearLayout>
   	
   	<LinearLayout android:layout_width="fill_parent"
   					android:layout_height="wrap_content"
-  					android:orientation="horizontal">
+  					android:orientation="vertical">
 	  	<TextView android:layout_width="wrap_content"
 	  				android:layout_height="wrap_content"
 	  				android:text="@string/event_location"
 	  				android:layout_gravity="left|center"
 	  				>
 	  	</TextView>
-	  	<EditText 	android:layout_weight="1.0"
+	  	<EditText 	
 	  	            android:id="@+id/event_add_location_editText"
-		            android:layout_width="0dp" 
+		            android:layout_width="fill_parent" 
 		            android:layout_height="wrap_content"
 		          	android:hint="@string/event_add_location_hint"
 		            >
@@ -78,40 +94,50 @@
 	
 	<LinearLayout android:layout_width="fill_parent"
   					android:layout_height="wrap_content"
-  					android:orientation="horizontal">
+  					android:orientation="vertical">
 		<TextView android:layout_width="wrap_content"
 	  				android:layout_height="wrap_content"
 	  				android:text="@string/event_contact"
 	  				android:layout_gravity="left|center">	  				  				
 	  	</TextView>
-  		<EditText android:layout_width="0dp"
-  					android:layout_height="wrap_content"
-  					android:layout_weight="1.0"
-  					android:hint="@string/event_add_contact_hint"
-  					android:id="@+id/event_add_contact_editText">
-  		</EditText>
+	  	<RelativeLayout android:layout_width="fill_parent"
+	  					android:layout_height="wrap_content">
+	  		<EditText android:layout_width="fill_parent"
+	  					android:layout_height="wrap_content"
+	  					android:hint="@string/event_add_contact_hint"
+	  					android:id="@+id/event_add_contact_editText"
+	  					android:layout_centerVertical="true"
+	  					android:paddingRight="64px">
+	  		</EditText>
+	  		
+	  		<ImageView android:layout_alignParentRight="true"
+	  					android:layout_centerVertical="true"
+	  					android:layout_width="wrap_content"
+	  					android:layout_height="wrap_content"
+	  					android:id="@+id/event_add_contact_add_imageView"
+	  					android:src="@drawable/event_add_contact_add">
+	  		</ImageView>
+  		</RelativeLayout>
   	</LinearLayout>
   	
    <LinearLayout android:layout_width="fill_parent"
   					android:layout_height="wrap_content"
-  					android:orientation="horizontal">
+  					android:orientation="vertical">
 		<TextView android:layout_width="wrap_content"
 	  				android:layout_height="wrap_content"
 	  				android:text="@string/event_note"
 	  				>
 	  	</TextView>
 	  	<EditText   android:id="@+id/event_add_note_editText"
-		            android:layout_width="wrap_content" 
-		            android:layout_height="wrap_content"
-		            android:layout_weight="1.0"
-		            android:hint="@string/event_add_note_hint">
+		            android:layout_width="fill_parent" 
+		            android:hint="@string/event_add_note_hint" android:layout_height="match_parent">
 		</EditText>
 	
 	</LinearLayout>
 	
 	 <LinearLayout android:layout_width="fill_parent"
   					android:layout_height="wrap_content"
-  					android:orientation="horizontal">
+  					android:orientation="vertical">
 		<TextView android:layout_width="wrap_content"
   				android:layout_height="wrap_content"
   				android:text="@string/event_priorAlarm"
@@ -119,42 +145,42 @@
   				android:layout_gravity="left|center"
 				>
   		</TextView>
-  		<Spinner android:layout_width="0dp"
+  		<Spinner android:layout_width="fill_parent"
   				android:layout_height="wrap_content"
-  				android:layout_weight="1.0"
-  				android:id="@+id/event_add_priori_alarm_day_spinner">
+  				android:id="@+id/event_add_priori_alarm_day_spinner"
+  				android:drawSelectorOnTop="true">
   		</Spinner>
   		
   	</LinearLayout>
   	
   	<LinearLayout android:layout_width="fill_parent"
   					android:layout_height="wrap_content"
-  					android:orientation="horizontal">
+  					android:orientation="vertical">
 	  	<TextView android:layout_width="wrap_content"
 	  				android:layout_height="wrap_content"
 	  				android:text="@string/event_repeat"
 	  				android:layout_gravity="left|center">
 	  	</TextView>
-  		<Spinner android:layout_width="0dp"
+  		<Spinner android:layout_width="fill_parent"
   				android:layout_height="wrap_content"
-  				android:layout_weight="1.0"
-  				android:id="@+id/event_add_priori_alarm_repeat_spinner">
+  				android:id="@+id/event_add_priori_alarm_repeat_spinner"
+  				android:drawSelectorOnTop="true">
   		</Spinner>
   	</LinearLayout>
   	
   	<LinearLayout android:layout_width="fill_parent"
   					android:layout_height="wrap_content"
-  					android:orientation="horizontal">
+  					android:orientation="vertical">
 	  	<TextView android:layout_width="wrap_content"
 	  				android:layout_height="wrap_content"
 	  				android:text="@string/event_alarmType"
 	  				android:layout_gravity="left|center">
 	  	</TextView>
 	  	
-	  	<Spinner android:layout_width="0dp"
+	  	<Spinner android:layout_width="fill_parent"
   				android:layout_height="wrap_content"
-  				android:layout_weight="1.0"
-  				android:id="@+id/event_add_alarm_type_spinner">
+  				android:id="@+id/event_add_alarm_type_spinner"
+  				android:drawSelectorOnTop="true">
   		</Spinner>
 	</LinearLayout>
 	
