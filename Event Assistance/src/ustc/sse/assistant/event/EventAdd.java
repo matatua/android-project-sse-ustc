@@ -10,13 +10,14 @@ import java.util.Map.Entry;
 
 import ustc.sse.assistant.R;
 import ustc.sse.assistant.contact.ContactSelection;
-import ustc.sse.assistant.event.data.EventEntity;
+import ustc.sse.assistant.event.broadcast.EventBroadcastReceiver;
 import ustc.sse.assistant.event.provider.EventAssistant;
 import ustc.sse.assistant.event.provider.EventAssistant.Event;
 import ustc.sse.assistant.event.provider.EventAssistant.EventContact;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -24,6 +25,7 @@ import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.OperationApplicationException;
 import android.net.Uri;
@@ -31,6 +33,7 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import android.text.format.DateFormat;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -65,6 +68,7 @@ public class EventAdd extends Activity{
 	private Spinner prioriAlarmDaySpinner;
 	private Spinner prioriAlarmRepeatSpinner;
 	private Spinner alarmTypeSpinner;
+	private Spinner todayRemindTimeSpinner;
 	
 	private EditText contentEditText;
 	private EditText locationEditText;
@@ -74,12 +78,13 @@ public class EventAdd extends Activity{
 	private Calendar beginCalendar = Calendar.getInstance();
 	private Calendar endCalendar = Calendar.getInstance();
 	
-	private int prioriAlarmDay = 0;
-	private int prioriAlarmRepeat = 0;
+	private int priorAlarmDay = 0;
+	private int priorAlarmRepeat = 0;
 	private int alarmType = 0;
-	private String location;
-	private String note;
-	private String content;
+	private String location = "";
+	private String note = "";
+	private String content = "";
+	private int alarmTime = 0;
 	private Map<Long, String> contactData = new HashMap<Long,String>();
 	
 	public static final String DATE_FORMAT = "yyyy年MM月dd日 EE";
@@ -112,6 +117,7 @@ public class EventAdd extends Activity{
 		prioriAlarmDaySpinner = (Spinner) findViewById(R.id.event_add_priori_alarm_day_spinner);
 		prioriAlarmRepeatSpinner = (Spinner) findViewById(R.id.event_add_priori_alarm_repeat_spinner);
 		alarmTypeSpinner = (Spinner) findViewById(R.id.event_add_alarm_type_spinner);
+		todayRemindTimeSpinner = (Spinner) findViewById(R.id.event_add_today_remind_time_spinner);
 		
 		contentEditText = (EditText) findViewById(R.id.event_add_content_editText);
 		locationEditText = (EditText) findViewById(R.id.event_add_location_editText);
@@ -123,7 +129,12 @@ public class EventAdd extends Activity{
 		
 		//initiate spinners
 		initiateSpinner();
+		//load default preference and set the corresponding spinner
+		initiatePreference();
+		
+	}
 
+	private void initiatePreference() {
 		
 	}
 
@@ -157,67 +168,54 @@ public class EventAdd extends Activity{
 	}
 
 	private void initiateSpinner() {
-		String[] prioriDayStringArray = getApplicationContext().getResources().getStringArray(R.array.entries_list_priori_day);
-		int[] prioriDayIntArray = getApplicationContext().getResources().getIntArray(R.array.entriesvalue_list_priori_day);
-		
-		List<Map<String, Integer>> prioriAlarmDayData = new ArrayList<Map<String,Integer>>();
-		for (int i = 0; i < prioriDayStringArray.length; i++) {
-			Map<String, Integer> map = new HashMap<String, Integer>();
-			map.put("name", prioriDayIntArray[i]);
-			map.put("value", prioriDayIntArray[i]);
-			prioriAlarmDayData.add(map);
-		}
-		SpinnerAdapter prioriAlarmDayAdapter = new SimpleAdapter(this, 
-														prioriAlarmDayData, 
-														R.layout.event_add_spinner_item,
-														new String[]{"name", "value"}, 
-														new int[]{R.id.event_add_spinner_textview1, R.id.event_add_spinner_textview2});
-		prioriAlarmDaySpinner.setAdapter(prioriAlarmDayAdapter);
-		prioriAlarmDaySpinner.setPromptId(R.string.event_priorAlarm);
-		prioriAlarmDaySpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-
-			@Override
-			public void onItemSelected(AdapterView<?> parent, View view,
-					int position, long id) {
-				TextView tv = (TextView) view.findViewById(R.id.event_add_spinner_textview2);
-				prioriAlarmDay = Integer.valueOf(tv.getText().toString());
-			}
-			@Override
-			public void onNothingSelected(AdapterView<?> parent) {
-			}
-		});
+		//prior day spinner
+		preparePriorDaySpinner();
 		//--------------------------------------------------------------------------
-		String[] prioriRepeatStringArray = getApplicationContext().getResources().getStringArray(R.array.entries_list_priori_repeat);
-		int[] prioriRepeatIntArray = getApplicationContext().getResources().getIntArray(R.array.entriesvalue_list_priori_repeat);
-		List<Map<String, Integer>> prioriAlarmRepeatData = new ArrayList<Map<String,Integer>>();
-		for (int i = 0; i < prioriRepeatStringArray.length; i++) {
-			Map<String, Integer> map = new HashMap<String, Integer>();
-			map.put("name", prioriRepeatIntArray[i]);
-			map.put("value", prioriRepeatIntArray[i]);
-			prioriAlarmRepeatData.add(map);
+		//prior repeat spinner
+		preparePriorRepeatSpinner();
+		//---------------------------------------------------------------------------------
+		//alarm type spinner
+		prepareAlarmTypeSpinner();
+		//--------------------------------------------------------------------------------
+		//Today remind time spinner
+		prepareTodayRemindTime();
+		
+	}
+
+	private void prepareTodayRemindTime() {
+		String[] todayRemindTimeStrArray = getApplicationContext().getResources().getStringArray(R.array.entries_list_event_add_today_remind_time);
+		int[] todayRemindTimeIntArray = getApplicationContext().getResources().getIntArray(R.array.entriesvalue_list_event_today_remind_time);
+		List<Map<String, Object>> todayRemindTimeDate = new ArrayList<Map<String,Object>>();
+		for (int i = 0; i < todayRemindTimeStrArray.length; i++) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("name", todayRemindTimeStrArray[i]);
+			map.put("value", todayRemindTimeIntArray[i]);
+			todayRemindTimeDate.add(map);
+			
 		}
-		SpinnerAdapter prioriAlarmRepeatAdapter = new SimpleAdapter(this, 
-				prioriAlarmRepeatData, 
-				R.layout.event_add_spinner_item,
-				new String[]{"name", "value"}, 
-				new int[]{R.id.event_add_spinner_textview1, R.id.event_add_spinner_textview2});
-		prioriAlarmRepeatSpinner.setAdapter(prioriAlarmRepeatAdapter);
-		prioriAlarmRepeatSpinner.setPromptId(R.string.event_repeat);
-		prioriAlarmRepeatSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+		
+		SimpleAdapter adapter = new EventAddSimpleAdapter(this, 
+													todayRemindTimeDate, 
+													android.R.layout.simple_spinner_dropdown_item, 
+													new String[]{"name"}, 
+													new int[] {android.R.id.text1});
+		todayRemindTimeSpinner.setAdapter(adapter);
+		todayRemindTimeSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view,
 					int position, long id) {
-				TextView tv = (TextView) view.findViewById(R.id.event_add_spinner_textview2);
-				prioriAlarmRepeat = Integer.valueOf(tv.getText().toString());
+				alarmTime = (Integer) view.getTag();
 			}
 
 			@Override
 			public void onNothingSelected(AdapterView<?> parent) {
+				
 			}
-		
 		});
-		//---------------------------------------------------------------------------------
+	}
+
+	private void prepareAlarmTypeSpinner() {
 		String[] alarmTypeStringArray = getApplicationContext().getResources().getStringArray(R.array.entries_list_alarm_type);
 		int[] alarmTypeIntArray = getApplicationContext().getResources().getIntArray(R.array.entriesvalue_list_alarm_type);
 		List<Map<String, Object>> alarmTypeData = new ArrayList<Map<String,Object>>();
@@ -250,7 +248,71 @@ public class EventAdd extends Activity{
 				
 			}
 		});
+	}
+
+	private void preparePriorRepeatSpinner() {
+		String[] prioriRepeatStringArray = getApplicationContext().getResources().getStringArray(R.array.entries_list_priori_repeat);
+		int[] prioriRepeatIntArray = getApplicationContext().getResources().getIntArray(R.array.entriesvalue_list_priori_repeat);
+		List<Map<String, Integer>> prioriAlarmRepeatData = new ArrayList<Map<String,Integer>>();
+		for (int i = 0; i < prioriRepeatStringArray.length; i++) {
+			Map<String, Integer> map = new HashMap<String, Integer>();
+			map.put("name", prioriRepeatIntArray[i]);
+			map.put("value", prioriRepeatIntArray[i]);
+			prioriAlarmRepeatData.add(map);
+		}
+		SpinnerAdapter prioriAlarmRepeatAdapter = new SimpleAdapter(this, 
+				prioriAlarmRepeatData, 
+				R.layout.event_add_spinner_item,
+				new String[]{"name", "value"}, 
+				new int[]{R.id.event_add_spinner_textview1, R.id.event_add_spinner_textview2});
+		prioriAlarmRepeatSpinner.setAdapter(prioriAlarmRepeatAdapter);
+		prioriAlarmRepeatSpinner.setPromptId(R.string.event_repeat);
+		prioriAlarmRepeatSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view,
+					int position, long id) {
+				TextView tv = (TextView) view.findViewById(R.id.event_add_spinner_textview2);
+				priorAlarmRepeat = Integer.valueOf(tv.getText().toString());
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+			}
 		
+		});
+	}
+
+	private void preparePriorDaySpinner() {
+		String[] prioriDayStringArray = getApplicationContext().getResources().getStringArray(R.array.entries_list_priori_day);
+		int[] prioriDayIntArray = getApplicationContext().getResources().getIntArray(R.array.entriesvalue_list_priori_day);
+		
+		List<Map<String, Integer>> prioriAlarmDayData = new ArrayList<Map<String,Integer>>();
+		for (int i = 0; i < prioriDayStringArray.length; i++) {
+			Map<String, Integer> map = new HashMap<String, Integer>();
+			map.put("name", prioriDayIntArray[i]);
+			map.put("value", prioriDayIntArray[i]);
+			prioriAlarmDayData.add(map);
+		}
+		SpinnerAdapter prioriAlarmDayAdapter = new SimpleAdapter(this, 
+														prioriAlarmDayData, 
+														R.layout.event_add_spinner_item,
+														new String[]{"name", "value"}, 
+														new int[]{R.id.event_add_spinner_textview1, R.id.event_add_spinner_textview2});
+		prioriAlarmDaySpinner.setAdapter(prioriAlarmDayAdapter);
+		prioriAlarmDaySpinner.setPromptId(R.string.event_priorAlarm);
+		prioriAlarmDaySpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view,
+					int position, long id) {
+				TextView tv = (TextView) view.findViewById(R.id.event_add_spinner_textview2);
+				priorAlarmDay = Integer.valueOf(tv.getText().toString());
+			}
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+			}
+		});
 	}
 
 	private void initiateButtons() {
@@ -283,6 +345,14 @@ public class EventAdd extends Activity{
 		
 		@Override
 		public void onClick(View v) {
+			//save event and corresponding contacts
+			saveEventAndContact();				
+			//start alarm service here
+			startAlarmService();
+			EventAdd.this.finish();
+		}
+
+		private void saveEventAndContact() {
 			//save all the data and store into database
 			//if necessary, start the alarm services
 			ContentResolver cr = getContentResolver();
@@ -291,7 +361,7 @@ public class EventAdd extends Activity{
 			location = locationEditText.getText().toString();
 			note = noteEditText.getText().toString();
 			Calendar now = Calendar.getInstance();
-			ContentValues contentValues = EventEntity.eventToContentValues(
+			ContentValues contentValues = EventUtils.eventToContentValues(
 																	content,
 																	String.valueOf(beginCalendar.getTimeInMillis()), 
 																	String.valueOf(alarmType), 
@@ -301,8 +371,8 @@ public class EventAdd extends Activity{
 																	String.valueOf(now.getTimeInMillis()), 
 																	location, 
 																	note, 
-																	prioriAlarmDay, 
-																	prioriAlarmRepeat);
+																	priorAlarmDay, 
+																	priorAlarmRepeat);
 			Uri newUri = cr.insert(Event.CONTENT_URI, contentValues);
 			//store eventcontact
 			Long eventId = Long.valueOf(newUri.getPathSegments().get(1));
@@ -326,11 +396,25 @@ public class EventAdd extends Activity{
 				e.printStackTrace();
 			} catch (OperationApplicationException e) {
 				e.printStackTrace();
-			}				
-			//start alarm service here
+			}
+		}
+
+		private void startAlarmService() {
 			AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+			long triggerAtTime = beginCalendar.getTimeInMillis() - EventUtils.toTimeInMillisecond(alarmTime);
 			
-			EventAdd.this.finish();
+			Intent intent = new Intent(EventAdd.this, EventBroadcastReceiver.class);
+			intent.putExtra(Event.CONTENT, content);
+			intent.putExtra(Event.ALARM_TIME, alarmTime);
+			intent.putExtra(Event.ALARM_TYPE, alarmType);
+			intent.putExtra(Event.BEGIN_TIME, beginCalendar.getTimeInMillis());
+			intent.putExtra(Event.END_TIME, endCalendar.getTimeInMillis());
+			intent.putExtra(Event.LOCATION, location);
+			intent.putExtra(Event.NOTE, note);
+			intent.putExtra(Event.PRIOR_ALARM_DAY, priorAlarmDay);
+			intent.putExtra(Event.PRIOR_REPEAT_TIME, priorAlarmRepeat);
+			PendingIntent operation = PendingIntent.getBroadcast(EventAdd.this, 0, intent, 0);
+			am.set(AlarmManager.RTC_WAKEUP, triggerAtTime, operation);
 		}
 	};
 	
@@ -454,4 +538,22 @@ public class EventAdd extends Activity{
 		return null;
 	}
 
+	private static class EventAddSimpleAdapter extends SimpleAdapter {
+
+		public EventAddSimpleAdapter(Context context,
+				List<? extends Map<String, ?>> data, int resource,
+				String[] from, int[] to) {
+			super(context, data, resource, from, to);
+		}
+		
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			View v = super.getView(position, convertView, parent);
+			Map<String, String> map =  (Map<String, String>) getItem(position);
+			v.setTag(map.get("value"));
+			
+			return v;
+		}
+		
+	}
 }

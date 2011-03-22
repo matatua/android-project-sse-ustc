@@ -4,11 +4,14 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 public class EventAssistant {
+	public static final String TAG = "EventAssistant";
 	
 	public static final String EVENT_AUTHORITY = "ustc.sse.provider.EventAssistant.event";
 	public static final String EVENT_CONTACT_AUTHORITY = "ustc.sse.provider.EventAssistant.eventcontact";
 	
 	public static class Event implements BaseColumns {
+		public static final String TAG = "EventAssistant.Event";
+		
 		public static final Uri CONTENT_URI = Uri.parse("content://" + EVENT_AUTHORITY + "/events");
 		
 		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.EventAssistant.events";
@@ -41,6 +44,8 @@ public class EventAssistant {
 	}
 	
 	public static class EventContact implements BaseColumns {
+		public static final String TAG = "EventAssistant.EventContact";
+		
 		public static final Uri CONTENT_URI = Uri.parse("content://" + EVENT_CONTACT_AUTHORITY + "/eventcontact");
 		
 		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.EventAssistant.eventcontact";

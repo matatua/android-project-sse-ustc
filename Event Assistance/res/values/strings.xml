@@ -30,6 +30,7 @@
 	<string name="event_alarmType">提醒方式:</string>
 	<string name="event_save">保存</string>
 	<string name="event_cancel">取消</string>
+	<string name="event_today_remind_time">当日提前提醒：</string>
 	<string name="event_add_content_hint">事件内容</string>
 	<string name="event_add_contact_hint">输入联系人</string>
 	<string name="event_add_location_hint">输入地点</string>

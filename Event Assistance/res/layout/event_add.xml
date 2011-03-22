@@ -135,6 +135,24 @@
 	
 	</LinearLayout>
 	
+	<LinearLayout android:layout_width="fill_parent"
+  					android:layout_height="wrap_content"
+  					android:orientation="vertical">
+		<TextView android:layout_width="wrap_content"
+  				android:layout_height="wrap_content"
+  				android:text="@string/event_today_remind_time"
+  				android:layout_gravity="left|center"
+				>
+  		</TextView>
+  		<Spinner android:layout_width="fill_parent"
+  				android:layout_height="wrap_content"
+  				android:prompt="@string/event_today_remind_time"
+  				android:id="@+id/event_add_today_remind_time_spinner"
+  				>
+  		</Spinner>
+  		
+  	</LinearLayout>
+	
 	 <LinearLayout android:layout_width="fill_parent"
   					android:layout_height="wrap_content"
   					android:orientation="vertical">
