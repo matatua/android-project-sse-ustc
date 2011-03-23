@@ -5,6 +5,7 @@
 
 package ustc.sse.assistant;
 
+import ustc.sse.assistant.calendar.EventCalendar;
 import ustc.sse.assistant.contact.ContactList;
 import ustc.sse.assistant.event.EventAdd;
 import ustc.sse.assistant.help.HelpActivity;
@@ -42,7 +43,7 @@ public class MainScreen extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				Intent eventIntent = new Intent(MainScreen.this, EventAdd.class);
+				Intent eventIntent = new Intent(MainScreen.this, EventCalendar.class);
 				MainScreen.this.startActivity(eventIntent);
 			}
 		});

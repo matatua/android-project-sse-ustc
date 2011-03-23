@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:id="@+id/calendar_gridView_cell_linearLayout"
+	android:background="@color/calendar_background"
+	>
+	<TextView android:id="@+id/calendar_gridview_textview1" 
+	            android:textColor="@color/day_color"
+	            android:layout_width="wrap_content"
+		        android:layout_height="wrap_content" 
+		        
+		        android:gravity="center" />
+	<TextView android:id="@+id/calendar_gridview_textview2"
+	            android:textColor="@color/day_color"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				
+				android:gravity="center">
+	</TextView>
+</LinearLayout>

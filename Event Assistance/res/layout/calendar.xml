@@ -20,7 +20,7 @@
   					android:gravity="center_vertical|center_horizontal"
   					android:text="x月"
   					android:layout_height="40dp"
-  					android:width="0dp"
+  					android:layout_width="0dp"
   					>
   		</TextView>
   		<TextView android:layout_height="40dp"
@@ -113,9 +113,12 @@
   				
   	<GridView android:layout_width="fill_parent"
   				android:layout_height="fill_parent"
-  				android:id="@+id/calendar_gridView">
+  				android:id="@+id/calendar_gridView"
+  				android:numColumns="7" 
+	            android:padding="1dp" 
+	            android:horizontalSpacing="1dp"
+	            android:verticalSpacing="1dp">
   	</GridView>
   </LinearLayout>
-  
-  
+   
 </RelativeLayout>

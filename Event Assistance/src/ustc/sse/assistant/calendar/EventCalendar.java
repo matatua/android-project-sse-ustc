@@ -3,15 +3,22 @@
  */
 package ustc.sse.assistant.calendar;
 
+import java.util.ArrayList;
 import java.util.Calendar;
-
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import ustc.sse.assistant.calendar.utils.MyCalendar;
 import ustc.sse.assistant.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 /**
@@ -38,6 +45,7 @@ public class EventCalendar extends Activity {
 		
 		initiateCalendars();
 		initiateWidget();
+		setAllTabText();
 	}
 
 	/**
@@ -50,6 +58,7 @@ public class EventCalendar extends Activity {
 		
 		preCalendar.roll(Calendar.MONTH, false);
 		nextCalendar.roll(Calendar.MONTH, true);
+		
 	}
 
 	private void initiateWidget() {
@@ -110,8 +119,38 @@ public class EventCalendar extends Activity {
 	 * @param currentCalendar
 	 */
 	private void initiateCalendarGridView(Calendar currentCalendar) {
-		//
+		List<Map<String, String>> cells = new ArrayList<Map<String, String>>();
+		MyCalendar myCalendar = new MyCalendar(currentCalendar);
+		String[] gregorianDays = myCalendar.getDays();
+		String[] lunarDays = myCalendar.getLunarDays();
+
+		double calendarHeight = calendarGridView.getHeight();
+		double cellHeight = calendarHeight/6.0;
 		
+	
+
+		for (int i = 0; i < gregorianDays.length; i++)
+		{
+			Map<String, String> cell = new HashMap<String, String>();
+			cell.put("textview1", gregorianDays[i]);
+//			cell.put("textview2", lunarDays[i]);
+			cells.add(cell);
+		}
+		
+//		SimpleAdapter simpleAdapter = new SimpleAdapter(this, cells,
+//				R.layout.calendar_cell, new String[]
+//				{ "textview1", "textview2" }, new int[]
+//				{ R.id.gridview_textview1, R.id.gridview_textview2 });
+//		calendarGridView.setAdapter(simpleAdapter);	
+		SimpleAdapter simpleAdapter = new SimpleAdapter(this, cells,
+				R.layout.calendar_cell, new String[]
+				{ "textview1"}, new int[]
+				{ R.id.calendar_gridview_textview1});
+		calendarGridView.setAdapter(simpleAdapter);
+		
+		
+		TextView tv = (TextView) calendarGridView.findViewById(R.id.calendar_gridview_textview1);
+		tv.setHeight((int) cellHeight);
 	}
 	
 	/**
@@ -120,10 +159,15 @@ public class EventCalendar extends Activity {
 	 * @param direction
 	 */
 	private void rollCalendarsMonth(boolean direction) {
-			preCalendar.roll(Calendar.MONTH, direction);
-			curCalendar.roll(Calendar.MONTH, direction);
-			nextCalendar.roll(Calendar.MONTH, direction);
-		
+			int amount = 0;
+			if (direction){
+				amount = 1;
+			} else {
+				amount = -1;
+			}
+			preCalendar.add(Calendar.MONTH, amount);
+			curCalendar.add(Calendar.MONTH, amount);
+			nextCalendar.add(Calendar.MONTH, amount);				
 	}
 
 	private void setAllTabText() {
@@ -131,4 +175,5 @@ public class EventCalendar extends Activity {
 		curMonthTextView.setText(DateFormat.format(DATE_FORMAT_YEAR_MONTH, curCalendar));
 		nextMonthTextView.setText(DateFormat.format(DATE_FORMAT_MONTH, nextCalendar));
 	}
+
 }
