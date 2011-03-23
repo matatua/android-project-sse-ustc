@@ -3,7 +3,7 @@ package ustc.sse.assistant.calendar.data;
 import java.util.HashMap;
 import java.util.Map;
 
-import ustc.sse.assistant.calendar.MappingDate;
+import ustc.sse.assistant.calendar.utils.MappingDate;
 
 public class DateMapping {
 	private Map<MappingDate, String> festivalDateMap;

@@ -6,6 +6,7 @@
     	<item>提示栏</item>
 	</string-array>
 	<string-array name="entries_list_priori_day">
+		<item>无</item>
    	 	<item>1天</item>
     	<item>2天</item>
     	<item>3天</item>
@@ -54,6 +55,7 @@
 		<item>2</item>
 	</integer-array>
 	<integer-array name="entriesvalue_list_priori_day">
+		<item>0</item>
     	<item>1</item>
     	<item>2</item>
     	<item>3</item>

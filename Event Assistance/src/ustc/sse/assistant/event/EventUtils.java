@@ -11,6 +11,14 @@ import android.os.Bundle;
  *
  */
 public class EventUtils {
+	
+	public static final long priorRepeatToInterval(int priorRepeat) {
+		return (24 * 60 * 60 * 1000) / priorRepeat;
+	}
+	
+	public static final long dayToTimeInMillisecond(int day) {
+		return day * 24 * 60  * 60 * 1000;
+	}
 
 	public static final long toTimeInMillisecond(int todayRemindTime) {
 		switch (todayRemindTime) {

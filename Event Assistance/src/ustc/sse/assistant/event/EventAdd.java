@@ -78,8 +78,8 @@ public class EventAdd extends Activity{
 	private Calendar beginCalendar = Calendar.getInstance();
 	private Calendar endCalendar = Calendar.getInstance();
 	
-	private int priorAlarmDay = 0;
-	private int priorAlarmRepeat = 0;
+	private int priorAlarmDay = EventConstant.EVENT_PRIOR_DAY_NONE;
+	private int priorAlarmRepeat = EventConstant.EVENT_PRIOR_REPEAT_ONE;
 	private int alarmType = 0;
 	private String location = "";
 	private String note = "";
@@ -348,8 +348,35 @@ public class EventAdd extends Activity{
 			//save event and corresponding contacts
 			saveEventAndContact();				
 			//start alarm service here
-			startAlarmService();
+			startTodayAlarmService();
+			startPriorAlarmService();
 			EventAdd.this.finish();
+		}
+
+		private void startPriorAlarmService() {
+			if (priorAlarmDay == EventConstant.EVENT_PRIOR_DAY_NONE) {
+				return ;
+			}
+			AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+			long priorRemindTimeInMillisecond = EventUtils.dayToTimeInMillisecond(priorAlarmDay);
+			long triggerAtTime = beginCalendar.getTimeInMillis() - priorRemindTimeInMillisecond;
+			
+			Intent intent = new Intent(EventAdd.this, EventBroadcastReceiver.class);
+			intent.setAction(Event.TAG + System.currentTimeMillis());
+			intent.putExtra(Event.CONTENT, content);
+			intent.putExtra(Event.ALARM_TIME, alarmTime);
+			intent.putExtra(Event.ALARM_TYPE, alarmType);
+			intent.putExtra(Event.BEGIN_TIME, beginCalendar.getTimeInMillis());
+			intent.putExtra(Event.END_TIME, endCalendar.getTimeInMillis());
+			intent.putExtra(Event.LOCATION, location);
+			intent.putExtra(Event.NOTE, note);
+			intent.putExtra(Event.PRIOR_ALARM_DAY, priorAlarmDay);
+			intent.putExtra(Event.PRIOR_REPEAT_TIME, priorAlarmRepeat);
+			PendingIntent operation = PendingIntent.getBroadcast(EventAdd.this, 0, intent, 0);
+			am.setInexactRepeating(AlarmManager.RTC_WAKEUP, 
+								triggerAtTime, 
+								EventUtils.priorRepeatToInterval(priorAlarmRepeat), 
+								operation);
 		}
 
 		private void saveEventAndContact() {
@@ -399,7 +426,7 @@ public class EventAdd extends Activity{
 			}
 		}
 
-		private void startAlarmService() {
+		private void startTodayAlarmService() {
 			AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
 			long remindTimeInMillisecond = EventUtils.toTimeInMillisecond(alarmTime);
 			long triggerAtTime = beginCalendar.getTimeInMillis() - remindTimeInMillisecond;
@@ -470,7 +497,7 @@ public class EventAdd extends Activity{
 				
 				if (compareCalendar.after(endCalendar)) {
 					endCalendar.set(year, monthOfYear, dayOfMonth);
-					endDateButton.setText(DateFormat.format(TIME_FORMAT, endCalendar));
+					endDateButton.setText(DateFormat.format(DATE_FORMAT, endCalendar));
 					datePickerDialog.updateDate(year, monthOfYear, dayOfMonth);
 				}
 				beginCalendar.set(year, monthOfYear, dayOfMonth);

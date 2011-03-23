@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  android:gravity="center">
+  
+  <LinearLayout android:layout_width="fill_parent"
+  				android:layout_height="wrap_content"
+  				android:orientation="vertical"
+  				android:layout_alignParentTop="true"
+  				android:id="@+id/calendar_top">
+  	<LinearLayout android:layout_width="fill_parent"
+  					android:layout_height="wrap_content"
+  					android:orientation="horizontal" 
+  					android:weightSum="2.0">
+  		<TextView android:layout_weight="0.5"
+  					android:background="@drawable/calendar_tab_deep_color"
+  					android:id="@+id/calendar_left_tab"
+  					android:gravity="center_vertical|center_horizontal"
+  					android:text="x月"
+  					android:layout_height="40dp"
+  					android:width="0dp"
+  					>
+  		</TextView>
+  		<TextView android:layout_height="40dp"
+  					android:layout_width="0dp"
+  					android:layout_weight="1.0"
+  					android:background="@drawable/calendar_tab_shallow_color"
+  					android:id="@+id/calendar_center_tab"
+  					android:gravity="center"
+  					android:text="x年x月">
+  		</TextView>
+  	
+  	    <TextView android:layout_height="40dp"
+  					android:layout_width="0dp"
+  					android:layout_weight="0.5"
+  					android:background="@drawable/calendar_tab_deep_color"
+  					android:id="@+id/calendar_right_tab"
+  					android:gravity="center_vertical|center_horizontal"
+  					android:text="x月">
+  		</TextView>
+  	</LinearLayout>
+  	
+	<LinearLayout android:layout_width="fill_parent"
+  					android:layout_height="wrap_content"
+  					android:orientation="horizontal"
+  					android:background="@drawable/calendar_week_background">
+  		<TextView android:layout_width="0dp"
+  					android:layout_height="@dimen/calendar_week_height"
+  					android:layout_weight="1.0"
+  					android:id="@+id/calendar_week_sunday"
+  					android:text="日"
+  					android:gravity="center"
+  					android:textColor="@android:color/white">
+  		</TextView>
+  		<TextView android:layout_width="0dp"
+  					android:layout_height="@dimen/calendar_week_height"
+  					android:layout_weight="1.0"
+  					android:id="@+id/calendar_week_sunday"
+  					android:text="一"
+  					android:gravity="center"
+  					android:textColor="@android:color/white">
+  		</TextView>
+  		<TextView android:layout_width="0dp"
+  					android:layout_height="@dimen/calendar_week_height"
+  					android:layout_weight="1.0"
+  					android:id="@+id/calendar_week_sunday"
+  					android:text="二"
+  					android:gravity="center"
+  					android:textColor="@android:color/white">
+  		</TextView>
+   		<TextView android:layout_width="0dp"
+  					android:layout_height="@dimen/calendar_week_height"
+  					android:layout_weight="1.0"
+  					android:id="@+id/calendar_week_sunday"
+  					android:text="三"
+  					android:gravity="center"
+  					android:textColor="@android:color/white">
+  		</TextView>
+  		<TextView android:layout_width="0dp"
+  					android:layout_height="@dimen/calendar_week_height"
+  					android:layout_weight="1.0"
+  					android:id="@+id/calendar_week_sunday"
+  					android:text="四"
+  					android:gravity="center"
+  					android:textColor="@android:color/white">
+  		</TextView>
+  		<TextView android:layout_width="0dp"
+  					android:layout_height="@dimen/calendar_week_height"
+  					android:layout_weight="1.0"
+  					android:id="@+id/calendar_week_sunday"
+  					android:text="五"
+  					android:gravity="center"
+  					android:textColor="@android:color/white">
+  		</TextView>
+  		 <TextView android:layout_width="0dp"
+  					android:layout_height="@dimen/calendar_week_height"
+  					android:layout_weight="1.0"
+  					android:id="@+id/calendar_week_sunday"
+  					android:text="六"
+  					android:gravity="center"
+  					android:textColor="@android:color/white">
+  		</TextView>
+  
+  	</LinearLayout>
+  </LinearLayout>
+  
+  <LinearLayout android:layout_width="fill_parent"
+  				android:layout_height="fill_parent"
+  				android:orientation="vertical"
+  				android:layout_below="@id/calendar_top">
+  				
+  	<GridView android:layout_width="fill_parent"
+  				android:layout_height="fill_parent"
+  				android:id="@+id/calendar_gridView">
+  	</GridView>
+  </LinearLayout>
+  
+  
+</RelativeLayout>

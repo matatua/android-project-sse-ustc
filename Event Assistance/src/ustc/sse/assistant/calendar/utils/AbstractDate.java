@@ -1,4 +1,4 @@
-package ustc.sse.assistant.calendar;
+package ustc.sse.assistant.calendar.utils;
 
 public class AbstractDate implements SmartDate {
 	protected Integer year;

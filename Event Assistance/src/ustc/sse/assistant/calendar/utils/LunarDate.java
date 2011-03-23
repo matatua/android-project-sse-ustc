@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ustc.sse.assistant.calendar;
+package ustc.sse.assistant.calendar.utils;
 
 /**
  * Caution:
