@@ -133,6 +133,7 @@ public class EventCalendar extends Activity {
 		double cellHeight = calendarHeight/6.0;
 		
 		List<Map<String, SmartDate>> data = new ArrayList<Map<String,SmartDate>>();
+		
 		ListAdapter adapter = new EventCalendarGridViewAdapter(this, data, (int) cellHeight);
 
 		calendarGridView.setAdapter(adapter);

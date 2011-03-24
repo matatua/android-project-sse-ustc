@@ -2,6 +2,8 @@ package ustc.sse.assistant.calendar.utils;
 
 import java.util.Map;
 
+import android.R;
+
 import ustc.sse.assistant.calendar.data.DateMapping;
 import ustc.sse.assistant.calendar.data.Lunar;
 
@@ -17,7 +19,7 @@ public class OrderedSmartDateFactory implements SmartDateFactory {
 	
 	@Override
 	public SmartDate createSmartDate(Integer year, Integer month, Integer day) {
-		MappingDate gregorianDate = new GregorianDate(year, month, day);
+		AbstractDate gregorianDate = new GregorianDate(year, month, day);
 		String displayText = dateMapping.getFestivalDateMap().get(gregorianDate);
 		//first check festival in ordinary calendar
 		if (displayText != null) {
@@ -25,7 +27,7 @@ public class OrderedSmartDateFactory implements SmartDateFactory {
 			gregorianDate.setMonthText(month.toString() + "月");
 			gregorianDate.setDayText(day.toString() + "日");
 			gregorianDate.setDisplayText(displayText);
-			gregorianDate.setColorResId(colorResId);
+			gregorianDate.setColorResId(ustc.sse.assistant.R.color.day_color);
 			return gregorianDate;
 		} 
 		

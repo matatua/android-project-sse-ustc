@@ -7,40 +7,45 @@ package ustc.sse.assistant.calendar.utils;
  */
 public interface SmartDate {
 	/**
-	 * the number of year
+	 * the gregorian number of year
 	 * @return
 	 */
-	Integer getOriginalYear();
+	Integer getGregorianYear();
 	
 	/**
 	 * 
-	 * @return the number of month
+	 * @return the gregorian number of month
 	 */
-	Integer getOriginalMonth();
+	Integer getGregorianMonth();
 	
 	/**
 	 * 
-	 * @return the number of day
+	 * @return the gregorian number of day
 	 */
-	Integer getOriginalDay();
+	Integer getGregorianDay();
 	
+	Integer getLunarYear();
+	
+	Integer getLunarMonth();
+	
+	Integer getLunarDay();
 	/**
 	 * 
 	 * @return typical text represent the month
 	 */
-	String getMonthText();
+	String getLunarMonthText();
 	
 	/**
 	 * 
 	 * @return typical text represent the year
 	 */
-	String getYearText();
+	String getLunarYearText();
 	
 	/**
 	 * 
 	 * @return typical text represent the day
 	 */
-	String getDayText();
+	String getLunarDayText();
 	
 	/**
 	 * 
@@ -48,5 +53,7 @@ public interface SmartDate {
 	 */
 	String getDisplayText();
 	
-	int getColorResId();
+	int getLunarColorResId();
+	
+	int getGregorianColorResId();
 }

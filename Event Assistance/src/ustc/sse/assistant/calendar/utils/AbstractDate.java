@@ -3,87 +3,139 @@ package ustc.sse.assistant.calendar.utils;
 import android.R;
 
 public class AbstractDate implements SmartDate {
-	protected Integer year;
-	protected Integer month;
-	protected Integer day;
+	protected Integer lunarYear;
+	protected Integer lunarMonth;
+	protected Integer lunarDay;
 	
-	protected String yearText;
-	protected String monthText;
-	protected String dayText;
+	protected Integer gregorianYear;
+	protected Integer gregorianMonth;
+	protected Integer gregorianDay;
+	
+	protected String lunarYearText;
+	protected String lunarMonthText;
+	protected String lunarDayText;
 	
 	private String displayText;
-	private int colorResId;
-	
+	private int lunarColorResId;
+	private int gregorianColorResId;
 	
 	/**
-	 * Caution:
-	 * Create from OrderdSmartDateFactory, never use this constructor
-	 * @param year
-	 * @param month
-	 * @param day
+	 *  Caution:
+	 *  Create from OrderdSmartDateFactory, never use this constructor
+	 * @param gregorianYear
+	 * @param gregorianMonth
+	 * @param gregorianDay
+	 * @param lunarDay
+	 * @param lunarMonth
+	 * @param lunarYear
 	 */
-	public AbstractDate(Integer year, Integer month, Integer day) {
+	public AbstractDate(Integer gregorianYear, Integer gregorianMonth, Integer gregorianDay, Integer lunarDay, Integer lunarMonth, Integer lunarYear) {
 		super();
-		this.year = year;
-		this.month = month;
-		this.day = day;
+		this.lunarYear = lunarYear;
+		this.lunarMonth = lunarMonth;
+		this.lunarDay = lunarDay;
+		this.gregorianDay = gregorianDay;
+		this.gregorianMonth = gregorianMonth;
+		this.gregorianYear = gregorianYear;
 		
-		yearText = year.toString();
-		monthText = month.toString();
-		dayText = day.toString();
-		displayText = yearText + "-" + monthText + "-" + dayText;
+		lunarYearText = lunarYear.toString();
+		lunarMonthText = lunarMonth.toString();
+		lunarDayText = lunarDay.toString();
+		displayText = lunarYearText + "-" + lunarMonthText + "-" + lunarDayText;
 	}
 
-	@Override
-	public Integer getOriginalYear() {
-		return year;
-	}
-
-	@Override
-	public Integer getOriginalMonth() {	
-		return month;
-	}
-
-	@Override
-	public Integer getOriginalDay() {
-		return day;
-	}
-
-	@Override
-	public String getMonthText() {
-		return monthText;
-	}
-
-	@Override
-	public String getYearText() {
-		return yearText;
-	}
-
-	@Override
-	public String getDayText() {
-		return dayText;
-	}
 
 	@Override
 	public String getDisplayText() {
 		return displayText;
 	}
 
-	public void setYearText(String yearText) {
-		this.yearText = yearText;
+	public void setLunarYearText(String lunarYearText) {
+		this.lunarYearText = lunarYearText;
 	}
 
-	public void setMonthText(String monthText) {
-		this.monthText = monthText;
+	public void setLunarMonthText(String lunarMonthText) {
+		this.lunarMonthText = lunarMonthText;
 	}
 
-	public void setDayText(String dayText) {
-		this.dayText = dayText;
+	public void setDayText(String lunarDayText) {
+		this.lunarDayText = lunarDayText;
 	}
 
 	public void setDisplayText(String displayText) {
 		this.displayText = displayText;
 	}
+
+	/**
+	 * @param colorResId the colorResId to set
+	 */
+	public void setLunarColorResId(int colorResId) {
+		this.lunarColorResId = colorResId;
+	}
+
+	@Override
+	public Integer getGregorianYear() {
+		return gregorianYear;
+	}
+
+	@Override
+	public Integer getGregorianMonth() {
+		return gregorianMonth;
+	}
+
+	@Override
+	public Integer getGregorianDay() {
+		return gregorianDay;
+	}
+
+	@Override
+	public Integer getLunarYear() {
+		return lunarYear;
+	}
+
+	@Override
+	public Integer getLunarMonth() {
+		return lunarYear;
+	}
+
+	@Override
+	public Integer getLunarDay() {
+		return lunarDay;
+	}
+
+	@Override
+	public String getLunarMonthText() {
+		return lunarMonthText;
+	}
+
+	@Override
+	public String getLunarYearText() {
+		return lunarYearText;
+	}
+
+	@Override
+	public String getLunarDayText() {
+		return lunarDayText;
+	}
+
+	@Override
+	public int getLunarColorResId() {
+		return R.color.black;
+	}
+
+	@Override
+	public int getGregorianColorResId() {
+		return R.color.black;
+	}
+
+
+	/**
+	 * @param gregorianColorResId the gregorianColorResId to set
+	 */
+	public void setGregorianColorResId(int gregorianColorResId) {
+		this.gregorianColorResId = gregorianColorResId;
+	}
+
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
@@ -92,11 +144,15 @@ public class AbstractDate implements SmartDate {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((day == null) ? 0 : day.hashCode());
-		result = prime * result + ((month == null) ? 0 : month.hashCode());
-		result = prime * result + ((year == null) ? 0 : year.hashCode());
+		result = prime * result
+				+ ((gregorianDay == null) ? 0 : gregorianDay.hashCode());
+		result = prime * result
+				+ ((gregorianMonth == null) ? 0 : gregorianMonth.hashCode());
+		result = prime * result
+				+ ((gregorianYear == null) ? 0 : gregorianYear.hashCode());
 		return result;
 	}
+
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
@@ -107,35 +163,24 @@ public class AbstractDate implements SmartDate {
 			return true;
 		if (obj == null)
 			return false;
+
 		AbstractDate other = (AbstractDate) obj;
-		if (day == null) {
-			if (other.day != null)
+		if (gregorianDay == null) {
+			if (other.gregorianDay != null)
 				return false;
-		} else if (!day.equals(other.day))
+		} else if (!gregorianDay.equals(other.gregorianDay))
 			return false;
-		if (month == null) {
-			if (other.month != null)
+		if (gregorianMonth == null) {
+			if (other.gregorianMonth != null)
 				return false;
-		} else if (!month.equals(other.month))
+		} else if (!gregorianMonth.equals(other.gregorianMonth))
 			return false;
-		if (year == null) {
-			if (other.year != null)
+		if (gregorianYear == null) {
+			if (other.gregorianYear != null)
 				return false;
-		} else if (!year.equals(other.year))
+		} else if (!gregorianYear.equals(other.gregorianYear))
 			return false;
 		return true;
-	}
-
-	@Override
-	public int getColorResId() {
-		return R.color.primary_text_light;
-	}
-
-	/**
-	 * @param colorResId the colorResId to set
-	 */
-	public void setColorResId(int colorResId) {
-		this.colorResId = colorResId;
 	}
 
 	
