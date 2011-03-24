@@ -33,8 +33,7 @@ import android.widget.TextView;
  *
  */
 public class EventCalendar extends Activity {
-	public static final String GREGORIAN_SMART_DATE = "gregorian";
-	public static final String LUNAR_SMART_DATE	= "lunar";
+	public static final String SMART_DATE = "smart_date";
 	
 	private TextView preMonthTextView;
 	private TextView curMonthTextView;
@@ -210,17 +209,16 @@ public class EventCalendar extends Activity {
 			linearLayout.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, height));
 			
 			Map<String, SmartDate> map = data.get(position);
-			SmartDate gregorianDate = map.get(GREGORIAN_SMART_DATE);
-			SmartDate lunarDate = map.get(LUNAR_SMART_DATE);
-
-			TextView gregorianTv = (TextView) linearLayout.findViewById(R.id.calendar_gridview_textview1);
-			TextView lunarTv = (TextView) linearLayout.findViewById(R.id.calendar_gridview_textview2);
+			SmartDate smartDate = map.get(SMART_DATE);
+		
+			TextView firstTv = (TextView) linearLayout.findViewById(R.id.calendar_gridview_textview1);
+			TextView secondTv = (TextView) linearLayout.findViewById(R.id.calendar_gridview_textview2);
 			
 			//set different color and font, or other attributes using information from SmartDate
-			gregorianTv.setText(gregorianDate.getDisplayText());
-			lunarTv.setText(lunarDate.getDisplayText());
-			gregorianTv.setTextColor(gregorianDate.getColorResId());
-			lunarTv.setTextColor(lunarDate.getColorResId());
+			firstTv.setText(smartDate.getGregorianDay().toString());
+			secondTv.setText(smartDate.getDisplayText());
+			firstTv.setTextColor(smartDate.getGregorianColorResId());
+			secondTv.setTextColor(smartDate.getLunarColorResId());
 			return linearLayout;
 			
 		}
