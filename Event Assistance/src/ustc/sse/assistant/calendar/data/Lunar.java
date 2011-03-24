@@ -130,8 +130,6 @@ public final class Lunar
 
     int SD = day;
 
-    int sy = (SY - 4) % 12;
-
     Date sDObj = new Date(SY - 1900, SM - 1, SD);
 
     Lunar1(sDObj);

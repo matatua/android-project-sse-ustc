@@ -7,7 +7,6 @@ package ustc.sse.assistant;
 
 import ustc.sse.assistant.calendar.EventCalendar;
 import ustc.sse.assistant.contact.ContactList;
-import ustc.sse.assistant.event.EventAdd;
 import ustc.sse.assistant.help.HelpActivity;
 import ustc.sse.assistant.setting.Setting;
 import android.app.Activity;

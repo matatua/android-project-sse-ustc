@@ -5,30 +5,19 @@ public class MyCalendar {
 
 	private SmartDateFactory factory = OrderedSmartDateFactory.getInstance();
 	private SmartDate sd;
-	private String[] days = new String[42];
-	private String[] lunarDays = new String[42];
+	private AbstractDate[] date = new AbstractDate[42];
 	
-	public String[] getDays() {
-		return days;
-	}
-	
-	public String[] getLunarDays() {
-		return lunarDays;
-	}
-
 	// 当前年和月
 	public int currentYear, currentMonth;
 	// 上月或下月
 	public int prevYear, prevMonth;
 	public int nextYear, nextMonth;
-	public int currentDay = -1, currentDay1 = -1, currentDayIndex = -1;
-	private Calendar calendar = Calendar.getInstance();
-	
+	Calendar calendar = Calendar.getInstance();
+		
 	public MyCalendar(Calendar currentCalendar){
 		currentYear = currentCalendar.get(Calendar.YEAR);
 		currentMonth = currentCalendar.get(Calendar.MONTH);
-		currentDay = currentCalendar.get(Calendar.DAY_OF_MONTH);
-		calendar.set(currentYear, currentMonth, currentDay);
+
 		prevYear = currentYear;
 		prevMonth = currentMonth - 1;
 		nextYear = currentYear;
@@ -47,6 +36,10 @@ public class MyCalendar {
 		
 		calculateDays();
 	}
+
+	public AbstractDate[] getCurrentMonthCalendar(){
+		return date;
+	}
 	
 	private void calculateDays()
 	{
@@ -61,26 +54,18 @@ public class MyCalendar {
 
 		for (int i = week, day = prevMonthDays; i > 1; i--, day--)
 		{
-			days[i - 2] = "*" + String.valueOf(day);
 			sd = factory.createSmartDate(prevYear, (prevMonth + 1), day);
-			lunarDays[i - 2] = sd.getDisplayText();
+			date[i - 2] = (AbstractDate) sd;
 		}
 		for (int day = 1, i = week - 1; day <= monthDays; day++, i++)
 		{		
-			days[i] = String.valueOf(day);
-			if (day == currentDay)
-			{
-				currentDayIndex = i;
-
-			}
 			sd = factory.createSmartDate(currentYear, (currentMonth + 1), day);
-			lunarDays[i] = sd.getDisplayText();
+			date[i] = (AbstractDate) sd;
 		}
-		for (int i = week + monthDays - 1, day = 1; i < days.length; i++, day++)
+		for (int i = week + monthDays - 1, day = 1; i < date.length; i++, day++)
 		{
-			days[i] = "*" + String.valueOf(day);
 			sd = factory.createSmartDate(nextYear, (nextMonth + 1), day);
-			lunarDays[i] = sd.getDisplayText();
+			date[i] = (AbstractDate) sd;
 		}
 
 	}

@@ -3,13 +3,9 @@
  */
 package ustc.sse.assistant.calendar;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import ustc.sse.assistant.R;
+import ustc.sse.assistant.calendar.utils.AbstractDate;
 import ustc.sse.assistant.calendar.utils.MyCalendar;
 import ustc.sse.assistant.calendar.utils.SmartDate;
 import android.app.Activity;
@@ -25,7 +21,6 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 /**
@@ -130,8 +125,9 @@ public class EventCalendar extends Activity {
 
 		double calendarHeight = calendarGridView.getHeight();
 		double cellHeight = calendarHeight/6.0;
-		
-		List<Map<String, SmartDate>> data = new ArrayList<Map<String,SmartDate>>();
+	
+		MyCalendar myCalendar = new MyCalendar(currentCalendar);
+	    AbstractDate[] data = myCalendar.getCurrentMonthCalendar();
 		
 		ListAdapter adapter = new EventCalendarGridViewAdapter(this, data, (int) cellHeight);
 
@@ -165,7 +161,7 @@ public class EventCalendar extends Activity {
 	private static class EventCalendarGridViewAdapter extends BaseAdapter {
 
 		private Context context;
-		private List<Map<String, SmartDate>> data;
+		private AbstractDate[] data;
 		private int height;
 		
 		/**
@@ -174,7 +170,7 @@ public class EventCalendar extends Activity {
 		 * @param data list of map of SmartDate, a map contain a gregorian date and a lunar date
 		 * @param height the height of each cell
 		 */
-		public EventCalendarGridViewAdapter(Context ctx, List<Map<String, SmartDate>> data, int height) {
+		public EventCalendarGridViewAdapter(Context ctx, AbstractDate[] data, int height) {
 			this.context = ctx;
 			this.data = data;
 			this.height = height;
@@ -182,12 +178,12 @@ public class EventCalendar extends Activity {
 		
 		@Override
 		public int getCount() {
-			return data.size();
+			return data.length;
 		}
 
 		@Override
 		public Object getItem(int position) {
-			return data.get(position);
+			return data[position];
 		}
 
 		@Override
@@ -208,8 +204,7 @@ public class EventCalendar extends Activity {
 			}
 			linearLayout.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, height));
 			
-			Map<String, SmartDate> map = data.get(position);
-			SmartDate smartDate = map.get(SMART_DATE);
+			SmartDate smartDate = data[position];
 		
 			TextView firstTv = (TextView) linearLayout.findViewById(R.id.calendar_gridview_textview1);
 			TextView secondTv = (TextView) linearLayout.findViewById(R.id.calendar_gridview_textview2);
