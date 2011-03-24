@@ -25,7 +25,7 @@ public class OrderedSmartDateFactory implements SmartDateFactory {
 			gregorianDate.setMonthText(month.toString() + "月");
 			gregorianDate.setDayText(day.toString() + "日");
 			gregorianDate.setDisplayText(displayText);
-			
+			gregorianDate.setColorResId(colorResId);
 			return gregorianDate;
 		} 
 		

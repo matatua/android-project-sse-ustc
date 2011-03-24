@@ -1,5 +1,7 @@
 package ustc.sse.assistant.calendar.utils;
 
+import android.R;
+
 public class AbstractDate implements SmartDate {
 	protected Integer year;
 	protected Integer month;
@@ -10,6 +12,7 @@ public class AbstractDate implements SmartDate {
 	protected String dayText;
 	
 	private String displayText;
+	private int colorResId;
 	
 	
 	/**
@@ -121,6 +124,18 @@ public class AbstractDate implements SmartDate {
 		} else if (!year.equals(other.year))
 			return false;
 		return true;
+	}
+
+	@Override
+	public int getColorResId() {
+		return R.color.primary_text_light;
+	}
+
+	/**
+	 * @param colorResId the colorResId to set
+	 */
+	public void setColorResId(int colorResId) {
+		this.colorResId = colorResId;
 	}
 
 	

@@ -8,16 +8,23 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import ustc.sse.assistant.calendar.utils.MyCalendar;
+
 import ustc.sse.assistant.R;
+import ustc.sse.assistant.calendar.utils.MyCalendar;
+import ustc.sse.assistant.calendar.utils.SmartDate;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
@@ -26,6 +33,8 @@ import android.widget.TextView;
  *
  */
 public class EventCalendar extends Activity {
+	public static final String GREGORIAN_SMART_DATE = "gregorian";
+	public static final String LUNAR_SMART_DATE	= "lunar";
 	
 	private TextView preMonthTextView;
 	private TextView curMonthTextView;
@@ -119,38 +128,14 @@ public class EventCalendar extends Activity {
 	 * @param currentCalendar
 	 */
 	private void initiateCalendarGridView(Calendar currentCalendar) {
-		List<Map<String, String>> cells = new ArrayList<Map<String, String>>();
-		MyCalendar myCalendar = new MyCalendar(currentCalendar);
-		String[] gregorianDays = myCalendar.getDays();
-		String[] lunarDays = myCalendar.getLunarDays();
 
 		double calendarHeight = calendarGridView.getHeight();
 		double cellHeight = calendarHeight/6.0;
 		
-	
+		List<Map<String, SmartDate>> data = new ArrayList<Map<String,SmartDate>>();
+		ListAdapter adapter = new EventCalendarGridViewAdapter(this, data, (int) cellHeight);
 
-		for (int i = 0; i < gregorianDays.length; i++)
-		{
-			Map<String, String> cell = new HashMap<String, String>();
-			cell.put("textview1", gregorianDays[i]);
-//			cell.put("textview2", lunarDays[i]);
-			cells.add(cell);
-		}
-		
-//		SimpleAdapter simpleAdapter = new SimpleAdapter(this, cells,
-//				R.layout.calendar_cell, new String[]
-//				{ "textview1", "textview2" }, new int[]
-//				{ R.id.gridview_textview1, R.id.gridview_textview2 });
-//		calendarGridView.setAdapter(simpleAdapter);	
-		SimpleAdapter simpleAdapter = new SimpleAdapter(this, cells,
-				R.layout.calendar_cell, new String[]
-				{ "textview1"}, new int[]
-				{ R.id.calendar_gridview_textview1});
-		calendarGridView.setAdapter(simpleAdapter);
-		
-		
-		TextView tv = (TextView) calendarGridView.findViewById(R.id.calendar_gridview_textview1);
-		tv.setHeight((int) cellHeight);
+		calendarGridView.setAdapter(adapter);
 	}
 	
 	/**
@@ -176,4 +161,68 @@ public class EventCalendar extends Activity {
 		nextMonthTextView.setText(DateFormat.format(DATE_FORMAT_MONTH, nextCalendar));
 	}
 
+	
+	private static class EventCalendarGridViewAdapter extends BaseAdapter {
+
+		private Context context;
+		private List<Map<String, SmartDate>> data;
+		private int height;
+		
+		/**
+		 * 
+		 * @param ctx
+		 * @param data list of map of SmartDate, a map contain a gregorian date and a lunar date
+		 * @param height the height of each cell
+		 */
+		public EventCalendarGridViewAdapter(Context ctx, List<Map<String, SmartDate>> data, int height) {
+			this.context = ctx;
+			this.data = data;
+			this.height = height;
+		}
+		
+		@Override
+		public int getCount() {
+			return data.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return data.get(position);
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			
+			LinearLayout linearLayout = null;
+			if (convertView != null && convertView instanceof LinearLayout) {
+				linearLayout = (LinearLayout) convertView;
+			} else {
+				LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				linearLayout = (LinearLayout) inflater.inflate(R.id.calendar_gridView_cell_linearLayout, null);
+
+			}
+			linearLayout.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, height));
+			
+			Map<String, SmartDate> map = data.get(position);
+			SmartDate gregorianDate = map.get(GREGORIAN_SMART_DATE);
+			SmartDate lunarDate = map.get(LUNAR_SMART_DATE);
+
+			TextView gregorianTv = (TextView) linearLayout.findViewById(R.id.calendar_gridview_textview1);
+			TextView lunarTv = (TextView) linearLayout.findViewById(R.id.calendar_gridview_textview2);
+			
+			//set different color and font, or other attributes using information from SmartDate
+			gregorianTv.setText(gregorianDate.getDisplayText());
+			lunarTv.setText(lunarDate.getDisplayText());
+			gregorianTv.setTextColor(gregorianDate.getColorResId());
+			lunarTv.setTextColor(lunarDate.getColorResId());
+			return linearLayout;
+			
+		}
+		
+	}
 }

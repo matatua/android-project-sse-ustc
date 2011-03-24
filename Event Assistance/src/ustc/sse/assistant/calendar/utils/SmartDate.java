@@ -47,4 +47,6 @@ public interface SmartDate {
 	 * @return text to be shown in a calendar
 	 */
 	String getDisplayText();
+	
+	int getColorResId();
 }
