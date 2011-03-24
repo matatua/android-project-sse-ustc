@@ -219,6 +219,8 @@ public class EventCalendar extends Activity {
 			secondTv.setText(smartDate.getDisplayText());
 			firstTv.setTextColor(smartDate.getGregorianColorResId());
 			secondTv.setTextColor(smartDate.getLunarColorResId());
+			
+			linearLayout.setTag(smartDate);
 			return linearLayout;
 			
 		}
