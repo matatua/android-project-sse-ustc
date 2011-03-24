@@ -27,8 +27,6 @@ public class LunarDate extends AbstractDate {
 				+ ((lunarDay == null) ? 0 : lunarDay.hashCode());
 		result = prime * result
 				+ ((lunarMonth == null) ? 0 : lunarMonth.hashCode());
-		result = prime * result
-				+ ((lunarYear == null) ? 0 : lunarYear.hashCode());
 		return result;
 	}
 

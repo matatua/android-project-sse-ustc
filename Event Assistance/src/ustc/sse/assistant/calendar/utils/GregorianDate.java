@@ -26,8 +26,6 @@ public class GregorianDate extends AbstractDate {
 				+ ((gregorianDay == null) ? 0 : gregorianDay.hashCode());
 		result = prime * result
 				+ ((gregorianMonth == null) ? 0 : gregorianMonth.hashCode());
-		result = prime * result
-				+ ((gregorianYear == null) ? 0 : gregorianYear.hashCode());
 		return result;
 	}
 

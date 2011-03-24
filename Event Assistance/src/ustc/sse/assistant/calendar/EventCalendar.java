@@ -4,19 +4,21 @@
 package ustc.sse.assistant.calendar;
 
 import java.util.Calendar;
+
 import ustc.sse.assistant.R;
-import ustc.sse.assistant.calendar.utils.AbstractDate;
 import ustc.sse.assistant.calendar.utils.MyCalendar;
 import ustc.sse.assistant.calendar.utils.SmartDate;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.LinearLayout;
@@ -28,6 +30,8 @@ import android.widget.TextView;
  *
  */
 public class EventCalendar extends Activity {
+	private static final double CALENDAR_ROW_NUMBER = 6.0;
+
 	public static final String SMART_DATE = "smart_date";
 	
 	private TextView preMonthTextView;
@@ -44,11 +48,23 @@ public class EventCalendar extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.calendar);
-		
+		setContentView(R.layout.calendar);	
 		initiateCalendars();
 		initiateWidget();
 		setAllTabText();
+		delayCalendarViewInitiation();
+	}
+
+	private void delayCalendarViewInitiation() {
+		Handler handler = new Handler();
+		handler.postDelayed(new Runnable() {
+			
+			@Override
+			public void run() {
+				initiateCalendarGridView(curCalendar);
+				
+			}
+		}, 100);
 	}
 
 	/**
@@ -72,8 +88,7 @@ public class EventCalendar extends Activity {
 		
 		//set onClick listener for tabs
 		initiateTabListener();
-		//
-		initiateCalendarGridView(curCalendar);
+		
 	}
 
 
@@ -124,14 +139,15 @@ public class EventCalendar extends Activity {
 	private void initiateCalendarGridView(Calendar currentCalendar) {
 
 		double calendarHeight = calendarGridView.getHeight();
-		double cellHeight = calendarHeight/6.0;
+		double cellHeight = calendarHeight / CALENDAR_ROW_NUMBER;
 	
 		MyCalendar myCalendar = new MyCalendar(currentCalendar);
-	    AbstractDate[] data = myCalendar.getCurrentMonthCalendar();
+	    SmartDate[] data = myCalendar.getCurrentMonthCalendar();
 		
 		ListAdapter adapter = new EventCalendarGridViewAdapter(this, data, (int) cellHeight);
 
 		calendarGridView.setAdapter(adapter);
+		
 	}
 	
 	/**
@@ -161,7 +177,7 @@ public class EventCalendar extends Activity {
 	private static class EventCalendarGridViewAdapter extends BaseAdapter {
 
 		private Context context;
-		private AbstractDate[] data;
+		private SmartDate[] data;
 		private int height;
 		
 		/**
@@ -170,7 +186,7 @@ public class EventCalendar extends Activity {
 		 * @param data list of map of SmartDate, a map contain a gregorian date and a lunar date
 		 * @param height the height of each cell
 		 */
-		public EventCalendarGridViewAdapter(Context ctx, AbstractDate[] data, int height) {
+		public EventCalendarGridViewAdapter(Context ctx, SmartDate[] data, int height) {
 			this.context = ctx;
 			this.data = data;
 			this.height = height;
@@ -199,10 +215,10 @@ public class EventCalendar extends Activity {
 				linearLayout = (LinearLayout) convertView;
 			} else {
 				LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				linearLayout = (LinearLayout) inflater.inflate(R.id.calendar_gridView_cell_linearLayout, null);
+				linearLayout = (LinearLayout) inflater.inflate(R.layout.calendar_cell, null);
 
 			}
-			linearLayout.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, height));
+			linearLayout.setLayoutParams(new AbsListView.LayoutParams(LayoutParams.FILL_PARENT, height));
 			
 			SmartDate smartDate = data[position];
 		
