@@ -1,7 +1,5 @@
 package ustc.sse.assistant.calendar.utils;
 
-import android.R;
-
 public class AbstractDate implements SmartDate {
 	protected Integer lunarYear;
 	protected Integer lunarMonth;
@@ -15,9 +13,9 @@ public class AbstractDate implements SmartDate {
 	protected String lunarMonthText;
 	protected String lunarDayText;
 	
-	private String displayText;
-	private int lunarColorResId;
-	private int gregorianColorResId;
+	protected String displayText;
+	protected Integer lunarColorResId;
+	protected Integer gregorianColorResId;
 	
 	/**
 	 *  Caution:
@@ -29,111 +27,104 @@ public class AbstractDate implements SmartDate {
 	 * @param lunarMonth
 	 * @param lunarYear
 	 */
-	public AbstractDate(Integer gregorianYear, Integer gregorianMonth, Integer gregorianDay, Integer lunarDay, Integer lunarMonth, Integer lunarYear) {
+	public AbstractDate(Integer gregorianYear, Integer gregorianMonth, Integer gregorianDay, Integer lunarYear, Integer lunarMonth, Integer lunarDay) {
 		super();
 		this.lunarYear = lunarYear;
 		this.lunarMonth = lunarMonth;
-		this.lunarDay = lunarDay;
-		this.gregorianDay = gregorianDay;
+		this.lunarDay = lunarDay;		
 		this.gregorianMonth = gregorianMonth;
-		this.gregorianYear = gregorianYear;
-		
-		lunarYearText = lunarYear.toString();
-		lunarMonthText = lunarMonth.toString();
-		lunarDayText = lunarDay.toString();
-		displayText = lunarYearText + "-" + lunarMonthText + "-" + lunarDayText;
+		this.gregorianYear = gregorianYear;		
+		this.gregorianDay = gregorianDay;
+	}
+	
+
+	public String getLunarYearText() {
+		return lunarYearText;
 	}
 
-
-	@Override
-	public String getDisplayText() {
-		return displayText;
-	}
 
 	public void setLunarYearText(String lunarYearText) {
 		this.lunarYearText = lunarYearText;
 	}
 
+
+	public String getLunarMonthText() {
+		return lunarMonthText;
+	}
+
+
 	public void setLunarMonthText(String lunarMonthText) {
 		this.lunarMonthText = lunarMonthText;
 	}
 
-	public void setDayText(String lunarDayText) {
+
+	public String getLunarDayText() {
+		return lunarDayText;
+	}
+
+
+	public void setLunarDayText(String lunarDayText) {
 		this.lunarDayText = lunarDayText;
 	}
+
+
+	public String getDisplayText() {
+		return displayText;
+	}
+
 
 	public void setDisplayText(String displayText) {
 		this.displayText = displayText;
 	}
 
-	/**
-	 * @param colorResId the colorResId to set
-	 */
-	public void setLunarColorResId(int colorResId) {
-		this.lunarColorResId = colorResId;
+
+	public Integer getLunarColorResId() {
+		return lunarColorResId;
 	}
 
-	@Override
-	public Integer getGregorianYear() {
-		return gregorianYear;
+
+	public void setLunarColorResId(Integer lunarColorResId) {
+		this.lunarColorResId = lunarColorResId;
 	}
 
-	@Override
-	public Integer getGregorianMonth() {
-		return gregorianMonth;
+
+	public Integer getGregorianColorResId() {
+		return gregorianColorResId;
 	}
 
-	@Override
-	public Integer getGregorianDay() {
-		return gregorianDay;
+
+	public void setGregorianColorResId(Integer gregorianColorResId) {
+		this.gregorianColorResId = gregorianColorResId;
 	}
 
-	@Override
+
 	public Integer getLunarYear() {
 		return lunarYear;
 	}
 
-	@Override
+
 	public Integer getLunarMonth() {
-		return lunarYear;
+		return lunarMonth;
 	}
 
-	@Override
+
 	public Integer getLunarDay() {
 		return lunarDay;
 	}
 
-	@Override
-	public String getLunarMonthText() {
-		return lunarMonthText;
-	}
 
-	@Override
-	public String getLunarYearText() {
-		return lunarYearText;
-	}
-
-	@Override
-	public String getLunarDayText() {
-		return lunarDayText;
-	}
-
-	@Override
-	public int getLunarColorResId() {
-		return R.color.black;
-	}
-
-	@Override
-	public int getGregorianColorResId() {
-		return R.color.black;
+	public Integer getGregorianYear() {
+		return gregorianYear;
 	}
 
 
-	/**
-	 * @param gregorianColorResId the gregorianColorResId to set
-	 */
-	public void setGregorianColorResId(int gregorianColorResId) {
-		this.gregorianColorResId = gregorianColorResId;
+	public Integer getGregorianMonth() {
+		return gregorianMonth;
+	}
+
+
+	public Integer getGregorianDay() {
+		return gregorianDay;
 	}
 
 

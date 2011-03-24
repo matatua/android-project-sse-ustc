@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="calendar_background">#FFFFFF</color> 
-
+    <color name="calendar_background">#FFFFFF</color>   
     <color name="day_color">#000000</color>
-    <color name="prev_next_month_day_color">#999999</color>    
-    <color name="current_day_color">#FF0000</color>
-    <color name="sunday_saturday_color">#FF0000</color>
-    <color name="sunday_saturday_prev_next_month_day_color">#990000</color>
+    <color name="prev_next_month_day_color">#ADADAD</color>    
+    <color name="gregorian_festival_color">#FF0000</color>
+    <color name="lunar_festival_color">#0000E3</color>
 </resources>

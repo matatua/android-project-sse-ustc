@@ -11,8 +11,8 @@ package ustc.sse.assistant.calendar.utils;
  */
 public class GregorianDate extends AbstractDate {
 
-	public GregorianDate(Integer gregorianYear, Integer gregorianMonth, Integer gregorianDay, Integer lunarDay, Integer lunarMonth, Integer lunarYear) {
-		super(gregorianYear, gregorianMonth, gregorianDay, lunarDay, lunarMonth, lunarYear);
+	public GregorianDate(Integer gregorianYear, Integer gregorianMonth, Integer gregorianDay, Integer lunarYear, Integer lunarMonth, Integer lunarDay) {
+		super(gregorianYear, gregorianMonth, gregorianDay, lunarYear, lunarMonth, lunarDay);
 	}
 	
 	/* (non-Javadoc)
@@ -52,11 +52,6 @@ public class GregorianDate extends AbstractDate {
 			if (other.gregorianMonth != null)
 				return false;
 		} else if (!gregorianMonth.equals(other.gregorianMonth))
-			return false;
-		if (gregorianYear == null) {
-			if (other.gregorianYear != null)
-				return false;
-		} else if (!gregorianYear.equals(other.gregorianYear))
 			return false;
 		return true;
 	}

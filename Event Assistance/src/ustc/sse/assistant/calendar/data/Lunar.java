@@ -122,7 +122,7 @@ public final class Lunar
     return isLeap;
   }
 
-  public static String getLunar(int year, int month, int day)
+  public static void setLunar(int year, int month, int day)
   {
     int SY = year;
 
@@ -135,20 +135,24 @@ public final class Lunar
     Date sDObj = new Date(SY - 1900, SM - 1, SD);
 
     Lunar1(sDObj);
-
-    String s = "农历 【" + Animals[sy] + "】" + cYear(getYear()) + "年" + " ";
-
-    s = s + ((getIsLeap()) ? "闰" : "") + monthNong[getMonth()] + "月" + (
-      (!getIsBig()) ? "小" : "大");
-
-    s = s + cDay(getDay()) + " ";
-
-    s = s + cyclical(getYearCyl()) + "年" + cyclical(getMonCyl()) + "月" + 
-      cyclical(getDayCyl()) + "日";
-
-    return s;
   }
 
+  public static String getLunar()
+  {
+	  int sy = (year - 4) % 12;
+	  String s = "农历 【" + Animals[sy] + "】" + cYear(getYear()) + "年" + " ";
+
+	    s = s + ((getIsLeap()) ? "闰" : "") + monthNong[getMonth()] + "月" + (
+	      (!getIsBig()) ? "小" : "大");
+
+	    s = s + cDay(getDay()) + " ";
+
+	    s = s + cyclical(getYearCyl()) + "年" + cyclical(getMonCyl()) + "月" + 
+	      cyclical(getDayCyl()) + "日";
+
+	    return s;
+  }
+  
   private static int getMonCyl()
   {
     return monCyl;
@@ -165,11 +169,13 @@ public final class Lunar
   }
 
   public static String getLunarMonth() {
-    return monthNong[getMonth()];
+    return monthNong[getMonth()] + "月";
   }
 
   public static String getLunarYear() {
-    return cYear(getYear());
+	  int animalYear = (year - 4) % 12;
+	  String lunarYear = cyclical(yearCyl) + "年【" + Animals[animalYear] + "年】";
+    return lunarYear;
   }
 
   public static int getYear()
