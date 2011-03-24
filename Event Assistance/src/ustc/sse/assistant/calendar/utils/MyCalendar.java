@@ -1,11 +1,16 @@
 package ustc.sse.assistant.calendar.utils;
 
 import java.util.Calendar;
+
+import android.app.Activity;
+import ustc.sse.assistant.R;
+
 public class MyCalendar {
 
 	private SmartDateFactory factory = OrderedSmartDateFactory.getInstance();
 	private SmartDate sd;
-	private AbstractDate[] date = new AbstractDate[42];
+	private SmartDate[] date = new AbstractDate[42];
+	protected Activity activity;
 	
 	// 当前年和月
 	public int currentYear, currentMonth;
@@ -37,7 +42,7 @@ public class MyCalendar {
 		calculateDays();
 	}
 
-	public AbstractDate[] getCurrentMonthCalendar(){
+	public SmartDate[] getCurrentMonthCalendar(){
 		return date;
 	}
 	
@@ -55,17 +60,21 @@ public class MyCalendar {
 		for (int i = week, day = prevMonthDays; i > 1; i--, day--)
 		{
 			sd = factory.createSmartDate(prevYear, (prevMonth + 1), day);
-			date[i - 2] = (AbstractDate) sd;
+			sd.setGregorianColorResId(activity.getResources().getColor(R.color.prev_next_month_day_color));
+			sd.setLunarColorResId(activity.getResources().getColor(R.color.prev_next_month_day_color));
+			date[i - 2] = sd;
 		}
 		for (int day = 1, i = week - 1; day <= monthDays; day++, i++)
 		{		
 			sd = factory.createSmartDate(currentYear, (currentMonth + 1), day);
-			date[i] = (AbstractDate) sd;
+			date[i] = sd;
 		}
 		for (int i = week + monthDays - 1, day = 1; i < date.length; i++, day++)
 		{
 			sd = factory.createSmartDate(nextYear, (nextMonth + 1), day);
-			date[i] = (AbstractDate) sd;
+			sd.setGregorianColorResId(activity.getResources().getColor(R.color.prev_next_month_day_color));
+			sd.setLunarColorResId(activity.getResources().getColor(R.color.prev_next_month_day_color));
+			date[i] = sd;
 		}
 
 	}

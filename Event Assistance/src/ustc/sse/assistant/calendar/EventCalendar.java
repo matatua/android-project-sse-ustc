@@ -175,7 +175,6 @@ public class EventCalendar extends Activity {
 
 	
 	private static class EventCalendarGridViewAdapter extends BaseAdapter {
-
 		private Context context;
 		private SmartDate[] data;
 		private int height;

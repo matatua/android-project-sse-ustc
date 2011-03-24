@@ -53,7 +53,11 @@ public interface SmartDate {
 	 */
 	String getDisplayText();
 	
-	Integer getLunarColorResId();
+	int getGregorianColorResId();
 	
-	Integer getGregorianColorResId();
+	int getLunarColorResId();
+	
+	void setGregorianColorResId(int gregorianColorResId);
+	
+	void setLunarColorResId(int lunarColorResId);
 }

@@ -14,8 +14,8 @@ public class AbstractDate implements SmartDate {
 	protected String lunarDayText;
 	
 	protected String displayText;
-	protected Integer lunarColorResId;
-	protected Integer gregorianColorResId;
+	protected int lunarColorResId;
+	protected int gregorianColorResId;
 	
 	/**
 	 *  Caution:
@@ -78,22 +78,22 @@ public class AbstractDate implements SmartDate {
 	}
 
 
-	public Integer getLunarColorResId() {
+	public int getLunarColorResId() {
 		return lunarColorResId;
 	}
 
 
-	public void setLunarColorResId(Integer lunarColorResId) {
+	public void setLunarColorResId(int lunarColorResId) {
 		this.lunarColorResId = lunarColorResId;
 	}
 
 
-	public Integer getGregorianColorResId() {
+	public int getGregorianColorResId() {
 		return gregorianColorResId;
 	}
 
 
-	public void setGregorianColorResId(Integer gregorianColorResId) {
+	public void setGregorianColorResId(int gregorianColorResId) {
 		this.gregorianColorResId = gregorianColorResId;
 	}
 
