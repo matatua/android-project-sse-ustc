@@ -53,7 +53,7 @@ public class OrderedSmartDateFactory implements SmartDateFactory {
 			lunarDate.setLunarMonthText(lunarMonthText);
 		}
 		
-		else if(lunarMonth == 12 && lunarDay == 29 && !Lunar.getIsBig()){
+		else if(lunarMonth == 11 && lunarDay == 29 && !Lunar.getIsBig()){
 			lunarDate.setDisplayText("除夕");
 			lunarDate.setLunarColorResId(R.color.lunar_festival_color);
 		}
