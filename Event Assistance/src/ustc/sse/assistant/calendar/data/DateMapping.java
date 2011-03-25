@@ -37,7 +37,6 @@ public class DateMapping {
 		lunarFestivalDateMap.put(new LunarDate(FAKE_YEAR, FAKE_MONTH, FAKE_DAY, FAKE_YEAR, 8, 15), "中秋节");
 		lunarFestivalDateMap.put(new LunarDate(FAKE_YEAR, FAKE_MONTH, FAKE_DAY, FAKE_YEAR, 9, 9), "重阳节");
 		lunarFestivalDateMap.put(new LunarDate(FAKE_YEAR, FAKE_MONTH, FAKE_DAY, FAKE_YEAR, 12, 8), "腊八节");
-		lunarFestivalDateMap.put(new LunarDate(FAKE_YEAR, FAKE_MONTH, FAKE_DAY, FAKE_YEAR, 12, 23), "除夕");
 		lunarFestivalDateMap.put(new LunarDate(FAKE_YEAR, FAKE_MONTH, FAKE_DAY, FAKE_YEAR, 12, 30), "除夕");		
 		
 	}
