@@ -1,6 +1,5 @@
 package ustc.sse.assistant.calendar.utils;
 
-import android.app.Activity;
 import ustc.sse.assistant.R;
 
 import ustc.sse.assistant.calendar.data.DateMapping;
@@ -15,8 +14,6 @@ public class OrderedSmartDateFactory implements SmartDateFactory {
 	private OrderedSmartDateFactory() {
 		dateMapping = DateMapping.getInstance();
 	}
-	
-	protected Activity activity;
 	
 	@Override
 	public SmartDate createSmartDate(Integer year, Integer month, Integer day) {
@@ -38,8 +35,8 @@ public class OrderedSmartDateFactory implements SmartDateFactory {
 			gregorianDate.setLunarMonthText(lunarMonthText);
 			gregorianDate.setLunarDayText(lunarDayText);
 			gregorianDate.setDisplayText(displayText);
-			gregorianDate.setGregorianColorResId(activity.getResources().getColor(R.color.day_color));
-			gregorianDate.setLunarColorResId(activity.getResources().getColor(R.color.gregorian_festival_color));
+			gregorianDate.setGregorianColorResId(R.color.day_color);
+			gregorianDate.setLunarColorResId(R.color.gregorian_festival_color);
 			return gregorianDate;
 		} 
 		AbstractDate lunarDate = new LunarDate(year, month, day, lunarYear, lunarMonth, lunarDay);
@@ -48,8 +45,8 @@ public class OrderedSmartDateFactory implements SmartDateFactory {
 		lunarDate.setLunarMonthText(lunarMonthText);
 		lunarDate.setLunarDayText(lunarDayText);
 		lunarDate.setDisplayText(lunarDayText);
-		lunarDate.setGregorianColorResId(activity.getResources().getColor(R.color.day_color));
-		lunarDate.setLunarColorResId(activity.getResources().getColor(R.color.day_color));
+		lunarDate.setGregorianColorResId(R.color.day_color);
+		lunarDate.setLunarColorResId(R.color.day_color);
 		
 		if(Lunar.getIsLeap()){
 			lunarMonthText = "闰" + Lunar.getLunarMonth();
@@ -58,14 +55,14 @@ public class OrderedSmartDateFactory implements SmartDateFactory {
 		
 		else if(lunarMonth == 12 && lunarDay == 29 && !Lunar.getIsBig()){
 			lunarDate.setDisplayText("除夕");
-			lunarDate.setLunarColorResId(activity.getResources().getColor(R.color.lunar_festival_color));
+			lunarDate.setLunarColorResId(R.color.lunar_festival_color);
 		}
 		
 		else {
 			displayText = dateMapping.getLunarFestivalDateMap().get(lunarDate);
 			if(displayText != null){
 				lunarDate.setDisplayText(displayText);
-				lunarDate.setLunarColorResId(activity.getResources().getColor(R.color.lunar_festival_color));
+				lunarDate.setLunarColorResId(R.color.lunar_festival_color);
 				return lunarDate;
 			}
 		}

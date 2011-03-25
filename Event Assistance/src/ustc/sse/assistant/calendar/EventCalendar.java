@@ -227,8 +227,8 @@ public class EventCalendar extends Activity {
 			//set different color and font, or other attributes using information from SmartDate
 			firstTv.setText(smartDate.getGregorianDay().toString());
 			secondTv.setText(smartDate.getDisplayText());
-			firstTv.setTextColor(smartDate.getGregorianColorResId());
-			secondTv.setTextColor(smartDate.getLunarColorResId());
+			firstTv.setTextColor(context.getApplicationContext().getResources().getColor(smartDate.getGregorianColorResId()));
+			secondTv.setTextColor(context.getApplicationContext().getResources().getColor(smartDate.getLunarColorResId()));
 			
 			linearLayout.setTag(smartDate);
 			return linearLayout;
