@@ -8,18 +8,27 @@ import java.util.Calendar;
 import ustc.sse.assistant.R;
 import ustc.sse.assistant.calendar.utils.MyCalendar;
 import ustc.sse.assistant.calendar.utils.SmartDate;
+import ustc.sse.assistant.event.EventAdd;
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.DatePickerDialog.OnDateSetListener;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
+import android.widget.DatePicker;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -33,6 +42,10 @@ public class EventCalendar extends Activity {
 	private static final double CALENDAR_ROW_NUMBER = 6.0;
 
 	public static final String SMART_DATE = "smart_date";
+	public static final int NEW_EVENT_ID = Menu.FIRST;
+	public static final int EVENT_LIST_ID = NEW_EVENT_ID + 1;
+	
+	public static final int DATE_PICKER_ID = 100;
 	
 	private TextView preMonthTextView;
 	private TextView curMonthTextView;
@@ -55,6 +68,58 @@ public class EventCalendar extends Activity {
 		delayCalendarViewInitiation();
 	}
 
+	
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		MenuInflater menuInflater = getMenuInflater();
+		menuInflater.inflate(R.menu.event_menu, menu);
+		
+		Intent eventIntent = new Intent(this, EventAdd.class);
+		Intent eventListIntent = new Intent();
+		menu.findItem(R.id.new_event).setIntent(eventIntent);
+		menu.findItem(R.id.event_list).setIntent(eventListIntent);
+		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {		
+		switch (item.getItemId()) {
+		case R.id.event_jump_to_date :
+			showDialog(DATE_PICKER_ID);
+			return true;
+		}
+		
+		return super.onOptionsItemSelected(item);
+	}
+	
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		if (DATE_PICKER_ID == id) {
+			OnDateSetListener callBack = new OnDateSetListener() {
+				
+				@Override
+				public void onDateSet(DatePicker view, int year, int monthOfYear,
+						int dayOfMonth) {
+					curCalendar.set(year, monthOfYear, dayOfMonth);
+					preCalendar.set(year, monthOfYear - 1, dayOfMonth);
+					nextCalendar.set(year, monthOfYear + 1, dayOfMonth);
+					
+					initiateCalendarGridView(curCalendar);
+					setAllTabText();
+					
+				}
+			};
+			DatePickerDialog dialog = new DatePickerDialog(this, 
+													callBack, 
+													curCalendar.get(Calendar.YEAR), 
+													curCalendar.get(Calendar.MONTH), 
+													curCalendar.get(Calendar.DAY_OF_MONTH));
+		
+			return dialog;
+		}
+		return super.onCreateDialog(id);
+	}
+	
 	private void delayCalendarViewInitiation() {
 		Handler handler = new Handler();
 		handler.postDelayed(new Runnable() {
@@ -109,7 +174,8 @@ public class EventCalendar extends Activity {
 			@Override
 			public void onClick(View v) {
 				Calendar now = Calendar.getInstance();
-				if (!(curCalendar.get(Calendar.MONTH) == now.get(Calendar.MONTH))) {
+				if (!(curCalendar.get(Calendar.MONTH) == now.get(Calendar.MONTH)) || 
+						!(curCalendar.get(Calendar.YEAR) == now.get(Calendar.MONTH))) {
 					initiateCalendars();
 					initiateCalendarGridView(curCalendar);
 					
@@ -147,6 +213,7 @@ public class EventCalendar extends Activity {
 		ListAdapter adapter = new EventCalendarGridViewAdapter(this, data, (int) cellHeight);
 
 		calendarGridView.setAdapter(adapter);
+		calendarGridView.startLayoutAnimation();
 		
 	}
 	
@@ -175,6 +242,7 @@ public class EventCalendar extends Activity {
 
 	
 	private static class EventCalendarGridViewAdapter extends BaseAdapter {
+
 		private Context context;
 		private SmartDate[] data;
 		private int height;
@@ -220,6 +288,13 @@ public class EventCalendar extends Activity {
 			linearLayout.setLayoutParams(new AbsListView.LayoutParams(LayoutParams.FILL_PARENT, height));
 			
 			SmartDate smartDate = data[position];
+			Calendar now = Calendar.getInstance();
+			if (smartDate.getGregorianYear() == now.get(Calendar.YEAR) 
+					&& smartDate.getGregorianMonth() == (now.get(Calendar.MONTH) + 1)
+					&& smartDate.getGregorianDay() == now.get(Calendar.DAY_OF_MONTH)) {
+				linearLayout.setBackgroundResource(R.drawable.calendar_today_highlight);
+				
+			}
 		
 			TextView firstTv = (TextView) linearLayout.findViewById(R.id.calendar_gridview_textview1);
 			TextView secondTv = (TextView) linearLayout.findViewById(R.id.calendar_gridview_textview2);
@@ -229,7 +304,7 @@ public class EventCalendar extends Activity {
 			secondTv.setText(smartDate.getDisplayText());
 			firstTv.setTextColor(context.getApplicationContext().getResources().getColor(smartDate.getGregorianColorResId()));
 			secondTv.setTextColor(context.getApplicationContext().getResources().getColor(smartDate.getLunarColorResId()));
-			
+
 			linearLayout.setTag(smartDate);
 			return linearLayout;
 			

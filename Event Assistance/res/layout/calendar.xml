@@ -116,12 +116,14 @@
 	            android:padding="0dp" 
 	            android:horizontalSpacing="1dp"
 	            android:verticalSpacing="1dp"
-	            android:scrollbars="none"
 	            android:layout_marginLeft="2dp"
+	            android:scrollbars="none"	           
 	            android:scrollbarAlwaysDrawVerticalTrack="false"
 	            android:scrollbarAlwaysDrawHorizontalTrack="false"
 	            android:fadeScrollbars="true"
-	            android:layout_weight="1.0">
+	            android:layout_weight="1.0"
+	            android:layoutAnimation="@anim/layout_grid_fade"
+	            >
   </ustc.sse.assistant.calendar.utils.CalendarGridView>
    
 </LinearLayout>

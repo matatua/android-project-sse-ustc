@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+  xmlns:android="http://schemas.android.com/apk/res/android"> 
+      <item android:id="@+id/new_event"
+          android:icon="@drawable/event_new_event"
+          android:title="@string/new_event">
+      </item>
+      <item android:id="@+id/event_list"
+          android:icon="@drawable/event_list"
+          android:title="@string/events">
+      </item> 
+       <item android:id="@+id/event_jump_to_date"
+        		android:icon="@drawable/event_jump_to_date"
+              android:title="@string/event_jump_to_date">
+       </item>
+       
+</menu>

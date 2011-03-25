@@ -39,5 +39,7 @@
 	<string name="event_add_prior_alarm_repeat_spinner_prompt">提醒次数</string>	
 	<string name="event_authority">ustc.sse.provider.EventAssistant.event</string>
 	<string name="event_contact_authority">ustc.sse.provider.EventAssistant.eventcontact</string>
-	
+	<string name="new_event">新事件</string>
+	<string name="events">事件列表</string>
+	<string name="event_jump_to_date">跳转</string>
 </resources> 
