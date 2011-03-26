@@ -135,7 +135,7 @@ public class EventAdd extends Activity{
 	}
 
 	private void initiatePreference() {
-		
+		//TODO load preference and initiate the related value.
 	}
 
 	private void initiateContactImageView() {
@@ -152,7 +152,7 @@ public class EventAdd extends Activity{
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == CONTACT_REQUEST_CODE && data != null) {
+		if (resultCode == RESULT_OK && requestCode == CONTACT_REQUEST_CODE && data != null) {
 			StringBuilder sb = new StringBuilder();
 			long[] contactIds = data.getLongArrayExtra(ContactSelection.SELECTED_CONTACT_IDS);
 			String[] names = data.getStringArrayExtra(ContactSelection.SELECTED_CONTACT_DISPLAY_NAME);

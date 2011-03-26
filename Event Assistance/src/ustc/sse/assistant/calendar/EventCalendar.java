@@ -9,6 +9,7 @@ import ustc.sse.assistant.R;
 import ustc.sse.assistant.calendar.utils.MyCalendar;
 import ustc.sse.assistant.calendar.utils.SmartDate;
 import ustc.sse.assistant.event.EventAdd;
+import ustc.sse.assistant.event.EventList;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
@@ -67,7 +68,6 @@ public class EventCalendar extends Activity {
 		setAllTabText();
 		delayCalendarViewInitiation();
 	}
-
 	
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
@@ -75,7 +75,9 @@ public class EventCalendar extends Activity {
 		menuInflater.inflate(R.menu.event_menu, menu);
 		
 		Intent eventIntent = new Intent(this, EventAdd.class);
-		Intent eventListIntent = new Intent();
+		Intent eventListIntent = new Intent(this, EventList.class);
+		//TODO add from time and to time into the eventListIntent
+		
 		menu.findItem(R.id.new_event).setIntent(eventIntent);
 		menu.findItem(R.id.event_list).setIntent(eventListIntent);
 		return true;
@@ -175,7 +177,7 @@ public class EventCalendar extends Activity {
 			public void onClick(View v) {
 				Calendar now = Calendar.getInstance();
 				if (!(curCalendar.get(Calendar.MONTH) == now.get(Calendar.MONTH)) || 
-						!(curCalendar.get(Calendar.YEAR) == now.get(Calendar.MONTH))) {
+						!(curCalendar.get(Calendar.YEAR) == now.get(Calendar.YEAR))) {
 					initiateCalendars();
 					initiateCalendarGridView(curCalendar);
 					
@@ -204,8 +206,8 @@ public class EventCalendar extends Activity {
 	 */
 	private void initiateCalendarGridView(Calendar currentCalendar) {
 
-		double calendarHeight = calendarGridView.getHeight();
-		double cellHeight = calendarHeight / CALENDAR_ROW_NUMBER;
+		int calendarHeight = calendarGridView.getHeight();
+		double cellHeight = (calendarHeight - 5) / CALENDAR_ROW_NUMBER;
 	
 		MyCalendar myCalendar = new MyCalendar(currentCalendar);
 	    SmartDate[] data = myCalendar.getCurrentMonthCalendar();
@@ -282,7 +284,7 @@ public class EventCalendar extends Activity {
 				linearLayout = (LinearLayout) convertView;
 			} else {
 				LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				linearLayout = (LinearLayout) inflater.inflate(R.layout.calendar_cell, null);
+				linearLayout = (LinearLayout) inflater.inflate(R.layout.calendar_cell, parent, false);
 
 			}
 			linearLayout.setLayoutParams(new AbsListView.LayoutParams(LayoutParams.FILL_PARENT, height));

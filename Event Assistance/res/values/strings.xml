@@ -42,4 +42,8 @@
 	<string name="new_event">新事件</string>
 	<string name="events">事件列表</string>
 	<string name="event_jump_to_date">跳转</string>
+	
+	<string name="event_list_select_button">全选</string>
+	<string name="event_list_deselect_button">全不选</string>
+	<string name="event_list_delete_button">删除</string>
 </resources> 
