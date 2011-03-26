@@ -21,4 +21,6 @@
     <dimen name="contact_selection_group_capacity_marginLeft">6dp</dimen>
     <dimen name="event_add_text_size">23sp</dimen>
     <dimen name="calendar_week_height">19dp</dimen>
+    <dimen name="calendar_gregorian_text_size">22sp</dimen>
+    <dimen name="calendar_lunar_text_size">14sp</dimen>
 </resources>
