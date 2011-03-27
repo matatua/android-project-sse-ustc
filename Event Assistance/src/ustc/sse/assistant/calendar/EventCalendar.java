@@ -48,7 +48,7 @@ import android.widget.Toast;
  * @author 李健
  *
  */
-public class EventCalendar extends Activity {
+public class EventCalendar extends Activity implements OnGesturePerformedListener {
 	private static final double CALENDAR_ROW_NUMBER = 6.0;
 
 	public static final String SMART_DATE = "smart_date";
@@ -82,8 +82,8 @@ public class EventCalendar extends Activity {
 		gestureLibrary = GestureLibraries.fromRawResource(this, R.raw.gestures);
 		if (gestureLibrary.load())
 		{
-			GestureOverlayView gestureOverlayView = (GestureOverlayView) findViewById(R.id.gestures);
-			gestureOverlayView.addOnGesturePerformedListener((OnGesturePerformedListener) this);
+			GestureOverlayView gestureOverlayView = (GestureOverlayView) findViewById(R.id.calendar_gesture_view);
+			gestureOverlayView.addOnGesturePerformedListener(this);
 		}
 	}
 	
@@ -338,8 +338,6 @@ public class EventCalendar extends Activity {
 
 		if (predictions.size() > 0)
 		{
-
-			int n = 0;
 			for (int i = 0; i < predictions.size(); i++)
 			{
 				Prediction prediction = predictions.get(i);

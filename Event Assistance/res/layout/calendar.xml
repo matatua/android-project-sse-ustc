@@ -7,9 +7,7 @@
   android:orientation="vertical"
   android:id="@+id/calendar_all">
   
-  <android.gesture.GestureOverlayView
-		android:id="@+id/gestures" android:layout_width="fill_parent"
-		android:layout_height="fill_parent" android:gestureStrokeType="single" />
+
   
   <LinearLayout android:layout_width="fill_parent"
   				android:layout_height="wrap_content"
@@ -113,6 +111,12 @@
   
   	</LinearLayout>
   </LinearLayout>
+
+	<android.gesture.GestureOverlayView
+		android:id="@+id/calendar_gesture_view" 
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent" 
+		android:gestureStrokeType="single">
   
   <ustc.sse.assistant.calendar.utils.CalendarGridView
   			 android:layout_width="fill_parent"
@@ -131,5 +135,6 @@
 	            android:layoutAnimation="@anim/layout_grid_fade"
 	            >
   </ustc.sse.assistant.calendar.utils.CalendarGridView>
+  </android.gesture.GestureOverlayView>
    
 </LinearLayout>
