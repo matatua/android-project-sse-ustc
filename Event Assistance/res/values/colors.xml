@@ -5,4 +5,6 @@
     <color name="prev_next_month_day_color">#ADADAD</color>    
     <color name="gregorian_festival_color">#FF0000</color>
     <color name="lunar_festival_color">#0000E3</color>
+    <color name="event_list_button_bar_background">#C8EEEEEE</color>
+    
 </resources>
