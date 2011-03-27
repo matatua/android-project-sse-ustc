@@ -3,6 +3,7 @@
  */
 package ustc.sse.assistant.calendar;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import ustc.sse.assistant.R;
@@ -16,6 +17,13 @@ import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.gesture.Gesture;
+import android.gesture.GestureLibraries;
+import android.gesture.GestureLibrary;
+import android.gesture.GestureOverlayView;
+import android.gesture.GestureOverlayView.OnGesturePerformedListener;
+import android.gesture.Prediction;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.format.DateFormat;
@@ -34,6 +42,7 @@ import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * @author 李健
@@ -59,6 +68,8 @@ public class EventCalendar extends Activity {
 	
 	public static final String DATE_FORMAT_YEAR_MONTH = "yyyy年MM月";
 	public static final String DATE_FORMAT_MONTH = "MM月";
+	
+	private GestureLibrary gestureLibrary;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -67,6 +78,13 @@ public class EventCalendar extends Activity {
 		initiateWidget();
 		setAllTabText();
 		delayCalendarViewInitiation();
+		
+		gestureLibrary = GestureLibraries.fromRawResource(this, R.raw.gestures);
+		if (gestureLibrary.load())
+		{
+			GestureOverlayView gestureOverlayView = (GestureOverlayView) findViewById(R.id.gestures);
+			gestureOverlayView.addOnGesturePerformedListener((OnGesturePerformedListener) this);
+		}
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -306,8 +324,6 @@ public class EventCalendar extends Activity {
 			secondTv.setText(smartDate.getDisplayText());
 			firstTv.setTextColor(context.getApplicationContext().getResources().getColor(smartDate.getGregorianColorResId()));
 			secondTv.setTextColor(context.getApplicationContext().getResources().getColor(smartDate.getLunarColorResId()));
-			firstTv.setTextSize(context.getApplicationContext().getResources().getDimension(R.dimen.calendar_gregorian_text_size));
-			secondTv.setTextSize(context.getApplicationContext().getResources().getDimension(R.dimen.calendar_lunar_text_size));
 
 			linearLayout.setTag(smartDate);
 			return linearLayout;
@@ -315,4 +331,38 @@ public class EventCalendar extends Activity {
 		}
 		
 	}
+	
+	public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture)
+	{
+		ArrayList<Prediction> predictions = gestureLibrary.recognize(gesture);
+
+		if (predictions.size() > 0)
+		{
+
+			int n = 0;
+			for (int i = 0; i < predictions.size(); i++)
+			{
+				Prediction prediction = predictions.get(i);
+				if (prediction.score > 1.0)
+				{
+					if ("prevMonthGesture".equals(prediction.name))
+					{
+						rollCalendarsMonth(false);
+						initiateCalendarGridView(curCalendar);
+						setAllTabText();
+					} 
+					
+					if ("nextMonthGesture".equals(prediction.name))
+					{
+						rollCalendarsMonth(true);
+						initiateCalendarGridView(curCalendar);
+						setAllTabText();
+					} 
+				}
+			}
+
+		}
+
+	}
+
 }
