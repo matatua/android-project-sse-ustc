@@ -116,7 +116,8 @@
 		android:id="@+id/calendar_gesture_view" 
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent" 
-		android:gestureStrokeType="single">
+		android:gestureStrokeType="single"
+		android:gestureColor="#00000000">
   
   <ustc.sse.assistant.calendar.utils.CalendarGridView
   			 android:layout_width="fill_parent"
