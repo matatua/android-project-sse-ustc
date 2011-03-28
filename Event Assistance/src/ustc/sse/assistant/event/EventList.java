@@ -139,6 +139,7 @@ public class EventList extends Activity {
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
 			Intent i = new Intent(EventList.this, EventDetail.class);
+			i.putExtra(Event._ID, id);
 			startActivity(i);
 			//Toast.makeText(EventList.this, String.valueOf(id), Toast.LENGTH_SHORT).show();
 			//TODO start event detail
@@ -184,6 +185,14 @@ public class EventList extends Activity {
 		TextView tv = new TextView(this);
 		tv.setLayoutParams(new AbsListView.LayoutParams(LayoutParams.FILL_PARENT, 50));
 		tv.setText("查看更多事件");
+		tv.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Do nothing
+				
+			}
+		});
 		listView.addFooterView(tv);	
 		
 		listView.setAdapter(adapter);

@@ -232,7 +232,7 @@ public class EventAdd extends Activity{
 				new int[]{R.id.event_add_spinner_textview1, R.id.event_add_spinner_textview2});
 
 		alarmTypeSpinner.setAdapter(alarmTypeAdapter);
-		alarmTypeSpinner.setPromptId(R.string.event_alarmType);
+		alarmTypeSpinner.setPromptId(R.string.event_alarm_type);
 		alarmTypeSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
@@ -300,7 +300,7 @@ public class EventAdd extends Activity{
 														new String[]{"name", "value"}, 
 														new int[]{R.id.event_add_spinner_textview1, R.id.event_add_spinner_textview2});
 		prioriAlarmDaySpinner.setAdapter(prioriAlarmDayAdapter);
-		prioriAlarmDaySpinner.setPromptId(R.string.event_priorAlarm);
+		prioriAlarmDaySpinner.setPromptId(R.string.event_prior_alarm_day);
 		prioriAlarmDaySpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
