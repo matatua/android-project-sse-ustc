@@ -125,6 +125,11 @@ public class EventContactProvider extends ContentProvider {
 			
 			getContext().getContentResolver().notifyChange(uri, null);
 			return count;
+		} else if (uriMatcher.match(uri) == EVENT_CONTACT) {
+			SQLiteDatabase db = openHelper.getWritableDatabase();
+			count = db.delete(EVENT_CONTACT_TABLE_NAME, selection, selectionArgs);
+			
+			getContext().getContentResolver().notifyChange(uri, null);
 		}
 		
 		throw new IllegalArgumentException("UNKNOWN URI " + uri); 

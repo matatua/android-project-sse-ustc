@@ -7,18 +7,30 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import ustc.sse.assistant.R;
+import ustc.sse.assistant.event.provider.EventAssistant;
 import ustc.sse.assistant.event.provider.EventAssistant.Event;
+import ustc.sse.assistant.event.provider.EventAssistant.EventContact;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,6 +45,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * a event list 
@@ -47,6 +60,7 @@ public class EventList extends Activity {
 	public static final String DATE_FORMAT = "yyyy年MM月dd日";
 	
 	private static final int HEADER_FOOTER_NUMBER = 1;
+	private static final int DELETE_DIALOG = 100;
 	
 	private ListView listView;
 	private Button selectButton;
@@ -105,8 +119,7 @@ public class EventList extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				
+				showDialog(DELETE_DIALOG);
 			}
 		});
 		
@@ -160,6 +173,7 @@ public class EventList extends Activity {
 		String[] selectionArgs = {String.valueOf(fromCalendar.getTimeInMillis()),
 									String.valueOf(toCalendar.getTimeInMillis())};
 		Cursor cursor = cr.query(Event.CONTENT_URI, projection, selection, selectionArgs, null);
+		startManagingCursor(cursor);
 		EventListCursorAdapter adapter = new EventListCursorAdapter(this, 
 														R.layout.event_list_item, 
 														cursor,
@@ -179,6 +193,77 @@ public class EventList extends Activity {
 
 	private void initiateBirthdayInfo() {
 		// TODO Auto-generated method stub
+		
+	}
+	/**
+	 * delete the event and eventcontact whose id in selectedItemIds
+	 */
+	private void deleteSelectedEvents() {
+		ContentResolver cr = getContentResolver();
+		ArrayList<ContentProviderOperation> eventOps = new ArrayList<ContentProviderOperation>();
+		ArrayList<ContentProviderOperation> eventContactOps = new ArrayList<ContentProviderOperation>();
+		Iterator<Long> iter = selectedItemIds.iterator();
+		while (iter.hasNext()) {
+			Long id = iter.next();
+			eventOps.add(ContentProviderOperation.newDelete(Event.CONTENT_URI)
+											.withSelection(Event._ID + " = ?", new String[]{id.toString()})
+											.build());
+			
+			Uri eventContactUri = ContentUris.withAppendedId(EventContact.CONTENT_URI, id);
+			eventContactOps.add(ContentProviderOperation.newDelete(eventContactUri)
+														.build());
+		}
+		
+		try {
+			ProgressDialog dialog = ProgressDialog.show(this, null, "删除中...", true, false);
+			cr.applyBatch(EventAssistant.EVENT_AUTHORITY, eventOps);
+			cr.applyBatch(EventAssistant.EVENT_CONTACT_AUTHORITY, eventContactOps);
+			
+			dialog.cancel();
+
+		} catch (RemoteException e) {
+			e.printStackTrace();
+			Toast.makeText(this, "删除失败", Toast.LENGTH_SHORT).show();
+		} catch (OperationApplicationException e) {
+			e.printStackTrace();
+			Toast.makeText(this, "删除失败", Toast.LENGTH_SHORT).show();
+		}
+		
+	}
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		switch (id) {
+		case DELETE_DIALOG :
+			
+			 DialogInterface.OnClickListener dialogListener = new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						switch (which) {
+						case DialogInterface.BUTTON_POSITIVE :
+							deleteSelectedEvents();
+							dialog.cancel();
+							break;
+						case DialogInterface.BUTTON_NEGATIVE :
+							dialog.cancel();
+							break;
+						}
+						
+					}
+				
+			};
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle(R.string.event_list_delete_dialog_title);
+			builder.setIcon(android.R.drawable.ic_dialog_alert);
+			builder.setMessage(R.string.event_list_delete_dialog_message);
+			builder.setPositiveButton(R.string.event_list_delete_dialog_affirm, dialogListener);
+			
+			builder.setNegativeButton(R.string.event_list_delete_dialog_cancel, dialogListener);
+			
+			return builder.create();
+		}
+		
+		return null;
 		
 	}
 	

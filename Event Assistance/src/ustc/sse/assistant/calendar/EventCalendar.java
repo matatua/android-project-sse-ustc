@@ -36,6 +36,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.DatePicker;
 import android.widget.GridView;
@@ -94,7 +96,14 @@ public class EventCalendar extends Activity implements OnGesturePerformedListene
 		
 		Intent eventIntent = new Intent(this, EventAdd.class);
 		Intent eventListIntent = new Intent(this, EventList.class);
-		//TODO add from time and to time into the eventListIntent
+		Calendar now = Calendar.getInstance();
+		Calendar fromCalendar = Calendar.getInstance();
+		fromCalendar.set(now.get(Calendar.YEAR), now.get(Calendar.MONTH), 1, 0, 0, 0);
+		Calendar toCalendar = Calendar.getInstance();
+		toCalendar.set(now.get(Calendar.YEAR), now.get(Calendar.MONTH) + 1, 1, 0, 0, 0);
+
+		eventListIntent.putExtra(EventList.FROM_CALENDAR, fromCalendar);
+		eventListIntent.putExtra(EventList.TO_CALENDAR, toCalendar);
 		
 		menu.findItem(R.id.new_event).setIntent(eventIntent);
 		menu.findItem(R.id.event_list).setIntent(eventListIntent);
@@ -171,6 +180,33 @@ public class EventCalendar extends Activity implements OnGesturePerformedListene
 		nextMonthTextView = (TextView) findViewById(R.id.calendar_right_tab);	
 		calendarGridView = (GridView) findViewById(R.id.calendar_gridView);
 		
+		calendarGridView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				SmartDate smartDate = (SmartDate) view.getTag();
+				Intent intent = new Intent(EventCalendar.this, EventList.class);
+				Calendar fromCalendar = Calendar.getInstance();
+				fromCalendar.set(smartDate.getGregorianYear(), 
+									smartDate.getGregorianMonth() - 1, 
+									smartDate.getGregorianDay(), 
+									0, 
+									0, 
+									0);
+				Calendar toCalendar = Calendar.getInstance();
+				toCalendar.set(smartDate.getGregorianYear(), 
+								smartDate.getGregorianMonth() - 1, 
+								smartDate.getGregorianDay() + 1, 
+								0, 
+								0, 
+								0);				
+				intent.putExtra(EventList.FROM_CALENDAR, fromCalendar);
+				intent.putExtra(EventList.TO_CALENDAR, toCalendar);
+				startActivity(intent);
+				
+			}
+		});
 		//set onClick listener for tabs
 		initiateTabListener();
 		

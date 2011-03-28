@@ -138,7 +138,7 @@ public class EventProvider extends ContentProvider {
 		case EVENT_ID :
 			String eventId = uri.getPathSegments().get(1);
 			count = db.delete(EVENT_TABLE_NAME, Event._ID + " = " + eventId 
-							+ (!TextUtils.isEmpty(selection) ? "AND (" + selection + ")" : ""), 
+							+ (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : ""), 
 							selectionArgs);
 			break;
 		default :
