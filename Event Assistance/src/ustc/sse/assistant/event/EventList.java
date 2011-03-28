@@ -139,6 +139,7 @@ public class EventList extends Activity {
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
 			Intent i = new Intent(EventList.this, EventDetail.class);
+			startActivity(i);
 			//Toast.makeText(EventList.this, String.valueOf(id), Toast.LENGTH_SHORT).show();
 			//TODO start event detail
 		}

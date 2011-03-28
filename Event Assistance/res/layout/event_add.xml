@@ -159,7 +159,6 @@
 		<TextView android:layout_width="wrap_content"
   				android:layout_height="wrap_content"
   				android:text="@string/event_priorAlarm"
-  				android:id="@+id/event_priorAlarm"
   				android:layout_gravity="left|center"
 				>
   		</TextView>
