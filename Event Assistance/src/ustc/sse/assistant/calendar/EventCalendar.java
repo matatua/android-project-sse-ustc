@@ -47,7 +47,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 /**
- * @author 李健
+ * @author 李健、宋安琪
  *
  */
 public class EventCalendar extends Activity implements OnGesturePerformedListener {

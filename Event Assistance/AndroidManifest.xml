@@ -27,6 +27,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".event.EventAdd"></activity>
+        <activity android:name=".event.EventEdit"></activity>
         <provider android:enabled="true" android:name=".event.provider.EventProvider" android:authorities="@string/event_authority" android:grantUriPermissions="true"></provider>
         <provider android:name=".event.provider.EventContactProvider" android:authorities="@string/event_contact_authority"></provider>
         <activity android:name=".setting.Setting"></activity>

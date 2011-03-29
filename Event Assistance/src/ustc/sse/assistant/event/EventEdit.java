@@ -50,10 +50,10 @@ import android.widget.TimePicker;
 
 /**
  * 
- * @author 李健
+ * @author 宋安琪、李健
  *
  */
-public class EventAdd extends Activity{
+public class EventEdit extends Activity{
 	/** Called when the activity is first created. */
 	public static final int CONTACT_REQUEST_CODE = 100;
 	
@@ -99,30 +99,30 @@ public class EventAdd extends Activity{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.event_add);
+        setContentView(R.layout.event_edit);
         
         initiateWidgets();
         
     }
 
 	private void initiateWidgets() {
-		contactImageButton = (ImageView) findViewById(R.id.event_add_contact_add_imageView);
-		cancelButton = (Button) findViewById(R.id.event_add_cancel_button);
-		saveButton = (Button) findViewById(R.id.event_add_save_button);
-		beginDateButton = (Button) findViewById(R.id.event_add_beginTime_date_button);
-		endDateButton = (Button) findViewById(R.id.event_add_endTime_date_button);
-		beginTimeButton = (Button) findViewById(R.id.event_add_beginTime_time_button);
-		endTimeButton = (Button) findViewById(R.id.event_add_endTime_time_button);
+		contactImageButton = (ImageView) findViewById(R.id.event_edit_contact_add_imageView);
+		cancelButton = (Button) findViewById(R.id.event_edit_cancel_button);
+		saveButton = (Button) findViewById(R.id.event_edit_save_button);
+		beginDateButton = (Button) findViewById(R.id.event_edit_beginTime_date_button);
+		endDateButton = (Button) findViewById(R.id.event_edit_endTime_date_button);
+		beginTimeButton = (Button) findViewById(R.id.event_edit_beginTime_time_button);
+		endTimeButton = (Button) findViewById(R.id.event_edit_endTime_time_button);
 		
-		prioriAlarmDaySpinner = (Spinner) findViewById(R.id.event_add_priori_alarm_day_spinner);
-		prioriAlarmRepeatSpinner = (Spinner) findViewById(R.id.event_add_priori_alarm_repeat_spinner);
-		alarmTypeSpinner = (Spinner) findViewById(R.id.event_add_alarm_type_spinner);
-		todayRemindTimeSpinner = (Spinner) findViewById(R.id.event_add_today_remind_time_spinner);
+		prioriAlarmDaySpinner = (Spinner) findViewById(R.id.event_edit_priori_alarm_day_spinner);
+		prioriAlarmRepeatSpinner = (Spinner) findViewById(R.id.event_edit_priori_alarm_repeat_spinner);
+		alarmTypeSpinner = (Spinner) findViewById(R.id.event_edit_alarm_type_spinner);
+		todayRemindTimeSpinner = (Spinner) findViewById(R.id.event_edit_today_remind_time_spinner);
 		
-		contentEditText = (EditText) findViewById(R.id.event_add_content_editText);
-		locationEditText = (EditText) findViewById(R.id.event_add_location_editText);
-		contactEditText = (EditText) findViewById(R.id.event_add_contact_editText);
-		noteEditText = (EditText) findViewById(R.id.event_add_note_editText);
+		contentEditText = (EditText) findViewById(R.id.event_edit_content_editText);
+		locationEditText = (EditText) findViewById(R.id.event_edit_location_editText);
+		contactEditText = (EditText) findViewById(R.id.event_edit_contact_editText);
+		noteEditText = (EditText) findViewById(R.id.event_edit_note_editText);
 		
 		initiateContactImageView();
 		initiateButtons();
@@ -143,7 +143,7 @@ public class EventAdd extends Activity{
 			
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(EventAdd.this, ContactSelection.class);
+				Intent intent = new Intent(EventEdit.this, ContactSelection.class);
 				startActivityForResult(intent, CONTACT_REQUEST_CODE);
 			}
 		});
@@ -194,7 +194,7 @@ public class EventAdd extends Activity{
 			
 		}
 		
-		SimpleAdapter adapter = new EventAddSimpleAdapter(this, 
+		SimpleAdapter adapter = new EventEditSimpleAdapter(this, 
 													todayRemindTimeDate, 
 													android.R.layout.simple_spinner_dropdown_item, 
 													new String[]{"name"}, 
@@ -227,9 +227,9 @@ public class EventAdd extends Activity{
 		}
 		SpinnerAdapter alarmTypeAdapter = new SimpleAdapter(this, 
 				alarmTypeData, 
-				R.layout.event_add_spinner_item,
+				R.layout.event_edit_spinner_item,
 				new String[]{"name", "value"}, 
-				new int[]{R.id.event_add_spinner_textview1, R.id.event_add_spinner_textview2});
+				new int[]{R.id.event_edit_spinner_textview1, R.id.event_edit_spinner_textview2});
 
 		alarmTypeSpinner.setAdapter(alarmTypeAdapter);
 		alarmTypeSpinner.setPromptId(R.string.event_alarm_type);
@@ -238,7 +238,7 @@ public class EventAdd extends Activity{
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view,
 					int position, long id) {
-				TextView tv = (TextView) view.findViewById(R.id.event_add_spinner_textview2);
+				TextView tv = (TextView) view.findViewById(R.id.event_edit_spinner_textview2);
 				alarmType = Integer.valueOf(tv.getText().toString());
 			}
 
@@ -262,9 +262,9 @@ public class EventAdd extends Activity{
 		}
 		SpinnerAdapter prioriAlarmRepeatAdapter = new SimpleAdapter(this, 
 				prioriAlarmRepeatData, 
-				R.layout.event_add_spinner_item,
+				R.layout.event_edit_spinner_item,
 				new String[]{"name", "value"}, 
-				new int[]{R.id.event_add_spinner_textview1, R.id.event_add_spinner_textview2});
+				new int[]{R.id.event_edit_spinner_textview1, R.id.event_edit_spinner_textview2});
 		prioriAlarmRepeatSpinner.setAdapter(prioriAlarmRepeatAdapter);
 		prioriAlarmRepeatSpinner.setPromptId(R.string.event_repeat);
 		prioriAlarmRepeatSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
@@ -272,7 +272,7 @@ public class EventAdd extends Activity{
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view,
 					int position, long id) {
-				TextView tv = (TextView) view.findViewById(R.id.event_add_spinner_textview2);
+				TextView tv = (TextView) view.findViewById(R.id.event_edit_spinner_textview2);
 				priorAlarmRepeat = Integer.valueOf(tv.getText().toString());
 			}
 
@@ -296,9 +296,9 @@ public class EventAdd extends Activity{
 		}
 		SpinnerAdapter prioriAlarmDayAdapter = new SimpleAdapter(this, 
 														prioriAlarmDayData, 
-														R.layout.event_add_spinner_item,
+														R.layout.event_edit_spinner_item,
 														new String[]{"name", "value"}, 
-														new int[]{R.id.event_add_spinner_textview1, R.id.event_add_spinner_textview2});
+														new int[]{R.id.event_edit_spinner_textview1, R.id.event_edit_spinner_textview2});
 		prioriAlarmDaySpinner.setAdapter(prioriAlarmDayAdapter);
 		prioriAlarmDaySpinner.setPromptId(R.string.event_prior_alarm_day);
 		prioriAlarmDaySpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
@@ -306,7 +306,7 @@ public class EventAdd extends Activity{
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view,
 					int position, long id) {
-				TextView tv = (TextView) view.findViewById(R.id.event_add_spinner_textview2);
+				TextView tv = (TextView) view.findViewById(R.id.event_edit_spinner_textview2);
 				priorAlarmDay = Integer.valueOf(tv.getText().toString());
 			}
 			@Override
@@ -338,11 +338,12 @@ public class EventAdd extends Activity{
 		
 		@Override
 		public void onClick(View v) {
-			EventAdd.this.finish();
+			EventEdit.this.finish();
 		}
 	};
 	private OnClickListener saveButtonListener = new OnClickListener() {
-		
+		//this calendar is used to set createTime and lastModifyTime
+		Calendar now = Calendar.getInstance();
 		@Override
 		public void onClick(View v) {
 			//save event and corresponding contacts
@@ -350,7 +351,7 @@ public class EventAdd extends Activity{
 			//start alarm service here
 			startTodayAlarmService();
 			startPriorAlarmService();
-			EventAdd.this.finish();
+			EventEdit.this.finish();
 		}
 
 		private void startPriorAlarmService() {
@@ -361,8 +362,9 @@ public class EventAdd extends Activity{
 			long priorRemindTimeInMillisecond = EventUtils.dayToTimeInMillisecond(priorAlarmDay);
 			long triggerAtTime = beginCalendar.getTimeInMillis() - priorRemindTimeInMillisecond;
 			
-			Intent intent = new Intent(EventAdd.this, EventBroadcastReceiver.class);
-			intent.setAction(Event.TAG + System.currentTimeMillis());
+			Intent intent = new Intent(EventEdit.this, EventBroadcastReceiver.class);
+			//this action is set only for distinguish, here action is event plus triggerAtTime
+			intent.setAction(Event.TAG + String.valueOf(triggerAtTime));
 			intent.putExtra(Event.CONTENT, content);
 			intent.putExtra(Event.ALARM_TIME, alarmTime);
 			intent.putExtra(Event.ALARM_TYPE, alarmType);
@@ -372,7 +374,7 @@ public class EventAdd extends Activity{
 			intent.putExtra(Event.NOTE, note);
 			intent.putExtra(Event.PRIOR_ALARM_DAY, priorAlarmDay);
 			intent.putExtra(Event.PRIOR_REPEAT_TIME, priorAlarmRepeat);
-			PendingIntent operation = PendingIntent.getBroadcast(EventAdd.this, 0, intent, 0);
+			PendingIntent operation = PendingIntent.getBroadcast(EventEdit.this, 0, intent, 0);
 			am.setInexactRepeating(AlarmManager.RTC_WAKEUP, 
 								triggerAtTime, 
 								EventUtils.priorRepeatToInterval(priorAlarmRepeat), 
@@ -387,7 +389,7 @@ public class EventAdd extends Activity{
 			content = contentEditText.getText().toString();
 			location = locationEditText.getText().toString();
 			note = noteEditText.getText().toString();
-			Calendar now = Calendar.getInstance();
+			
 			ContentValues contentValues = EventUtils.eventToContentValues(
 																	content,
 																	String.valueOf(beginCalendar.getTimeInMillis()), 
@@ -431,8 +433,8 @@ public class EventAdd extends Activity{
 			long remindTimeInMillisecond = EventUtils.toTimeInMillisecond(alarmTime);
 			long triggerAtTime = beginCalendar.getTimeInMillis() - remindTimeInMillisecond;
 			
-			Intent intent = new Intent(EventAdd.this, EventBroadcastReceiver.class);
-			intent.setAction(Event.TAG + System.currentTimeMillis());
+			Intent intent = new Intent(EventEdit.this, EventBroadcastReceiver.class);
+			intent.setAction(Event.TAG + String.valueOf(now.getTimeInMillis()));
 			intent.putExtra(Event.CONTENT, content);
 			intent.putExtra(Event.ALARM_TIME, alarmTime);
 			intent.putExtra(Event.ALARM_TYPE, alarmType);
@@ -442,7 +444,7 @@ public class EventAdd extends Activity{
 			intent.putExtra(Event.NOTE, note);
 			intent.putExtra(Event.PRIOR_ALARM_DAY, priorAlarmDay);
 			intent.putExtra(Event.PRIOR_REPEAT_TIME, priorAlarmRepeat);
-			PendingIntent operation = PendingIntent.getBroadcast(EventAdd.this, 0, intent, 0);
+			PendingIntent operation = PendingIntent.getBroadcast(EventEdit.this, 0, intent, 0);
 			am.set(AlarmManager.RTC_WAKEUP, triggerAtTime, operation);
 		}
 	};
@@ -595,9 +597,9 @@ public class EventAdd extends Activity{
 		return null;
 	}
 
-	private static class EventAddSimpleAdapter extends SimpleAdapter {
+	private static class EventEditSimpleAdapter extends SimpleAdapter {
 
-		public EventAddSimpleAdapter(Context context,
+		public EventEditSimpleAdapter(Context context,
 				List<? extends Map<String, ?>> data, int resource,
 				String[] from, int[] to) {
 			super(context, data, resource, from, to);

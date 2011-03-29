@@ -3,7 +3,11 @@ package ustc.sse.assistant.calendar.utils;
 import java.util.Calendar;
 
 import ustc.sse.assistant.R;
-
+/**
+ * 
+ * @author 宋安琪
+ *
+ */
 public class MyCalendar {
 
 	private SmartDateFactory factory = OrderedSmartDateFactory.getInstance();

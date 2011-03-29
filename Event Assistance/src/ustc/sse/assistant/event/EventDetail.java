@@ -1,20 +1,35 @@
 package ustc.sse.assistant.event;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 
 import ustc.sse.assistant.R;
+import ustc.sse.assistant.event.provider.EventAssistant;
 import ustc.sse.assistant.event.provider.EventAssistant.Event;
 import ustc.sse.assistant.event.provider.EventAssistant.EventContact;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.text.TextUtils;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * 
@@ -23,7 +38,8 @@ import android.widget.TextView;
  */
 public class EventDetail extends Activity{
 	/** Called when the activity is first created. */
-	public static final int CONTACT_REQUEST_CODE = 100;
+	private static final int DELETE_DIALOG = 99;
+	long eventId;
 	
 	private Button editButton;
 	private Button deleteButton;
@@ -39,17 +55,18 @@ public class EventDetail extends Activity{
 	private TextView priorAlarmRepeatTextView;
 	private TextView alarmTypeTextView;
 	
-	
+			
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_detail);
-       
+        getWidgets();
         initiateWidgets();
+        initiateButtons();
 	}
-    
-	private void initiateWidgets() {
-		editButton = (Button) findViewById(R.id.event_detail_edit_button);
+ 
+    private void getWidgets() {
+    	editButton = (Button) findViewById(R.id.event_detail_edit_button);
 		deleteButton = (Button) findViewById(R.id.event_detail_delete_button);		
 		contentTextView = (TextView) findViewById(R.id.event_detail_content);
 		beginTimeTextView = (TextView) findViewById(R.id.event_detail_beginTime);
@@ -60,9 +77,11 @@ public class EventDetail extends Activity{
 		todayRemindTimeTextView = (TextView) findViewById(R.id.event_detail_today_remind_time);
 		priorAlarmDayTextView = (TextView) findViewById(R.id.event_detail_prior_alarm_day);
 		priorAlarmRepeatTextView = (TextView) findViewById(R.id.event_detail_prior_alarm_repeat);
-		alarmTypeTextView = (TextView) findViewById(R.id.event_detail_alarm_type);			
-    	
-		long eventId = getIntent().getLongExtra(Event._ID, -1);
+		alarmTypeTextView = (TextView) findViewById(R.id.event_detail_alarm_type);	
+    }
+    
+	private void initiateWidgets() {
+		eventId = getIntent().getLongExtra(Event._ID, -1);
 		ContentResolver cr = getContentResolver();
 		
 		String[] projection = {Event.CONTENT, Event.BEGIN_TIME, Event.END_TIME, Event.LOCATION, Event.NOTE, Event.ALARM_TIME, Event.PRIOR_ALARM_DAY, Event.PRIOR_REPEAT_TIME, Event.ALARM_TYPE};
@@ -166,4 +185,85 @@ public class EventDetail extends Activity{
 		alarmTypeTextView.setText(alarmType);
 	}
 	
+	private void initiateButtons() {
+		editButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(EventDetail.this, EventEdit.class);
+				i.putExtra(Event._ID, eventId);
+				startActivity(i);
+			}
+		});
+		
+		deleteButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				showDialog(DELETE_DIALOG);
+				//Toast.makeText(EventDetail.this, "delete", Toast.LENGTH_SHORT).show();	
+			}
+		});	
+	}
+	
+	protected Dialog onCreateDialog(int id) {
+		switch (id) {
+		case DELETE_DIALOG :
+			
+			 DialogInterface.OnClickListener dialogListener = new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						switch (which) {
+						case DialogInterface.BUTTON_POSITIVE :
+							deleteEvent();
+							dialog.cancel();
+							break;
+						case DialogInterface.BUTTON_NEGATIVE :
+							dialog.cancel();
+							break;
+						}
+						
+					}
+				
+			};
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle(R.string.event_detail_delete_dialog_title);
+			builder.setIcon(android.R.drawable.ic_dialog_alert);
+			builder.setMessage(R.string.event_detail_delete_dialog_message);
+			builder.setPositiveButton(R.string.event_detail_delete_dialog_affirm, dialogListener);	
+			builder.setNegativeButton(R.string.event_detail_delete_dialog_cancel, dialogListener);		
+			return builder.create();
+		}		
+		return null;		
+	}
+	
+	private void deleteEvent() {
+		ContentResolver cr = getContentResolver();
+		ArrayList<ContentProviderOperation> eventOps = new ArrayList<ContentProviderOperation>();
+		ArrayList<ContentProviderOperation> eventContactOps = new ArrayList<ContentProviderOperation>();
+
+		eventOps.add(ContentProviderOperation.newDelete(Event.CONTENT_URI).withSelection(Event._ID + " = ?",
+						new String[] { String.valueOf(eventId) }).build());
+
+		Uri eventContactUri = ContentUris.withAppendedId(EventContact.CONTENT_URI, eventId);
+		eventContactOps.add(ContentProviderOperation.newDelete(eventContactUri).build());
+
+		try {
+			ProgressDialog dialog = ProgressDialog.show(this, null, "删除中...",true, false);
+			cr.applyBatch(EventAssistant.EVENT_AUTHORITY, eventOps);
+			cr.applyBatch(EventAssistant.EVENT_CONTACT_AUTHORITY,eventContactOps);
+			dialog.cancel();
+
+		} catch (RemoteException e) {
+			e.printStackTrace();
+			Toast.makeText(this, "删除失败", Toast.LENGTH_SHORT).show();
+		} catch (OperationApplicationException e) {
+			e.printStackTrace();
+			Toast.makeText(this, "删除失败", Toast.LENGTH_SHORT).show();
+		} finally {
+			this.finish();
+		}
+		
+	}
 }

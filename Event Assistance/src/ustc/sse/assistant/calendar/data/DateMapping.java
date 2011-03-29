@@ -4,7 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 import ustc.sse.assistant.calendar.utils.GregorianDate;
 import ustc.sse.assistant.calendar.utils.LunarDate;
-
+/**
+ * 
+ * @author 宋安琪
+ *
+ */
 public class DateMapping {
 	private Map<GregorianDate, String> gregorianFestivalDateMap = new HashMap<GregorianDate, String>();
 	private Map<LunarDate, String> lunarFestivalDateMap = new HashMap<LunarDate, String>();;

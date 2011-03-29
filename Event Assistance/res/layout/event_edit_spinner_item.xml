@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent" android:orientation="horizontal">
+  
+  <TextView style="?android:attr/spinnerItemStyle"
+  			android:layout_width="wrap_content"
+  			android:layout_height="25dp"
+  			android:singleLine="true"
+  			android:id="@+id/event_edit_spinner_textview1"
+  			android:ellipsize="marquee"
+  			android:paddingLeft="20dp"
+  			android:gravity="center_vertical">
+  </TextView>
+  
+  <TextView android:layout_width="wrap_content"
+  			android:layout_height="wrap_content"
+  			android:id="@+id/event_edit_spinner_textview2"
+  			android:visibility="gone">
+  </TextView>
+</LinearLayout>

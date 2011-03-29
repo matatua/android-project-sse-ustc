@@ -1,7 +1,11 @@
 package ustc.sse.assistant.calendar.data;
 
 import java.util.Date;
-
+/**
+ * 
+ * @author 宋安琪
+ *
+ */
 public final class Lunar
 {
   private static int monCyl;

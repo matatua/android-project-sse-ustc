@@ -34,6 +34,14 @@
 	<string name="event_add_note_hint">输入备注</string>
 	<string name="event_add_prior_alarm_day_spinner_prompt">选择天数</string>
 	<string name="event_add_prior_alarm_repeat_spinner_prompt">提醒次数</string>	
+	
+	<string name="event_edit_content_hint">事件内容</string>
+	<string name="event_edit_contact_hint">输入联系人</string>
+	<string name="event_edit_location_hint">输入地点</string>
+	<string name="event_edit_note_hint">输入备注</string>
+	<string name="event_edit_prior_alarm_day_spinner_prompt">选择天数</string>
+	<string name="event_edit_prior_alarm_repeat_spinner_prompt">提醒次数</string>	
+	
 	<string name="event_authority">ustc.sse.provider.EventAssistant.event</string>
 	<string name="event_contact_authority">ustc.sse.provider.EventAssistant.eventcontact</string>
 	<string name="event_save">保存</string>
@@ -43,6 +51,12 @@
 	<string name="new_event">新事件</string>
 	<string name="events">本月事件</string>
 	<string name="event_jump_to_date">跳转</string>
+	
+	<string name="event_detail_delete_button">删除</string>
+	<string name="event_detail_delete_dialog_title">删除事件</string>
+	<string name="event_detail_delete_dialog_message">确认删除选中的事件?</string>
+	<string name="event_detail_delete_dialog_affirm">确认</string>
+	<string name="event_detail_delete_dialog_cancel">取消</string>
 	
 	<string name="event_list_select_button">全选</string>
 	<string name="event_list_deselect_button">全不选</string>
