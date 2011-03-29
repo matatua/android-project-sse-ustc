@@ -24,13 +24,16 @@ import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.OperationApplicationException;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +59,7 @@ import android.widget.TimePicker;
 public class EventEdit extends Activity{
 	/** Called when the activity is first created. */
 	public static final int CONTACT_REQUEST_CODE = 100;
+	private long eventId;
 	
 	private Button cancelButton;
 	private Button saveButton;
@@ -124,16 +128,101 @@ public class EventEdit extends Activity{
 		contactEditText = (EditText) findViewById(R.id.event_edit_contact_editText);
 		noteEditText = (EditText) findViewById(R.id.event_edit_note_editText);
 		
+		initiateDate();
 		initiateContactImageView();
 		initiateButtons();
 		
 		//initiate spinners
 		initiateSpinner();
 		//load default preference and set the corresponding spinner
-		initiatePreference();
-		
+		initiatePreference();		
 	}
 
+
+	public void initiateDate(){
+		eventId = getIntent().getLongExtra(Event._ID, -1);
+		ContentResolver cr = getContentResolver();
+		
+		String[] projection = {Event.CONTENT, Event.BEGIN_TIME, Event.END_TIME, Event.LOCATION, Event.NOTE, Event.ALARM_TIME, Event.PRIOR_ALARM_DAY, Event.PRIOR_REPEAT_TIME, Event.ALARM_TYPE};
+		String selection = Event._ID + " = ? ";
+		String[] selectionArgs = {String.valueOf(eventId)};		
+		String[] eventContactProjection = {EventContact.DISPLAY_NAME};	
+		Uri eventContact = ContentUris.withAppendedId(EventContact.CONTENT_URI, eventId);
+		
+		Cursor cursor = cr.query(Event.CONTENT_URI, projection, selection, selectionArgs, null);
+		Cursor eventContactCursor = cr.query(eventContact, eventContactProjection, null, null, null);
+		startManagingCursor(cursor);
+		startManagingCursor(eventContactCursor);
+		
+		String beginTime = null;
+		String endTime = null;
+		StringBuilder contactBuilder = new StringBuilder();
+		String contact = null;
+		
+		int contentColumn;
+		int beginTimeColumn;
+		int endTimeColumn;
+		int locationColumn;
+		int noteColumn;
+		int alarmTimeColumn;
+		int priorAlarmDayColumn;
+		int priorAlarmRepeatColumn;
+		int alarmTypeColumn;
+
+		if(cursor.moveToFirst()){
+		    contentColumn = cursor.getColumnIndex(Event.CONTENT);
+		    beginTimeColumn = cursor.getColumnIndex(Event.BEGIN_TIME);
+		    endTimeColumn = cursor.getColumnIndex(Event.END_TIME);
+		    locationColumn = cursor.getColumnIndex(Event.LOCATION);
+		    noteColumn = cursor.getColumnIndex(Event.NOTE);
+		    alarmTimeColumn = cursor.getColumnIndex(Event.ALARM_TIME);
+		    priorAlarmDayColumn = cursor.getColumnIndex(Event.PRIOR_ALARM_DAY);
+		    priorAlarmRepeatColumn = cursor.getColumnIndex(Event.PRIOR_REPEAT_TIME);
+		    alarmTypeColumn = cursor.getColumnIndex(Event.ALARM_TYPE);
+
+			content = cursor.getString(contentColumn);
+			beginTime = cursor.getString(beginTimeColumn);
+			endTime = cursor.getString(endTimeColumn);
+			location = cursor.getString(locationColumn);
+			note = cursor.getString(noteColumn);
+			alarmTime = Integer.valueOf(cursor.getString(alarmTimeColumn));
+			priorAlarmDay = cursor.getInt(priorAlarmDayColumn);
+			priorAlarmRepeat = cursor.getInt(priorAlarmRepeatColumn);
+			alarmType = Integer.valueOf(cursor.getString(alarmTypeColumn));
+		}
+
+		if (eventContactCursor.moveToFirst()) {
+			int contactColumn = eventContactCursor
+					.getColumnIndex(EventContact.DISPLAY_NAME);
+			do {
+				contactBuilder.append(eventContactCursor.getString(contactColumn)).append(" ");
+			} while (eventContactCursor.moveToNext());
+		}
+		contact = contactBuilder.toString();
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(Long.valueOf(beginTime));
+		beginDateButton.setText(DateFormat.format(DATE_FORMAT, calendar));
+		beginTimeButton.setText(DateFormat.format(TIME_FORMAT, calendar));
+		calendar.setTimeInMillis(Long.valueOf(endTime));
+		endDateButton.setText(DateFormat.format(DATE_FORMAT, calendar));
+		endTimeButton.setText(DateFormat.format(TIME_FORMAT, calendar));
+
+		if(!TextUtils.isEmpty(content)){
+			contentEditText.setText(content);
+		}
+		if(!TextUtils.isEmpty(location)){
+			locationEditText.setText(location);
+		}
+		if(!TextUtils.isEmpty(contact)){
+			contactEditText.setText(contact);
+		}
+		if(!TextUtils.isEmpty(note)){
+			noteEditText.setText(note);
+		}
+		
+	}
+	
 	private void initiatePreference() {
 		//TODO load preference and initiate the related value.
 	}
@@ -186,12 +275,19 @@ public class EventEdit extends Activity{
 		String[] todayRemindTimeStrArray = getApplicationContext().getResources().getStringArray(R.array.entries_list_event_add_today_remind_time);
 		int[] todayRemindTimeIntArray = getApplicationContext().getResources().getIntArray(R.array.entriesvalue_list_event_today_remind_time);
 		List<Map<String, Object>> todayRemindTimeDate = new ArrayList<Map<String,Object>>();
+		int selectedIndex;
+		
 		for (int i = 0; i < todayRemindTimeStrArray.length; i++) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("name", todayRemindTimeStrArray[i]);
 			map.put("value", todayRemindTimeIntArray[i]);
-			todayRemindTimeDate.add(map);
-			
+			todayRemindTimeDate.add(map);			
+		}
+		
+		for (selectedIndex = 0; selectedIndex < todayRemindTimeIntArray.length; selectedIndex++){
+			if(alarmTime == todayRemindTimeIntArray[selectedIndex]){
+				break;
+			}
 		}
 		
 		SimpleAdapter adapter = new EventEditSimpleAdapter(this, 
@@ -200,6 +296,7 @@ public class EventEdit extends Activity{
 													new String[]{"name"}, 
 													new int[] {android.R.id.text1});
 		todayRemindTimeSpinner.setAdapter(adapter);
+		todayRemindTimeSpinner.setSelection(selectedIndex, true);
 		todayRemindTimeSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
@@ -219,12 +316,21 @@ public class EventEdit extends Activity{
 		String[] alarmTypeStringArray = getApplicationContext().getResources().getStringArray(R.array.entries_list_alarm_type);
 		int[] alarmTypeIntArray = getApplicationContext().getResources().getIntArray(R.array.entriesvalue_list_alarm_type);
 		List<Map<String, Object>> alarmTypeData = new ArrayList<Map<String,Object>>();
+		int selectedIndex;
+		
 		for (int i = 0; i < alarmTypeStringArray.length; i++) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("name", alarmTypeStringArray[i]);
 			map.put("value", alarmTypeIntArray[i]);
 			alarmTypeData.add(map);
 		}
+		
+		for (selectedIndex = 0; selectedIndex < alarmTypeIntArray.length; selectedIndex++){
+			if(alarmType == alarmTypeIntArray[selectedIndex]){
+				break;
+			}
+		}
+		
 		SpinnerAdapter alarmTypeAdapter = new SimpleAdapter(this, 
 				alarmTypeData, 
 				R.layout.event_edit_spinner_item,
@@ -233,6 +339,7 @@ public class EventEdit extends Activity{
 
 		alarmTypeSpinner.setAdapter(alarmTypeAdapter);
 		alarmTypeSpinner.setPromptId(R.string.event_alarm_type);
+		alarmTypeSpinner.setSelection(selectedIndex, true);
 		alarmTypeSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
@@ -254,12 +361,21 @@ public class EventEdit extends Activity{
 		String[] prioriRepeatStringArray = getApplicationContext().getResources().getStringArray(R.array.entries_list_priori_repeat);
 		int[] prioriRepeatIntArray = getApplicationContext().getResources().getIntArray(R.array.entriesvalue_list_priori_repeat);
 		List<Map<String, Integer>> prioriAlarmRepeatData = new ArrayList<Map<String,Integer>>();
+		int selectedIndex;
+		
 		for (int i = 0; i < prioriRepeatStringArray.length; i++) {
 			Map<String, Integer> map = new HashMap<String, Integer>();
 			map.put("name", prioriRepeatIntArray[i]);
 			map.put("value", prioriRepeatIntArray[i]);
 			prioriAlarmRepeatData.add(map);
 		}
+		
+		for (selectedIndex = 0; selectedIndex < prioriRepeatIntArray.length; selectedIndex++){
+			if(priorAlarmRepeat == prioriRepeatIntArray[selectedIndex]){
+				break;
+			}
+		}
+		
 		SpinnerAdapter prioriAlarmRepeatAdapter = new SimpleAdapter(this, 
 				prioriAlarmRepeatData, 
 				R.layout.event_edit_spinner_item,
@@ -267,6 +383,7 @@ public class EventEdit extends Activity{
 				new int[]{R.id.event_edit_spinner_textview1, R.id.event_edit_spinner_textview2});
 		prioriAlarmRepeatSpinner.setAdapter(prioriAlarmRepeatAdapter);
 		prioriAlarmRepeatSpinner.setPromptId(R.string.event_repeat);
+		prioriAlarmRepeatSpinner.setSelection(selectedIndex, true);
 		prioriAlarmRepeatSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
@@ -285,15 +402,23 @@ public class EventEdit extends Activity{
 
 	private void preparePriorDaySpinner() {
 		String[] prioriDayStringArray = getApplicationContext().getResources().getStringArray(R.array.entries_list_priori_day);
-		int[] prioriDayIntArray = getApplicationContext().getResources().getIntArray(R.array.entriesvalue_list_priori_day);
-		
+		int[] prioriDayIntArray = getApplicationContext().getResources().getIntArray(R.array.entriesvalue_list_priori_day);		
 		List<Map<String, Integer>> prioriAlarmDayData = new ArrayList<Map<String,Integer>>();
+		int selectedIndex;
+		
 		for (int i = 0; i < prioriDayStringArray.length; i++) {
 			Map<String, Integer> map = new HashMap<String, Integer>();
 			map.put("name", prioriDayIntArray[i]);
 			map.put("value", prioriDayIntArray[i]);
 			prioriAlarmDayData.add(map);
 		}
+		
+		for (selectedIndex = 0; selectedIndex < prioriDayIntArray.length; selectedIndex++){
+			if(priorAlarmDay == prioriDayIntArray[selectedIndex]){
+				break;
+			}
+		}
+		
 		SpinnerAdapter prioriAlarmDayAdapter = new SimpleAdapter(this, 
 														prioriAlarmDayData, 
 														R.layout.event_edit_spinner_item,
@@ -301,6 +426,7 @@ public class EventEdit extends Activity{
 														new int[]{R.id.event_edit_spinner_textview1, R.id.event_edit_spinner_textview2});
 		prioriAlarmDaySpinner.setAdapter(prioriAlarmDayAdapter);
 		prioriAlarmDaySpinner.setPromptId(R.string.event_prior_alarm_day);
+		prioriAlarmDaySpinner.setSelection(selectedIndex, true);
 		prioriAlarmDaySpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
@@ -316,15 +442,7 @@ public class EventEdit extends Activity{
 	}
 
 	private void initiateButtons() {
-		//initiate buttons
-		Calendar calendar = Calendar.getInstance();
-		CharSequence currentDate = DateFormat.format(DATE_FORMAT, calendar);
-		beginDateButton.setText(currentDate);
-		endDateButton.setText(currentDate);
-		CharSequence currentTime = DateFormat.format(TIME_FORMAT, calendar);
-		beginTimeButton.setText(currentTime);
-		endTimeButton.setText(currentTime);
-		
+		//initiate buttons		
 		beginDateButton.setOnClickListener(beginDateListener);
 		beginTimeButton.setOnClickListener(beginTimeListener);
 		endDateButton.setOnClickListener(endDateListener);
@@ -392,7 +510,7 @@ public class EventEdit extends Activity{
 			
 			ContentValues contentValues = EventUtils.eventToContentValues(
 																	content,
-																	String.valueOf(beginCalendar.getTimeInMillis()), 
+																	String.valueOf(alarmTime), 
 																	String.valueOf(alarmType), 
 																	String.valueOf(beginCalendar.getTimeInMillis()), 
 																	String.valueOf(endCalendar.getTimeInMillis()), 
@@ -433,6 +551,11 @@ public class EventEdit extends Activity{
 			long remindTimeInMillisecond = EventUtils.toTimeInMillisecond(alarmTime);
 			long triggerAtTime = beginCalendar.getTimeInMillis() - remindTimeInMillisecond;
 			
+			Intent priorIntent = new Intent(EventEdit.this, EventBroadcastReceiver.class);
+			priorIntent.setAction(Event.TAG + String.valueOf(now.getTimeInMillis()));
+			PendingIntent operaIntent = PendingIntent.getBroadcast(EventEdit.this, 0, priorIntent, 0);
+			am.cancel(operaIntent);
+			
 			Intent intent = new Intent(EventEdit.this, EventBroadcastReceiver.class);
 			intent.setAction(Event.TAG + String.valueOf(now.getTimeInMillis()));
 			intent.putExtra(Event.CONTENT, content);
@@ -445,7 +568,7 @@ public class EventEdit extends Activity{
 			intent.putExtra(Event.PRIOR_ALARM_DAY, priorAlarmDay);
 			intent.putExtra(Event.PRIOR_REPEAT_TIME, priorAlarmRepeat);
 			PendingIntent operation = PendingIntent.getBroadcast(EventEdit.this, 0, intent, 0);
-			am.set(AlarmManager.RTC_WAKEUP, triggerAtTime, operation);
+			am.set(AlarmManager.RTC_WAKEUP, triggerAtTime, operation);		
 		}
 	};
 	
@@ -612,7 +735,7 @@ public class EventEdit extends Activity{
 			v.setTag(map.get("value"));
 			
 			return v;
-		}
-		
+		}		
 	}
+	
 }

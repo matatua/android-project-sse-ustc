@@ -390,7 +390,7 @@ public class EventAdd extends Activity{
 			Calendar now = Calendar.getInstance();
 			ContentValues contentValues = EventUtils.eventToContentValues(
 																	content,
-																	String.valueOf(beginCalendar.getTimeInMillis()), 
+																	String.valueOf(alarmTime), 
 																	String.valueOf(alarmType), 
 																	String.valueOf(beginCalendar.getTimeInMillis()), 
 																	String.valueOf(endCalendar.getTimeInMillis()), 

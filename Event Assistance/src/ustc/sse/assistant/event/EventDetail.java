@@ -3,8 +3,6 @@ package ustc.sse.assistant.event;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Iterator;
-
 import ustc.sse.assistant.R;
 import ustc.sse.assistant.event.provider.EventAssistant;
 import ustc.sse.assistant.event.provider.EventAssistant.Event;
@@ -27,7 +25,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +35,7 @@ import android.widget.Toast;
  */
 public class EventDetail extends Activity{
 	/** Called when the activity is first created. */
-	private static final int DELETE_DIALOG = 99;
+	private static final int DELETE_DIALOG = 100;
 	long eventId;
 	
 	private Button editButton;
@@ -104,11 +101,14 @@ public class EventDetail extends Activity{
 		StringBuilder contact = new StringBuilder();
 		String contactText = null;
 		String note = null;
-		String todayRemindTime = null;
+		int todayRemindTime = 0;
 		String todayRemindTimeText = null;
 		String priorAlarmDay = null;
 		String priorAlarmRepeat = null;
-		String alarmType = null;
+		int alarmType = 0;
+		String alarmTypeText = null;
+		String[] todayRemindTimeStrArray = getApplicationContext().getResources().getStringArray(R.array.entries_list_event_add_today_remind_time);
+		String[] alarmTypeStringArray = getApplicationContext().getResources().getStringArray(R.array.entries_list_alarm_type);
 		
 		int contentColumn;
 		int beginTimeColumn;
@@ -136,10 +136,10 @@ public class EventDetail extends Activity{
 			endTime = cursor.getString(endTimeColumn);
 			location = cursor.getString(locationColumn);
 			note = cursor.getString(noteColumn);
-			todayRemindTime = cursor.getString(todayRemindTimeColumn);
+			todayRemindTime = Integer.valueOf(cursor.getString(todayRemindTimeColumn));
 			priorAlarmDay = String.valueOf(cursor.getInt(priorAlarmDayColumn));
 			priorAlarmRepeat = String.valueOf(cursor.getInt(priorAlarmRepeatColumn));
-			alarmType = cursor.getString(alarmTypeColumn);
+			alarmType = Integer.valueOf(cursor.getString(alarmTypeColumn));
 		}
 
 		if (eventContactCursor.moveToFirst()) {
@@ -157,8 +157,6 @@ public class EventDetail extends Activity{
 		beginTimeText = sdf.format(calendar.getTime());
 		calendar.setTimeInMillis(Long.valueOf(endTime));
 		endTimeText = sdf.format(calendar.getTime());
-		calendar.setTimeInMillis(Long.valueOf(todayRemindTime));
-		todayRemindTimeText = sdf.format(calendar.getTime());
 
 		if(TextUtils.isEmpty(content)){
 			content = "无";
@@ -173,6 +171,9 @@ public class EventDetail extends Activity{
 			note = "无";
 		}
 		
+		todayRemindTimeText = todayRemindTimeStrArray[todayRemindTime];
+	    alarmTypeText = alarmTypeStringArray[alarmType];
+					
 		contentTextView.setText(content);
 		beginTimeTextView.setText(beginTimeText);
 		endTimeTextView.setText(endTimeText);	
@@ -182,7 +183,7 @@ public class EventDetail extends Activity{
 		todayRemindTimeTextView.setText(todayRemindTimeText);
 		priorAlarmDayTextView.setText(priorAlarmDay);
 		priorAlarmRepeatTextView.setText(priorAlarmRepeat);
-		alarmTypeTextView.setText(alarmType);
+		alarmTypeTextView.setText(alarmTypeText);
 	}
 	
 	private void initiateButtons() {
