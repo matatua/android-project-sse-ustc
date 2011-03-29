@@ -104,8 +104,11 @@ public class EventContactProvider extends ContentProvider {
 			SQLiteDatabase db = openHelper.getWritableDatabase();
 			long rowId = db.insert(EVENT_CONTACT_TABLE_NAME, "EventContact", values);
 			
-			Uri newUri = ContentUris.withAppendedId(uri, rowId);
-			return newUri;
+			if (rowId > 0) {
+				Uri newUri = ContentUris.withAppendedId(uri, rowId);
+				getContext().getContentResolver().notifyChange(newUri, null);
+				return newUri;
+			}
 		}
 		
 		throw new IllegalArgumentException("UNKNOWN URI " + uri);
@@ -130,6 +133,7 @@ public class EventContactProvider extends ContentProvider {
 			count = db.delete(EVENT_CONTACT_TABLE_NAME, selection, selectionArgs);
 			
 			getContext().getContentResolver().notifyChange(uri, null);
+			return count;
 		}
 		
 		throw new IllegalArgumentException("UNKNOWN URI " + uri); 

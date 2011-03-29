@@ -35,8 +35,9 @@
         <activity android:name=".calendar.EventCalendar"></activity>
         <activity android:name=".event.EventList"></activity>
         <activity android:name=".event.EventDetail"></activity>
-
+        
+		<meta-data android:name="com.google.android.backup.api_key"
+   		 android:value="AEdPqrEAAAAICPUk7P-5nDqULBGfNFjWUygjGdLMldleGAOnRA" />
     </application>
-
 
 </manifest> 

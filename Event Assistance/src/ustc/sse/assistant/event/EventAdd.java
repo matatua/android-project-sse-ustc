@@ -342,7 +342,8 @@ public class EventAdd extends Activity{
 		}
 	};
 	private OnClickListener saveButtonListener = new OnClickListener() {
-		
+		//this calendar is used to set createTime and lastModifyTime
+		Calendar now = Calendar.getInstance();
 		@Override
 		public void onClick(View v) {
 			//save event and corresponding contacts
@@ -362,7 +363,8 @@ public class EventAdd extends Activity{
 			long triggerAtTime = beginCalendar.getTimeInMillis() - priorRemindTimeInMillisecond;
 			
 			Intent intent = new Intent(EventAdd.this, EventBroadcastReceiver.class);
-			intent.setAction(Event.TAG + System.currentTimeMillis());
+			//this action is set only for distinguish, here action is event plus triggerAtTime
+			intent.setAction(Event.TAG + String.valueOf(triggerAtTime));
 			intent.putExtra(Event.CONTENT, content);
 			intent.putExtra(Event.ALARM_TIME, alarmTime);
 			intent.putExtra(Event.ALARM_TYPE, alarmType);
@@ -387,7 +389,7 @@ public class EventAdd extends Activity{
 			content = contentEditText.getText().toString();
 			location = locationEditText.getText().toString();
 			note = noteEditText.getText().toString();
-			Calendar now = Calendar.getInstance();
+			
 			ContentValues contentValues = EventUtils.eventToContentValues(
 																	content,
 																	String.valueOf(beginCalendar.getTimeInMillis()), 
@@ -432,7 +434,7 @@ public class EventAdd extends Activity{
 			long triggerAtTime = beginCalendar.getTimeInMillis() - remindTimeInMillisecond;
 			
 			Intent intent = new Intent(EventAdd.this, EventBroadcastReceiver.class);
-			intent.setAction(Event.TAG + System.currentTimeMillis());
+			intent.setAction(Event.TAG + String.valueOf(now.getTimeInMillis()));
 			intent.putExtra(Event.CONTENT, content);
 			intent.putExtra(Event.ALARM_TIME, alarmTime);
 			intent.putExtra(Event.ALARM_TYPE, alarmType);

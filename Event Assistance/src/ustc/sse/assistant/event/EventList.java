@@ -207,8 +207,10 @@ public class EventList extends Activity {
 	}
 	/**
 	 * delete the event and eventcontact whose id in selectedItemIds
+	 * and cancel alarm service associated with these events
 	 */
 	private void deleteSelectedEvents() {
+		//delete events
 		ContentResolver cr = getContentResolver();
 		ArrayList<ContentProviderOperation> eventOps = new ArrayList<ContentProviderOperation>();
 		ArrayList<ContentProviderOperation> eventContactOps = new ArrayList<ContentProviderOperation>();
@@ -238,6 +240,10 @@ public class EventList extends Activity {
 			e.printStackTrace();
 			Toast.makeText(this, "删除失败", Toast.LENGTH_SHORT).show();
 		}
+		buttonBar.setVisibility(View.INVISIBLE);
+		
+		//cancel alarm service
+		//TODO cancel alarm service
 		
 	}
 	@Override
