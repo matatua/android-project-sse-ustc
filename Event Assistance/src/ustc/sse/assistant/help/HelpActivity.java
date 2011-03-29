@@ -10,7 +10,7 @@ public class HelpActivity extends TabActivity {
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
+		setContentView(R.layout.help_activity);
 		TabHost vTabHost = getTabHost();
 
 		vTabHost.addTab(vTabHost.newTabSpec("tab01")
