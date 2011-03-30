@@ -29,7 +29,7 @@
         <activity android:name=".setting.Setting"></activity>
         <activity android:name=".help.HelpActivity"></activity>
         <receiver android:name=".event.broadcast.EventBroadcastReceiver"></receiver>
-        <activity android:name=".calendar.EventCalendar"></activity>
+        <activity android:name=".calendar.EventCalendar" android:screenOrientation="portrait"></activity>
         <activity android:name=".event.EventList"></activity>
         <activity android:name=".event.EventDetail"></activity>
         

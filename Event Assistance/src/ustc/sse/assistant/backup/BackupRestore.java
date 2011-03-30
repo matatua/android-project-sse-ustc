@@ -10,6 +10,7 @@ import java.io.StringWriter;
 
 import ustc.sse.assistant.R;
 import ustc.sse.assistant.backup.util.EventToXml;
+import ustc.sse.assistant.backup.util.XmlToEvent;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Environment;
@@ -63,8 +64,10 @@ public class BackupRestore extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				
+				File root = Environment.getExternalStorageDirectory();
+				File backupFile = new File(root, "/eventassistant/backup.xml");
+				XmlToEvent xte = new XmlToEvent(BackupRestore.this, backupFile, false);
+				xte.restore();
 			}
 		});
 		
