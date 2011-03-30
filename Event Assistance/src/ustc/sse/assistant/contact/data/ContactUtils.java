@@ -6,23 +6,21 @@
 package ustc.sse.assistant.contact.data;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import ustc.sse.assistant.contact.ContactList;
-
 import android.app.Activity;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.RemoteException;
 import android.provider.ContactsContract;
-import android.provider.ContactsContract.CommonDataKinds.Email;
 import android.provider.ContactsContract.CommonDataKinds.Event;
 import android.provider.ContactsContract.CommonDataKinds.GroupMembership;
 import android.provider.ContactsContract.CommonDataKinds.Note;
@@ -304,22 +302,27 @@ public class ContactUtils {
 		Cursor c = null;
 		String birthday = null;
 		
-		String[] projection = {Event.START_DATE, Event.TYPE};
+		String[] projection = {BirthdayConstant.YEAR, BirthdayConstant.MONTH, BirthdayConstant.DAY};
 		String selection = Data.MIMETYPE + " = ? AND " 
-							+ Data.CONTACT_ID + " = ? " + " AND "
-							+ Event.TYPE + " = ?";
-		String[] selectionArgs = {Event.CONTENT_ITEM_TYPE, 
-								  Long.toString(contactId),
-								  Integer.toString(Event.TYPE_BIRTHDAY)};
+							+ Data.CONTACT_ID + " = ? ";
+		String[] selectionArgs = {BirthdayConstant.TYPE, 
+								  Long.toString(contactId)};
 		
 		c = cr.query(Data.CONTENT_URI, projection, selection, selectionArgs, null);
-		int birthdayColumnIndex = c.getColumnIndex(Event.START_DATE);
+		int yearColumnIndex = c.getColumnIndex(BirthdayConstant.YEAR);
+		int monthColumnIndex = c.getColumnIndex(BirthdayConstant.MONTH);
+		int dayColumnIndex = c.getColumnIndex(BirthdayConstant.DAY);
+		Calendar birthdayCalendar = Calendar.getInstance();
 		if (c.moveToFirst()) {
-			birthday = c.getString(birthdayColumnIndex);
+			int year = c.getInt(yearColumnIndex);
+			int month = c.getInt(monthColumnIndex);
+			int day = c.getInt(dayColumnIndex);
+			
+			birthdayCalendar.set(year, month, day);
 		}
 		
 		c.close();
-		return birthday;
+		return String.valueOf(birthdayCalendar.getTimeInMillis());
 	}
 	
 	
@@ -337,20 +340,24 @@ public class ContactUtils {
 		for (Contact c : contacts) {
 			//get the first rawcontact id
 			Long rawContactId = getRawContactId(c.getContactId()).get(0);
-			
+			Calendar birthdayCalendar = Calendar.getInstance();
+			birthdayCalendar.setTimeInMillis(Long.valueOf(c.getBirthday()));
 			if (newData) {
+				
 				ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
 				          .withValue(Data.RAW_CONTACT_ID, rawContactId)
-				          .withValue(Data.MIMETYPE, Event.CONTENT_ITEM_TYPE)
-				          .withValue(Event.TYPE, Event.TYPE_BIRTHDAY)
-				          .withValue(Event.START_DATE, c.getBirthday())
+				          .withValue(Data.MIMETYPE, BirthdayConstant.TYPE)
+				          .withValue(BirthdayConstant.YEAR, birthdayCalendar.get(Calendar.YEAR))
+				          .withValue(BirthdayConstant.MONTH, birthdayCalendar.get(Calendar.MONTH) + 1)
+				          .withValue(BirthdayConstant.DAY, birthdayCalendar.get(Calendar.DAY_OF_MONTH))
 				          .build());
 			} else {
 				ops.add(ContentProviderOperation.newUpdate(Data.CONTENT_URI)
 				          .withSelection(Data.RAW_CONTACT_ID + " = ?", new String[]{rawContactId.toString()})
-				          .withSelection(Data.MIMETYPE + " = ? ", new String[]{Event.CONTENT_ITEM_TYPE})
-				          .withSelection(Event.TYPE + " = ?", new String[]{Long.toString(Event.TYPE_BIRTHDAY)})
-				          .withValue(Event.START_DATE, c.getBirthday())
+				          .withSelection(Data.MIMETYPE + " = ? ", new String[]{BirthdayConstant.TYPE})
+				          .withValue(BirthdayConstant.YEAR + " = ?", new String[]{String.valueOf(birthdayCalendar.get(Calendar.YEAR))})
+				          .withValue(BirthdayConstant.MONTH + " = ? ", new String[]{String.valueOf(birthdayCalendar.get(Calendar.MONTH))})
+				          .withValue(BirthdayConstant.DAY + " = ? ", new String[]{String.valueOf(birthdayCalendar.get(Calendar.DAY_OF_MONTH))})
 				          .build());
 			}
 		}
