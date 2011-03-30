@@ -21,10 +21,6 @@
         <activity android:name=".contact.ContactList"></activity>
         <activity android:name=".contact.ContactEdit"></activity>
         <activity android:name=".contact.ContactSelection">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"></action>
-                <category android:name="android.intent.category.LAUNCHER"></category>
-            </intent-filter>
         </activity>
         <activity android:name=".event.EventAdd"></activity>
         <activity android:name=".event.EventEdit"></activity>
@@ -39,6 +35,7 @@
         
 		<meta-data android:name="com.google.android.backup.api_key"
    		 android:value="AEdPqrEAAAAICPUk7P-5nDqULBGfNFjWUygjGdLMldleGAOnRA" />
+		<activity android:name=".backup.BackupRestore"></activity>
     </application>
 
 </manifest> 

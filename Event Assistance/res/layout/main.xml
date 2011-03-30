@@ -86,6 +86,7 @@
 	    		android:layout_width="wrap_content"
 	    		android:layout_height="wrap_content"
 	    		android:background="@color/main_screen_image_button"
+	    		android:id="@+id/share_imageButton"
 	    		>
 	    	</ImageButton>
 	    	<TextView android:layout_width="wrap_content"
@@ -104,6 +105,7 @@
 	    		android:layout_width="wrap_content"
 	    		android:layout_height="wrap_content"
 	    		android:background="@color/main_screen_image_button"
+	    		android:id="@+id/backup_imageButton"
 	    		>
 	    	</ImageButton>
 			<TextView android:layout_width="wrap_content"
@@ -132,7 +134,7 @@
 		    		android:layout_width="wrap_content"
 		    		android:layout_height="wrap_content"
 	    			android:background="@color/main_screen_image_button"
-	    			android:id="@+id/setting_imageButtojn"
+	    			android:id="@+id/setting_imageButton"
 		    		>
 		    	</ImageButton>
 		    	<TextView android:layout_width="wrap_content"

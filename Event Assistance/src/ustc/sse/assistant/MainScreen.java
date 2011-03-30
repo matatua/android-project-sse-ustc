@@ -5,6 +5,7 @@
 
 package ustc.sse.assistant;
 
+import ustc.sse.assistant.backup.BackupRestore;
 import ustc.sse.assistant.calendar.EventCalendar;
 import ustc.sse.assistant.contact.ContactList;
 import ustc.sse.assistant.help.HelpActivity;
@@ -47,7 +48,7 @@ public class MainScreen extends Activity {
 			}
 		});
     	
-    	ImageButton settingButton = (ImageButton) findViewById(R.id.setting_imageButtojn);
+    	ImageButton settingButton = (ImageButton) findViewById(R.id.setting_imageButton);
     	settingButton.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -63,6 +64,17 @@ public class MainScreen extends Activity {
 			public void onClick(View v) {
 				Intent helpIntent = new Intent(MainScreen.this, HelpActivity.class);
 				startActivity(helpIntent);
+			}
+		});
+    	
+    	ImageButton backupButton = (ImageButton) findViewById(R.id.backup_imageButton);
+    	backupButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent backupIntent = new Intent(MainScreen.this, BackupRestore.class);
+				startActivity(backupIntent);
+				
 			}
 		});
     	

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ustc.sse.assistant.backup;
+package ustc.sse.assistant.backup.util;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -51,8 +51,14 @@ public class EventToXml {
 		String[] projection = {Event._ID, Event.ALARM_TIME, Event.ALARM_TYPE, Event.BEGIN_TIME,
 								Event.CONTENT, Event.CREATE_TIME, Event.END_TIME, Event.LAST_MODIFY_TIME,
 								Event.LOCATION, Event.NOTE, Event.PRIOR_ALARM_DAY, Event.PRIOR_REPEAT_TIME};
-		String selection = Event.CREATE_TIME + " >= ? AND " + Event.CREATE_TIME + " <= ?";
-		String[] selectionArgs = {String.valueOf(from.getTimeInMillis()), String.valueOf(to.getTimeInMillis())};
+		
+		String selection = null;
+		String[] selectionArgs = null;
+		if (null != from && null != to) {
+			selection = Event.CREATE_TIME + " >= ? AND " + Event.CREATE_TIME + " <= ?";
+			selectionArgs = new String[] {String.valueOf(from.getTimeInMillis()), String.valueOf(to.getTimeInMillis())};
+
+		}
 		Cursor c = cr.query(Event.CONTENT_URI, projection, selection, selectionArgs, null);
 		
 		int idIndex = c.getColumnIndex(Event._ID);
@@ -93,7 +99,7 @@ public class EventToXml {
 			Uri contactsUri = ContentUris.withAppendedId(EventContact.CONTENT_URI, ee.id);
 			Cursor contactsCursor = cr.query(contactsUri, null, null, null, null);
 			
-			if (c != null && c.moveToFirst()) {
+			if (contactsCursor != null && contactsCursor.moveToFirst()) {
 				do {
 					EventContactEntity ece = new EventContactEntity();
 					ece.id = contactsCursor.getLong(contactsCursor.getColumnIndex(EventContact._ID));
@@ -104,12 +110,16 @@ public class EventToXml {
 					ee.contacts.add(ece);
 				} while (contactsCursor.moveToNext());
 			}
+			
+			contactsCursor.close();
 
 		}
 		
+		c.close();
+		
 	}
 	
-	StringWriter generateXml() {
+	public StringWriter generateXml() {
 		generateEntities();
 		
 		StringWriter sw = new StringWriter();
@@ -130,14 +140,60 @@ public class EventToXml {
 				xs.text(ee.alarmType.toString());
 				xs.endTag("", EventXmlConstant.EVENT_ALARM_TYPE);
 				
+				xs.startTag("", EventXmlConstant.EVENT_BEGIN_TIME);
+				xs.text(ee.beginTime);
+				xs.endTag("", EventXmlConstant.EVENT_BEGIN_TIME);
 				
+				xs.startTag("", EventXmlConstant.EVENT_CONTENT);
+				xs.text(ee.content);
+				xs.endTag("", EventXmlConstant.EVENT_CONTENT);
+				
+				xs.startTag("", EventXmlConstant.EVENT_CREATE_TIME);
+				xs.text(ee.createTime);
+				xs.endTag("", EventXmlConstant.EVENT_CREATE_TIME);
+				
+				xs.startTag("", EventXmlConstant.EVENT_END_TIME);
+				xs.text(ee.endTime);
+				xs.endTag("", EventXmlConstant.EVENT_END_TIME);
+				
+				xs.startTag("", EventXmlConstant.EVENT_LAST_MODIFY_TIME);
+				xs.text(ee.lastModifyTime);
+				xs.endTag("", EventXmlConstant.EVENT_LAST_MODIFY_TIME);
+				
+				xs.startTag("", EventXmlConstant.EVENT_LOCATION);
+				xs.text(ee.location);
+				xs.endTag("", EventXmlConstant.EVENT_LOCATION);
+				
+				xs.startTag("", EventXmlConstant.EVENT_NOTE);
+				xs.text(ee.note);
+				xs.endTag("", EventXmlConstant.EVENT_NOTE);
+				
+				xs.startTag("", EventXmlConstant.EVENT_PRIOR_ALARM_DAY);
+				xs.text(ee.priorAlarmDay.toString());
+				xs.endTag("", EventXmlConstant.EVENT_PRIOR_ALARM_DAY);
+				
+				xs.startTag("", EventXmlConstant.EVENT_PRIOR_ALARM_REPEAT);
+				xs.text(ee.priorRepeat.toString());
+				xs.endTag("", EventXmlConstant.EVENT_PRIOR_ALARM_REPEAT);
+				
+				xs.startTag("", EventXmlConstant.CONTACTS);
+				for (EventContactEntity ec : ee.contacts) {
+					xs.startTag("", EventXmlConstant.CONTACT);
+					xs.startTag("", EventXmlConstant.EVENT_CONTACT_DISPLAY_NAME);
+					
+					xs.text(ec.displayName);
+					
+					xs.endTag("", EventXmlConstant.EVENT_CONTACT_DISPLAY_NAME);
+					xs.endTag("", EventXmlConstant.CONTACT);
+				}
+				xs.endTag("", EventXmlConstant.CONTACTS);
 				
 				xs.endTag("", EventXmlConstant.EVENT);
 			}
 			
 			xs.endTag("", EventXmlConstant.EVENTS);
 			xs.endDocument();
-			
+			xs.flush();
 			
 		} catch (IllegalArgumentException e) {
 			// TODO Auto-generated catch block
@@ -150,6 +206,7 @@ public class EventToXml {
 			e.printStackTrace();
 		}
 		
+		return sw;
 	
 		
 	}

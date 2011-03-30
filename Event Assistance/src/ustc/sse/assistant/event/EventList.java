@@ -240,6 +240,7 @@ public class EventList extends Activity {
 			e.printStackTrace();
 			Toast.makeText(this, "删除失败", Toast.LENGTH_SHORT).show();
 		}
+		selectedItemIds.clear();
 		buttonBar.setVisibility(View.INVISIBLE);
 		
 		//cancel alarm service
@@ -257,8 +258,9 @@ public class EventList extends Activity {
 					public void onClick(DialogInterface dialog, int which) {
 						switch (which) {
 						case DialogInterface.BUTTON_POSITIVE :
-							deleteSelectedEvents();
 							dialog.cancel();
+							deleteSelectedEvents();
+							
 							break;
 						case DialogInterface.BUTTON_NEGATIVE :
 							dialog.cancel();
