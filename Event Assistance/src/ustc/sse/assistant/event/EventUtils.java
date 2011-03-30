@@ -1,6 +1,6 @@
 package ustc.sse.assistant.event;
 
-import ustc.sse.assistant.event.data.EventsEntity;
+import ustc.sse.assistant.event.data.EventEntity;
 import ustc.sse.assistant.event.provider.EventAssistant.Event;
 import android.content.ContentValues;
 import android.os.Bundle;
@@ -82,7 +82,7 @@ public class EventUtils {
 		return values;
 	}
 
-	public static final EventsEntity createEvent(String content,
+	public static final EventEntity createEvent(String content,
 													long alarmTime, 
 													int alarmType,
 													long beginTime,											
@@ -93,14 +93,14 @@ public class EventUtils {
 													String note,
 													int priorAlarmDay,
 													int priorRepeatDay) {
-		EventsEntity ee = new EventsEntity();
+		EventEntity ee = new EventEntity();
 		ee.content = content;
-		ee.alarmTime = alarmTime;
+		ee.alarmTime = String.valueOf(alarmTime);
 		ee.alarmType = alarmType;
-		ee.beginTime = beginTime;
-		ee.endTime = endTime;
-		ee.createTime = createTime;
-		ee.lastModifyTime = lastModifyTime;
+		ee.beginTime = String.valueOf(beginTime);
+		ee.endTime = String.valueOf(endTime);
+		ee.createTime = String.valueOf(createTime);
+		ee.lastModifyTime = String.valueOf(lastModifyTime);
 		ee.location = location;
 		ee.note = note;
 		ee.priorAlarmDay = priorAlarmDay;
