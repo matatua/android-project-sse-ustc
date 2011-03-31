@@ -158,6 +158,7 @@ public class EventAdd extends Activity{
 			String[] names = data.getStringArrayExtra(ContactSelection.SELECTED_CONTACT_DISPLAY_NAME);
 		
 			if (contactIds != null && names != null) {
+				contactData.clear();
 				for (int i = 0; i < contactIds.length; i++) {
 					contactData.put(contactIds[i], names[i]);
 					sb.append(names[i] + " ");							
