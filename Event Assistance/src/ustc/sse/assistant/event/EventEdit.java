@@ -53,7 +53,7 @@ import android.widget.TimePicker;
 
 /**
  * 
- * @author 宋安琪、李健
+ * @author 李健、宋安琪
  *
  */
 public class EventEdit extends Activity{
@@ -142,11 +142,11 @@ public class EventEdit extends Activity{
 	public void initiateDate(){
 		eventId = getIntent().getLongExtra(Event._ID, -1);
 		ContentResolver cr = getContentResolver();
-		
+
 		String[] projection = {Event.CONTENT, Event.BEGIN_TIME, Event.END_TIME, Event.LOCATION, Event.NOTE, Event.ALARM_TIME, Event.PRIOR_ALARM_DAY, Event.PRIOR_REPEAT_TIME, Event.ALARM_TYPE};
 		String selection = Event._ID + " = ? ";
 		String[] selectionArgs = {String.valueOf(eventId)};		
-		String[] eventContactProjection = {EventContact.DISPLAY_NAME};	
+		String[] eventContactProjection = {EventContact.CONTACT_ID, EventContact.DISPLAY_NAME};	
 		Uri eventContact = ContentUris.withAppendedId(EventContact.CONTENT_URI, eventId);
 		
 		Cursor cursor = cr.query(Event.CONTENT_URI, projection, selection, selectionArgs, null);
@@ -158,11 +158,15 @@ public class EventEdit extends Activity{
 		String endTime = null;
 		StringBuilder contactBuilder = new StringBuilder();
 		String contact = null;
+		Long contactId;
+		String contactName;
 		
 		int contentColumn;
 		int beginTimeColumn;
 		int endTimeColumn;
 		int locationColumn;
+		int contactIdColumn;
+		int contactNameColumn;
 		int noteColumn;
 		int alarmTimeColumn;
 		int priorAlarmDayColumn;
@@ -192,10 +196,14 @@ public class EventEdit extends Activity{
 		}
 
 		if (eventContactCursor.moveToFirst()) {
-			int contactColumn = eventContactCursor
-					.getColumnIndex(EventContact.DISPLAY_NAME);
+			contactIdColumn = eventContactCursor.getColumnIndex(EventContact.CONTACT_ID);
+			contactNameColumn = eventContactCursor.getColumnIndex(EventContact.DISPLAY_NAME);
+
 			do {
-				contactBuilder.append(eventContactCursor.getString(contactColumn)).append(" ");
+				contactId = eventContactCursor.getLong(contactIdColumn);
+				contactName = eventContactCursor.getString(contactNameColumn); 
+				contactData.put(contactId, contactName);
+				contactBuilder.append(contactName).append(" ");
 			} while (eventContactCursor.moveToNext());
 		}
 		contact = contactBuilder.toString();
@@ -220,6 +228,9 @@ public class EventEdit extends Activity{
 		if(!TextUtils.isEmpty(note)){
 			noteEditText.setText(note);
 		}
+		
+		//delete contact data which refer to this event
+		cr.delete(eventContact, null, null);
 		
 	}
 	
@@ -247,6 +258,7 @@ public class EventEdit extends Activity{
 			String[] names = data.getStringArrayExtra(ContactSelection.SELECTED_CONTACT_DISPLAY_NAME);
 		
 			if (contactIds != null && names != null) {
+				contactData.clear();
 				for (int i = 0; i < contactIds.length; i++) {
 					contactData.put(contactIds[i], names[i]);
 					sb.append(names[i] + " ");							
@@ -508,21 +520,21 @@ public class EventEdit extends Activity{
 			location = locationEditText.getText().toString();
 			note = noteEditText.getText().toString();
 			
-			ContentValues contentValues = EventUtils.eventToContentValues(
+			ContentValues contentValues = EventUtils.eventUpdateToContentValues(
 																	content,
 																	String.valueOf(alarmTime), 
 																	String.valueOf(alarmType), 
 																	String.valueOf(beginCalendar.getTimeInMillis()), 
 																	String.valueOf(endCalendar.getTimeInMillis()), 
 																	String.valueOf(now.getTimeInMillis()), 
-																	String.valueOf(now.getTimeInMillis()), 
 																	location, 
 																	note, 
 																	priorAlarmDay, 
 																	priorAlarmRepeat);
-			Uri newUri = cr.insert(Event.CONTENT_URI, contentValues);
-			//store eventcontact
-			Long eventId = Long.valueOf(newUri.getPathSegments().get(1));
+			Uri editUri = ContentUris.withAppendedId(Event.CONTENT_URI, eventId);
+			cr.update(editUri, contentValues, null, null);
+			//store contact
+			Long eventId = Long.valueOf(editUri.getPathSegments().get(1));
 			ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
 			Iterator<Entry<Long, String>> iter = contactData.entrySet().iterator();
 			
@@ -543,6 +555,10 @@ public class EventEdit extends Activity{
 				e.printStackTrace();
 			} catch (OperationApplicationException e) {
 				e.printStackTrace();
+			} finally{
+				Intent i = new Intent(EventEdit.this, EventDetail.class);
+				i.putExtra(Event._ID, eventId);
+				startActivity(i);
 			}
 		}
 

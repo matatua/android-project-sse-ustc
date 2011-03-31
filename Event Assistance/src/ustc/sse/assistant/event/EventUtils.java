@@ -7,7 +7,7 @@ import android.os.Bundle;
 
 /**
  * 
- * @author 李健
+ * @author 李健、宋安琪
  *
  */
 public class EventUtils {
@@ -79,6 +79,27 @@ public class EventUtils {
 		values.put(Event.PRIOR_REPEAT_TIME, priorRepeatDay);
 		values.put(Event.CONTENT, content);
 		
+		return values;
+	}
+	
+	public static final ContentValues eventUpdateToContentValues(String content,
+			String alarmTime, String alarmType, String beginTime,
+			String endTime, String lastModifyTime,
+			String location, String note, Integer priorAlarmDay,
+			Integer priorRepeatDay) {
+
+		ContentValues values = new ContentValues();
+		values.put(Event.ALARM_TIME, alarmTime);
+		values.put(Event.ALARM_TYPE, alarmType);
+		values.put(Event.BEGIN_TIME, beginTime);
+		values.put(Event.END_TIME, endTime);
+		values.put(Event.LAST_MODIFY_TIME, lastModifyTime);
+		values.put(Event.LOCATION, location);
+		values.put(Event.NOTE, note);
+		values.put(Event.PRIOR_ALARM_DAY, priorAlarmDay);
+		values.put(Event.PRIOR_REPEAT_TIME, priorRepeatDay);
+		values.put(Event.CONTENT, content);
+
 		return values;
 	}
 

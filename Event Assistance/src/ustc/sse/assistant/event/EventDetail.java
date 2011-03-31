@@ -194,6 +194,7 @@ public class EventDetail extends Activity{
 				Intent i = new Intent(EventDetail.this, EventEdit.class);
 				i.putExtra(Event._ID, eventId);
 				startActivity(i);
+				finish();
 			}
 		});
 		
