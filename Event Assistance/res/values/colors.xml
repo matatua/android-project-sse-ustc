@@ -6,5 +6,5 @@
     <color name="gregorian_festival_color">#FF0000</color>
     <color name="lunar_festival_color">#0000E3</color>
     <color name="event_list_button_bar_background">#C8EEEEEE</color>
-    
+    <color name="event_list_item_date_bg">#F0F0F0</color>
 </resources>

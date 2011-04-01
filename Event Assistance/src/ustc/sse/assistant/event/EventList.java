@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import ustc.sse.assistant.R;
 import ustc.sse.assistant.event.provider.EventAssistant;
@@ -32,6 +33,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.text.format.DateFormat;
+import android.text.util.Linkify;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -59,7 +61,7 @@ public class EventList extends Activity {
 	
 	public static final String DATE_FORMAT = "yyyy年MM月dd日";
 	
-	private static final int HEADER_FOOTER_NUMBER = 1;
+	private static final int HEADER_FOOTER_NUMBER = 2;
 	private static final int DELETE_DIALOG = 100;
 	
 	private ListView listView;
@@ -182,10 +184,10 @@ public class EventList extends Activity {
 														imageViewListener,
 														imageViewList);
 		
-		TextView tv = new TextView(this);
-		tv.setLayoutParams(new AbsListView.LayoutParams(LayoutParams.FILL_PARENT, 50));
-		tv.setText("查看更多事件");
-		tv.setOnClickListener(new OnClickListener() {
+		TextView footer = new TextView(this);
+		footer.setLayoutParams(new AbsListView.LayoutParams(android.widget.AbsListView.LayoutParams.MATCH_PARENT, 50));
+		footer.setText("点击可浏览下一个月的所有事件");
+		footer.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -193,7 +195,19 @@ public class EventList extends Activity {
 				
 			}
 		});
-		listView.addFooterView(tv);	
+		TextView header = new TextView(this);
+		header.setText("点击可浏览上一个月的所有事件");
+		header.setLayoutParams(new AbsListView.LayoutParams(android.widget.AbsListView.LayoutParams.MATCH_PARENT, 50));
+		header.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		listView.addFooterView(footer);	
+		listView.addHeaderView(header);
 		
 		listView.setAdapter(adapter);
 		listView.setOnItemClickListener(listViewItemListener);
@@ -372,6 +386,9 @@ public class EventList extends Activity {
 							+ " to " + DateFormat.format(DATE_FORMAT, end));
 			contentTv.setText(content);
 			locationTv.setText(location);
+			Pattern pattern = Pattern.compile("\\w+");
+			Linkify.addLinks(locationTv, pattern, "geo:");
+			locationTv.setFocusable(false);
 		}
 
 	}

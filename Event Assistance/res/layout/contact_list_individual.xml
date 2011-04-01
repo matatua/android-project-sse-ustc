@@ -9,17 +9,21 @@
   				android:layout_height="wrap_content"
   				android:id="@+id/contactIndividualImage"
   				android:layout_gravity="left"
+  				android:scaleType="center"
+  				android:maxWidth="@dimen/contact_list_image_size"
+  				android:maxHeight="@dimen/contact_list_image_size"
   				android:layout_marginLeft="@dimen/contact_list_individual_image_marginLeft">
   </ImageView>
   <TextView android:layout_width="wrap_content"
   			android:layout_height="wrap_content"
   			android:id="@+id/hiddenIndividualId"
-  			android:visibility="invisible">
+  			android:visibility="gone">
   </TextView>
   
   <TextView android:layout_width="wrap_content"
   			android:layout_height="wrap_content"
   			android:id="@+id/contactIndividualName"
+  			android:layout_gravity="center_vertical"
   			android:layout_marginLeft="@dimen/contact_list_individual_name_marginLeft">
   </TextView>
 </LinearLayout>

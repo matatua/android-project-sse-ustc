@@ -9,7 +9,7 @@
   			android:layout_width="match_parent"
   			android:layout_height="wrap_content"
   			android:layout_alignParentTop="true"
-  			android:background="@android:color/darker_gray"
+  			android:background="@color/event_list_item_date_bg"
   			android:text="Date from x to x">
   </TextView>
 
@@ -30,26 +30,45 @@
 	  			>
 	  </ImageView>	    
   
-  	<LinearLayout android:layout_width="wrap_content"
+  	<RelativeLayout android:layout_width="wrap_content"
 					android:layout_alignParentLeft="true"
 					android:layout_toLeftOf="@id/event_list_item_check"
-  					android:layout_height="wrap_content"
-  					android:orientation="vertical"
+  					android:layout_height="wrap_content"  					
   					>
+  		  <TextView android:layout_width="wrap_content"
+  		  			android:layout_height="wrap_content"
+  		  			android:layout_alignParentLeft="true"
+  		  			android:layout_alignParentTop="true"
+  		  			android:layout_marginLeft="3dp"
+  		  			android:text="@string/event_content"
+  		  			android:id="@+id/event_list_content_label">
+  		  </TextView>
 		  <TextView android:id="@+id/event_list_item_content"
+		  			android:layout_alignTop="@id/event_list_content_label"
+		  			android:layout_toRightOf="@id/event_list_content_label"
 		  			android:layout_height="wrap_content"
 		  			android:layout_width="wrap_content"			
 		  			android:text="Content">
 		  </TextView>
 		  
+  		  <TextView android:layout_width="wrap_content"
+  		  			android:layout_height="wrap_content"
+  		  			android:layout_alignParentLeft="true"
+  		  			android:layout_below="@id/event_list_content_label"
+  		  			android:layout_marginLeft="3dp"
+  		  			android:text="@string/event_location"
+  		  			android:id="@+id/event_list_location_label">
+  		  </TextView>
 		  <TextView android:id="@+id/event_list_item_location"
 		  			android:layout_width="wrap_content"
 		  			android:layout_height="wrap_content"
-		  			android:layout_alignParentLeft="true"
-		  			android:text="location">
+		  			android:layout_alignTop="@id/event_list_location_label"
+		  			android:layout_toRightOf="@id/event_list_location_label"
+		  			android:text="location"
+		  			android:focusable="false">
 		  </TextView>
 		  
-	  </LinearLayout>
+	  </RelativeLayout>
 	
 	  
   </RelativeLayout>

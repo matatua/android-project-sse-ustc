@@ -4,17 +4,20 @@
   android:layout_width="fill_parent"
   android:layout_height="match_parent"
   android:orientation="horizontal"
-  android:id="@+id/contact_list_group_item">
+  android:id="@+id/contact_list_group_item"
+ >
   
   <ImageView android:layout_height="wrap_content"
   			 android:layout_width="wrap_content"
   			 android:src="@drawable/default_group_image"
-  			 android:layout_gravity="left">
+  			 android:layout_gravity="left"
+  			 android:scaleType="center"
+  			 android:layout_marginLeft="@dimen/contact_list_group_item_marginLeft">
   </ImageView>
   <TextView android:layout_width="wrap_content"
   			android:layout_height="wrap_content"
   			android:id="@+id/hiddenGroupId"
-  			android:visibility="invisible"
+  			android:visibility="gone"
   			>
   </TextView>
   <TextView android:layout_width="wrap_content"
@@ -22,6 +25,7 @@
   			android:id="@+id/groupItemText"
   			android:textSize="@dimen/contact_list_text_size"
   			android:text="Default"
+  			android:layout_gravity="center_vertical"
   			android:layout_marginLeft="@dimen/contact_list_group_title_marginLeft">
   </TextView>
   

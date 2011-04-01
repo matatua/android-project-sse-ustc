@@ -6,13 +6,17 @@
   <LinearLayout android:layout_height="wrap_content"
   				android:layout_width="fill_parent"
   				android:layout_alignParentTop="true"
-  				android:id="@+id/groupSelector">
+  				android:id="@+id/groupSelector"
+  				 android:background="@drawable/contact_list_group_selector_bg">
   				
   	  <ImageView android:layout_width="wrap_content"
   	  			 android:layout_height="wrap_content"
   	  			 android:src="@drawable/icon"
   	  			 android:layout_gravity="left"
-  	  			 android:layout_marginLeft="@dimen/contact_list_group_selector_indicator_marginLeft"
+  	  			 android:scaleType="center"
+  	  			 android:maxWidth="@dimen/contact_list_image_size"
+  	  			 android:maxHeight="@dimen/contact_list_image_size"
+  	  			 android:layout_marginLeft="@dimen/contact_list_group_item_marginLeft"
   	  			 android:id="@+id/groupSelectorIndicatorImage">
   	  </ImageView>
 	  <TextView android:id="@+id/selectedGroupTitleText"
