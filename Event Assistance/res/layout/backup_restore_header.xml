@@ -2,15 +2,19 @@
  
  <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
  				android:layout_width="match_parent"
+ 				android:layout_height="wrap_content"				
+ 				android:layout_marginLeft="5dp"
+ 				android:id="@+id/backup_restore_header_view">
+ 	<TextView android:layout_width="match_parent"
  				android:layout_height="wrap_content"
  				android:layout_alignParentTop="true"
- 				android:layout_marginLeft="5dp"
- 				android:id="@+id/backup_restore_top_relativeLayout">
- 
+ 				android:layout_alignParentLeft="true"
+ 				android:id="@+id/backup_restore_start_time_label"
+ 				android:text="备份起始时间"></TextView>
  	<Button android:layout_width="wrap_content"
  			android:layout_height="wrap_content"
  			android:layout_alignParentLeft="true"
- 			android:layout_alignParentTop="true"
+			android:layout_below="@id/backup_restore_start_time_label"
  			android:id="@+id/backup_restore_from_date"
  			android:text="from date">
  	</Button>
@@ -22,10 +26,16 @@
  			android:id="@+id/backup_restore_from_time"
  			android:text="from time">
  	</Button>
+ 	<TextView android:layout_width="match_parent"
+ 				android:layout_height="wrap_content"
+ 				android:layout_alignParentLeft="true"
+ 				android:layout_below="@id/backup_restore_from_date"
+ 				android:id="@+id/backup_restore_end_time_label"
+ 				android:text="备份结束时间"></TextView>
  	 <Button android:layout_width="wrap_content"
  			android:layout_height="wrap_content"
  			android:layout_alignParentLeft="true"
- 			android:layout_below="@id/backup_restore_from_date"
+ 			android:layout_below="@id/backup_restore_end_time_label"
  			android:id="@+id/backup_restore_to_date"
  			android:text="to date">
  	</Button>
@@ -46,7 +56,8 @@
  	</Button>
  	<CheckBox android:layout_height="wrap_content"
  				 android:layout_width="wrap_content"
- 				 android:text="全部"  				 
+ 				 android:text="全部"  		
+ 				 android:id="@+id/backup_restore_type_checkBox"		 
  				 android:layout_alignParentRight="true"
  				 android:layout_alignTop="@id/backup_restore_do_operation">
  	</CheckBox>

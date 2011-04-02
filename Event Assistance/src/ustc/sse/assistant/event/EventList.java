@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ustc.sse.assistant.R;
@@ -37,6 +38,7 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import android.text.format.DateFormat;
 import android.text.util.Linkify;
+import android.text.util.Linkify.TransformFilter;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -406,8 +408,7 @@ public class EventList extends Activity {
 							+ " to " + DateFormat.format(DATE_FORMAT, end));
 			contentTv.setText(content);
 			locationTv.setText(location);
-			Pattern pattern = Pattern.compile("\\w+");
-			Linkify.addLinks(locationTv, pattern, "geo:");
+			EventUtils.linkifyEventLocation(locationTv);
 			locationTv.setFocusable(false);
 		}
 

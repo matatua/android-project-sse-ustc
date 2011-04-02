@@ -1,9 +1,15 @@
 package ustc.sse.assistant.event;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import ustc.sse.assistant.event.data.EventEntity;
 import ustc.sse.assistant.event.provider.EventAssistant.Event;
 import android.content.ContentValues;
 import android.os.Bundle;
+import android.text.util.Linkify;
+import android.text.util.Linkify.TransformFilter;
+import android.widget.TextView;
 
 /**
  * 
@@ -11,6 +17,16 @@ import android.os.Bundle;
  *
  */
 public class EventUtils {
+	
+	public static final void linkifyEventLocation(TextView tv) {
+		Pattern pattern = Pattern.compile("\\w+");
+		Linkify.addLinks(tv, pattern, "geo:", null, new TransformFilter() {
+			
+			public String transformUrl(Matcher match, String url) {
+				return "0,0?q=" + url;				
+			}
+		});
+	}
 	
 	public static final long priorRepeatToInterval(int priorRepeat) {
 		return (24 * 60 * 60 * 1000) / priorRepeat;
