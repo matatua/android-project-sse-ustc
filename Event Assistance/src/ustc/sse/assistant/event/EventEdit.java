@@ -510,14 +510,14 @@ public class EventEdit extends Activity{
 //			long oldTriggerAtTime = Long.valueOf(oldBeginTime) - oldPriorRemindTimeInMillisecond;
 			Intent priorIntent = new Intent(EventEdit.this, EventBroadcastReceiver.class);
 			priorIntent.setAction(Event.PRIOR_ALARM_DAY);
-			priorIntent.setData(ContentUris.withAppendedId(Event.CONTENT_URI, eventId));
+			priorIntent.setDataAndType(ContentUris.withAppendedId(Event.CONTENT_URI, eventId), Event.CONTENT_ITEM_TYPE);
 			
 			PendingIntent priorOperation = PendingIntent.getBroadcast(EventEdit.this, 0, priorIntent, 0);
 			am.cancel(priorOperation);
 			
 			Intent intent = new Intent(EventEdit.this, EventBroadcastReceiver.class);
 			//this action is set only for distinguish, here action is event plus triggerAtTime
-			intent.setAction(Event.TAG + String.valueOf(triggerAtTime));
+			intent.setAction(Event.PRIOR_ALARM_DAY);			
 			intent.setDataAndType(ContentUris.withAppendedId(Event.CONTENT_URI, eventId), Event.CONTENT_ITEM_TYPE);
 			intent.putExtra(Event.CONTENT, content);
 			intent.putExtra(Event.ALARM_TIME, alarmTime);
@@ -604,7 +604,9 @@ public class EventEdit extends Activity{
 			am.cancel(priorOperation);
 			
 			Intent intent = new Intent(EventEdit.this, EventBroadcastReceiver.class);
-			intent.setAction(Event.TAG + String.valueOf(lastModifiedTime));
+			intent.setAction(Event.ALARM_TIME);
+			intent.setDataAndType(ContentUris.withAppendedId(Event.CONTENT_URI, eventId), Event.CONTENT_ITEM_TYPE);
+
 			intent.putExtra(Event.CONTENT, content);
 			intent.putExtra(Event.ALARM_TIME, alarmTime);
 			intent.putExtra(Event.ALARM_TYPE, alarmType);
