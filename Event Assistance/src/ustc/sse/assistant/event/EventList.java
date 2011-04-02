@@ -13,12 +13,15 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import ustc.sse.assistant.R;
+import ustc.sse.assistant.event.broadcast.EventBroadcastReceiver;
 import ustc.sse.assistant.event.provider.EventAssistant;
 import ustc.sse.assistant.event.provider.EventAssistant.Event;
 import ustc.sse.assistant.event.provider.EventAssistant.EventContact;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
@@ -37,7 +40,6 @@ import android.text.util.Linkify;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -228,6 +230,8 @@ public class EventList extends Activity {
 		ContentResolver cr = getContentResolver();
 		ArrayList<ContentProviderOperation> eventOps = new ArrayList<ContentProviderOperation>();
 		ArrayList<ContentProviderOperation> eventContactOps = new ArrayList<ContentProviderOperation>();
+		ArrayList<PendingIntent> pendingIntents = new ArrayList<PendingIntent>();
+		
 		Iterator<Long> iter = selectedItemIds.iterator();
 		while (iter.hasNext()) {
 			Long id = iter.next();
@@ -238,15 +242,31 @@ public class EventList extends Activity {
 			Uri eventContactUri = ContentUris.withAppendedId(EventContact.CONTENT_URI, id);
 			eventContactOps.add(ContentProviderOperation.newDelete(eventContactUri)
 														.build());
+			//delete corresponding alarm
+			Intent priorIntent = new Intent(this, EventBroadcastReceiver.class);
+			priorIntent.setAction(Event.PRIOR_ALARM_DAY);
+			priorIntent.setDataAndType(ContentUris.withAppendedId(Event.CONTENT_URI, id), Event.CONTENT_ITEM_TYPE);
+			PendingIntent pi = PendingIntent.getBroadcast(this, 0, priorIntent, 0);
+			Intent todayRemindIntent = new Intent(this, EventBroadcastReceiver.class);
+			todayRemindIntent.setAction(Event.ALARM_TIME);
+			todayRemindIntent.setDataAndType(ContentUris.withAppendedId(Event.CONTENT_URI, id), Event.CONTENT_ITEM_TYPE);
+			PendingIntent pi2 = PendingIntent.getBroadcast(this, 0, todayRemindIntent, 0);
+			
+			pendingIntents.add(pi);
+			pendingIntents.add(pi2);
 		}
 		
 		try {
 			ProgressDialog dialog = ProgressDialog.show(this, null, "删除中...", true, false);
 			cr.applyBatch(EventAssistant.EVENT_AUTHORITY, eventOps);
 			cr.applyBatch(EventAssistant.EVENT_CONTACT_AUTHORITY, eventContactOps);
-			
+				
+			AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+			for (PendingIntent pi : pendingIntents) {
+				am.cancel(pi);
+			}
 			dialog.cancel();
-
+			
 		} catch (RemoteException e) {
 			e.printStackTrace();
 			Toast.makeText(this, "删除失败", Toast.LENGTH_SHORT).show();

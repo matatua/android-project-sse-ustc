@@ -490,29 +490,35 @@ public class EventEdit extends Activity{
 			//save event and corresponding contacts
 			modifyEventAndContact();				
 			//start alarm service here
-			startTodayAlarmService();
-			startPriorAlarmService();
+			if (alarmTime != EventConstant.EVENT_TODAY_REMIND_TIME_NONE) {
+				startTodayAlarmService();
+			}
+			if (priorAlarmDay != EventConstant.EVENT_PRIOR_DAY_NONE) {
+				startPriorAlarmService();
+			}
+			
 			EventEdit.this.finish();
 		}
 
 		private void startPriorAlarmService() {
-			if (priorAlarmDay == EventConstant.EVENT_PRIOR_DAY_NONE) {
-				return ;
-			}
+
 			AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
 			long priorRemindTimeInMillisecond = EventUtils.dayToTimeInMillisecond(priorAlarmDay);
 			long triggerAtTime = beginCalendar.getTimeInMillis() - priorRemindTimeInMillisecond;
 
-			long oldPriorRemindTimeInMillisecond = EventUtils.dayToTimeInMillisecond(oldPriorAlarmDay);
-			long oldTriggerAtTime = Long.valueOf(oldBeginTime) - oldPriorRemindTimeInMillisecond;
+//			long oldPriorRemindTimeInMillisecond = EventUtils.dayToTimeInMillisecond(oldPriorAlarmDay);
+//			long oldTriggerAtTime = Long.valueOf(oldBeginTime) - oldPriorRemindTimeInMillisecond;
 			Intent priorIntent = new Intent(EventEdit.this, EventBroadcastReceiver.class);
-			priorIntent.setAction(Event.TAG + String.valueOf(oldTriggerAtTime));
+			priorIntent.setAction(Event.PRIOR_ALARM_DAY);
+			priorIntent.setData(ContentUris.withAppendedId(Event.CONTENT_URI, eventId));
+			
 			PendingIntent priorOperation = PendingIntent.getBroadcast(EventEdit.this, 0, priorIntent, 0);
 			am.cancel(priorOperation);
 			
 			Intent intent = new Intent(EventEdit.this, EventBroadcastReceiver.class);
 			//this action is set only for distinguish, here action is event plus triggerAtTime
 			intent.setAction(Event.TAG + String.valueOf(triggerAtTime));
+			intent.setDataAndType(ContentUris.withAppendedId(Event.CONTENT_URI, eventId), Event.CONTENT_ITEM_TYPE);
 			intent.putExtra(Event.CONTENT, content);
 			intent.putExtra(Event.ALARM_TIME, alarmTime);
 			intent.putExtra(Event.ALARM_TYPE, alarmType);
@@ -527,7 +533,7 @@ public class EventEdit extends Activity{
 								triggerAtTime, 
 								EventUtils.priorRepeatToInterval(priorAlarmRepeat), 
 								operation);
-			Log.i(TAG, priorIntent.getAction());
+			Log.i(TAG, priorIntent.getComponent().toString());
 		}
 
 		private void modifyEventAndContact() {
@@ -592,7 +598,8 @@ public class EventEdit extends Activity{
 			long triggerAtTime = beginCalendar.getTimeInMillis() - remindTimeInMillisecond;
 			
 			Intent priorIntent = new Intent(EventEdit.this, EventBroadcastReceiver.class);
-			priorIntent.setAction(Event.TAG + String.valueOf(createTime));
+			priorIntent.setAction(Event.ALARM_TIME);
+			priorIntent.setDataAndType(ContentUris.withAppendedId(Event.CONTENT_URI, eventId), Event.CONTENT_ITEM_TYPE);
 			PendingIntent priorOperation = PendingIntent.getBroadcast(EventEdit.this, 0, priorIntent, 0);
 			am.cancel(priorOperation);
 			
@@ -609,7 +616,7 @@ public class EventEdit extends Activity{
 			intent.putExtra(Event.PRIOR_REPEAT_TIME, priorAlarmRepeat);
 			PendingIntent operation = PendingIntent.getBroadcast(EventEdit.this, 0, intent, 0);
 			am.set(AlarmManager.RTC_WAKEUP, triggerAtTime, operation);	
-			Log.i(TAG, priorIntent.getAction());
+			Log.i(TAG, priorIntent.getComponent().toString());
 		}
 	};
 	

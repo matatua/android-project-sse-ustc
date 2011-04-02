@@ -319,12 +319,10 @@ public class ContactUtils {
 			int day = c.getInt(dayColumnIndex);
 			
 			birthdayCalendar.set(year, month, day);
-			birthday = String.valueOf(birthdayCalendar.getTimeInMillis());
 		}
 		
-		
 		c.close();
-		return birthday;
+		return String.valueOf(birthdayCalendar.getTimeInMillis());
 	}
 	
 	
@@ -350,7 +348,7 @@ public class ContactUtils {
 				          .withValue(Data.RAW_CONTACT_ID, rawContactId)
 				          .withValue(Data.MIMETYPE, BirthdayConstant.TYPE)
 				          .withValue(BirthdayConstant.YEAR, birthdayCalendar.get(Calendar.YEAR))
-				          .withValue(BirthdayConstant.MONTH, birthdayCalendar.get(Calendar.MONTH))
+				          .withValue(BirthdayConstant.MONTH, birthdayCalendar.get(Calendar.MONTH) + 1)
 				          .withValue(BirthdayConstant.DAY, birthdayCalendar.get(Calendar.DAY_OF_MONTH))
 				          .build());
 			} else {

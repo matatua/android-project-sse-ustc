@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+ 
+ <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ 				android:layout_width="match_parent"
+ 				android:layout_height="wrap_content"
+ 				android:layout_alignParentTop="true"
+ 				android:layout_marginLeft="5dp"
+ 				android:id="@+id/backup_restore_top_relativeLayout">
+ 
+ 	<Button android:layout_width="wrap_content"
+ 			android:layout_height="wrap_content"
+ 			android:layout_alignParentLeft="true"
+ 			android:layout_alignParentTop="true"
+ 			android:id="@+id/backup_restore_from_date"
+ 			android:text="from date">
+ 	</Button>
+ 	
+ 	<Button android:layout_width="wrap_content"
+ 			android:layout_height="wrap_content"
+ 			android:layout_alignTop="@id/backup_restore_from_date"
+ 			android:layout_toRightOf="@id/backup_restore_from_date"
+ 			android:id="@+id/backup_restore_from_time"
+ 			android:text="from time">
+ 	</Button>
+ 	 <Button android:layout_width="wrap_content"
+ 			android:layout_height="wrap_content"
+ 			android:layout_alignParentLeft="true"
+ 			android:layout_below="@id/backup_restore_from_date"
+ 			android:id="@+id/backup_restore_to_date"
+ 			android:text="to date">
+ 	</Button>
+ 	    	<Button android:layout_width="wrap_content"
+ 			android:layout_height="wrap_content"
+ 			android:layout_alignTop="@id/backup_restore_to_date"
+ 			android:layout_toRightOf="@id/backup_restore_to_date"
+ 			android:id="@+id/backup_restore_to_time"
+ 			android:text="to time">
+ 	</Button>
+ 	    	
+ 	<Button android:layout_width="wrap_content"
+ 			android:layout_height="wrap_content"
+ 			android:id="@+id/backup_restore_do_operation"
+ 			android:layout_alignParentLeft="true"
+ 			android:layout_below="@id/backup_restore_to_date"
+ 			android:text="开始备份">
+ 	</Button>
+ 	<CheckBox android:layout_height="wrap_content"
+ 				 android:layout_width="wrap_content"
+ 				 android:text="全部"  				 
+ 				 android:layout_alignParentRight="true"
+ 				 android:layout_alignTop="@id/backup_restore_do_operation">
+ 	</CheckBox>
+
+ </RelativeLayout>

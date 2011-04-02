@@ -7,7 +7,7 @@
     <dimen name="main_screen_button_marginRight">15dp</dimen>
     <dimen name="main_screen_button_marginLeft">15dp</dimen>
     <dimen name="main_screen_button_text_size">15dp</dimen>
-    <dimen name="contact_list_image_size">45dp</dimen>
+    <dimen name="contact_list_image_size">20dp</dimen>
     <dimen name="contact_list_view_marginTop">1dp</dimen>
     <dimen name="contact_list_text_size">12sp</dimen>
     <dimen name="contact_list_group_title_marginLeft">5dp</dimen>

@@ -4,12 +4,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import ustc.sse.assistant.R;
+import ustc.sse.assistant.event.broadcast.EventBroadcastReceiver;
 import ustc.sse.assistant.event.provider.EventAssistant;
 import ustc.sse.assistant.event.provider.EventAssistant.Event;
 import ustc.sse.assistant.event.provider.EventAssistant.EventContact;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
@@ -255,7 +258,22 @@ public class EventDetail extends Activity{
 			ProgressDialog dialog = ProgressDialog.show(this, null, "删除中...",true, false);
 			cr.applyBatch(EventAssistant.EVENT_AUTHORITY, eventOps);
 			cr.applyBatch(EventAssistant.EVENT_CONTACT_AUTHORITY,eventContactOps);
+			
+			Intent priorIntent = new Intent(this, EventBroadcastReceiver.class);
+			priorIntent.setAction(Event.PRIOR_ALARM_DAY);
+			priorIntent.setDataAndType(ContentUris.withAppendedId(Event.CONTENT_URI, eventId), Event.CONTENT_ITEM_TYPE);
+			PendingIntent pi = PendingIntent.getBroadcast(this, 0, priorIntent, 0);
+			Intent todayRemindIntent = new Intent(this, EventBroadcastReceiver.class);
+			todayRemindIntent.setAction(Event.ALARM_TIME);
+			todayRemindIntent.setDataAndType(ContentUris.withAppendedId(Event.CONTENT_URI, eventId), Event.CONTENT_ITEM_TYPE);
+			PendingIntent pi2 = PendingIntent.getBroadcast(this, 0, todayRemindIntent, 0);
+			
+			AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+			am.cancel(pi2);
+			am.cancel(pi);
 			dialog.cancel();
+			
+			
 
 		} catch (RemoteException e) {
 			e.printStackTrace();

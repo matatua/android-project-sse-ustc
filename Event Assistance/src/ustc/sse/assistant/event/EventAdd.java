@@ -24,6 +24,7 @@ import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -86,7 +87,7 @@ public class EventAdd extends Activity{
 	private String location = "";
 	private String note = "";
 	private String content = "";
-	private int alarmTime = 0;
+	private int alarmTime = EventConstant.EVENT_TODAY_REMIND_TIME_NONE;
 	private long creatTime;
 	private Map<Long, String> contactData = new HashMap<Long,String>();
 	
@@ -348,27 +349,33 @@ public class EventAdd extends Activity{
 	private OnClickListener saveButtonListener = new OnClickListener() {
 		//this calendar is used to set createTime and lastModifyTime
 		Calendar now = Calendar.getInstance();
+		Long eventId = null;
 		@Override
 		public void onClick(View v) {
 			//save event and corresponding contacts
 			saveEventAndContact();				
 			//start alarm service here
-			startTodayAlarmService();
-			startPriorAlarmService();
+			if ((alarmTime != EventConstant.EVENT_TODAY_REMIND_TIME_NONE)) {
+				startTodayAlarmService();
+
+			}
+			if ((priorAlarmDay != EventConstant.EVENT_PRIOR_DAY_NONE)) {
+				startPriorAlarmService();
+			}
+			
 			EventAdd.this.finish();
 		}
 
 		private void startPriorAlarmService() {
-			if (priorAlarmDay == EventConstant.EVENT_PRIOR_DAY_NONE) {
-				return ;
-			}
+
 			AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
 			long priorRemindTimeInMillisecond = EventUtils.dayToTimeInMillisecond(priorAlarmDay);
 			long triggerAtTime = beginCalendar.getTimeInMillis() - priorRemindTimeInMillisecond;
 			
 			Intent intent = new Intent(EventAdd.this, EventBroadcastReceiver.class);
 			//this action is set only for distinguish, here action is event plus triggerAtTime
-			intent.setAction(Event.TAG + String.valueOf(triggerAtTime));
+			intent.setAction(Event.PRIOR_ALARM_DAY);
+			intent.setDataAndType(ContentUris.withAppendedId(Event.CONTENT_URI, eventId), Event.CONTENT_ITEM_TYPE);
 			intent.putExtra(Event.CONTENT, content);
 			intent.putExtra(Event.ALARM_TIME, alarmTime);
 			intent.putExtra(Event.ALARM_TYPE, alarmType);
@@ -383,7 +390,7 @@ public class EventAdd extends Activity{
 								triggerAtTime, 
 								EventUtils.priorRepeatToInterval(priorAlarmRepeat), 
 								operation);
-			Log.i(TAG, intent.getAction());
+			Log.i(TAG, intent.getComponent().toString());
 		}
 
 		private void saveEventAndContact() {
@@ -409,7 +416,7 @@ public class EventAdd extends Activity{
 																	priorAlarmRepeat);
 			Uri newUri = cr.insert(Event.CONTENT_URI, contentValues);
 			//store eventcontact
-			Long eventId = Long.valueOf(newUri.getPathSegments().get(1));
+			eventId = Long.valueOf(newUri.getPathSegments().get(1));
 			ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
 			Iterator<Entry<Long, String>> iter = contactData.entrySet().iterator();
 			
@@ -437,9 +444,11 @@ public class EventAdd extends Activity{
 			AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
 			long remindTimeInMillisecond = EventUtils.toTimeInMillisecond(alarmTime);
 			long triggerAtTime = beginCalendar.getTimeInMillis() - remindTimeInMillisecond;
-			
+		
 			Intent intent = new Intent(EventAdd.this, EventBroadcastReceiver.class);
-			intent.setAction(Event.TAG + String.valueOf(creatTime));
+			intent.setAction(Event.ALARM_TIME);
+			intent.setDataAndType(ContentUris.withAppendedId(Event.CONTENT_URI, eventId), Event.CONTENT_ITEM_TYPE);
+
 			intent.putExtra(Event.CONTENT, content);
 			intent.putExtra(Event.ALARM_TIME, alarmTime);
 			intent.putExtra(Event.ALARM_TYPE, alarmType);
@@ -451,7 +460,7 @@ public class EventAdd extends Activity{
 			intent.putExtra(Event.PRIOR_REPEAT_TIME, priorAlarmRepeat);
 			PendingIntent operation = PendingIntent.getBroadcast(EventAdd.this, 0, intent, 0);
 			am.set(AlarmManager.RTC_WAKEUP, triggerAtTime, operation);
-			Log.i(TAG, intent.getAction());
+			Log.i(TAG, intent.getComponent().toString());
 		}
 	};
 	

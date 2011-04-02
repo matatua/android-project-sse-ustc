@@ -81,7 +81,7 @@ public class EventBroadcastReceiver extends BroadcastReceiver {
 		PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0, intent, 0);
 		Notification notification = new Notification(drawable.notification, tickerText, System.currentTimeMillis());
 		notification.setLatestEventInfo(ctx, contentTitle, contentText, contentIntent);
-		
+		notification.flags = notification.flags | Notification.FLAG_AUTO_CANCEL;
 		return notification;
 	}
 

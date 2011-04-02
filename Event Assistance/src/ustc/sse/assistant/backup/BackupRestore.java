@@ -24,52 +24,53 @@ import android.widget.Button;
  */
 public class BackupRestore extends Activity {
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		
-		setContentView(R.layout.backup_restore);
-		Button backup = (Button) findViewById(R.id.generate_xml);
-		Button restore = (Button) findViewById(R.id.restore_xml);
-		
-		backup.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				EventToXml etx = new EventToXml(BackupRestore.this, null, null);
-				StringWriter sw = etx.generateXml();
-				File root = Environment.getExternalStorageDirectory();
-				File backDir = new File(root, "/eventassistant");
-				
-				try {
-					if (!backDir.exists()) {
-						backDir.mkdirs();
-					}
-					
-					File backFile = new File(backDir, "backup.xml");
-					if (!backFile.exists()) {
-						backFile.createNewFile();
-					}
-					
-					FileOutputStream fs = new FileOutputStream(backFile);
-					byte[] byteArray = new byte[sw.getBuffer().length()];
-					fs.write(sw.toString().getBytes());
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
-		restore.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				File root = Environment.getExternalStorageDirectory();
-				File backupFile = new File(root, "/eventassistant/backup.xml");
-				XmlToEvent xte = new XmlToEvent(BackupRestore.this, backupFile, false);
-				xte.restore();
-			}
-		});
-		
-	}
+	
+//	@Override
+//	protected void onCreate(Bundle savedInstanceState) {
+//		super.onCreate(savedInstanceState);
+//		
+//		setContentView(R.layout.backup_restore);
+//		Button backup = (Button) findViewById(R.id.generate_xml);
+//		Button restore = (Button) findViewById(R.id.restore_xml);
+//		
+//		backup.setOnClickListener(new OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				EventToXml etx = new EventToXml(BackupRestore.this, null, null);
+//				StringWriter sw = etx.generateXml();
+//				File root = Environment.getExternalStorageDirectory();
+//				File backDir = new File(root, "/eventassistant");
+//				
+//				try {
+//					if (!backDir.exists()) {
+//						backDir.mkdirs();
+//					}
+//					
+//					File backFile = new File(backDir, "backup.xml");
+//					if (!backFile.exists()) {
+//						backFile.createNewFile();
+//					}
+//					
+//					FileOutputStream fs = new FileOutputStream(backFile);
+//					byte[] byteArray = new byte[sw.getBuffer().length()];
+//					fs.write(sw.toString().getBytes());
+//				} catch (IOException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//		restore.setOnClickListener(new OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				File root = Environment.getExternalStorageDirectory();
+//				File backupFile = new File(root, "/eventassistant/backup.xml");
+//				XmlToEvent xte = new XmlToEvent(BackupRestore.this, backupFile, false);
+//				xte.restore();
+//			}
+//		});
+//		
+//	}
 }

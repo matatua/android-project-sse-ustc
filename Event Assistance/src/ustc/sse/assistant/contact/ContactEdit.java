@@ -140,7 +140,7 @@ public class ContactEdit extends Activity {
 				inDate.set(year, month, day);
 				birthdayChooseButton.setText(DateFormat.format("yyyy-MM-dd",
 						inDate));
-				contact.setBirthday(Long.toString(inDate.getTimeInMillis()).toString());
+				contact.setBirthday(String.valueOf(inDate.getTimeInMillis()));
 			}
 		};
 		
