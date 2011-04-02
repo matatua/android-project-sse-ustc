@@ -85,6 +85,7 @@ public class EventAdd extends Activity{
 	private String note = "";
 	private String content = "";
 	private int alarmTime = 0;
+	private long creatTime;
 	private Map<Long, String> contactData = new HashMap<Long,String>();
 	
 	public static final String DATE_FORMAT = "yyyy年MM月dd日 EE";
@@ -390,15 +391,15 @@ public class EventAdd extends Activity{
 			content = contentEditText.getText().toString();
 			location = locationEditText.getText().toString();
 			note = noteEditText.getText().toString();
-			
+			creatTime = now.getTimeInMillis();
 			ContentValues contentValues = EventUtils.eventToContentValues(
 																	content,
 																	String.valueOf(alarmTime), 
 																	String.valueOf(alarmType), 
 																	String.valueOf(beginCalendar.getTimeInMillis()), 
 																	String.valueOf(endCalendar.getTimeInMillis()), 
-																	String.valueOf(now.getTimeInMillis()), 
-																	String.valueOf(now.getTimeInMillis()), 
+																	String.valueOf(creatTime), 
+																	String.valueOf(creatTime), 
 																	location, 
 																	note, 
 																	priorAlarmDay, 
@@ -435,7 +436,7 @@ public class EventAdd extends Activity{
 			long triggerAtTime = beginCalendar.getTimeInMillis() - remindTimeInMillisecond;
 			
 			Intent intent = new Intent(EventAdd.this, EventBroadcastReceiver.class);
-			intent.setAction(Event.TAG + String.valueOf(now.getTimeInMillis()));
+			intent.setAction(Event.TAG + String.valueOf(creatTime));
 			intent.putExtra(Event.CONTENT, content);
 			intent.putExtra(Event.ALARM_TIME, alarmTime);
 			intent.putExtra(Event.ALARM_TYPE, alarmType);

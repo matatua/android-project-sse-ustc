@@ -53,7 +53,7 @@ import android.widget.TimePicker;
 
 /**
  * 
- * @author 李健、宋安琪
+ * @author 宋安琪、李健
  *
  */
 public class EventEdit extends Activity{
@@ -81,14 +81,20 @@ public class EventEdit extends Activity{
 	
 	private Calendar beginCalendar = Calendar.getInstance();
 	private Calendar endCalendar = Calendar.getInstance();
+	private String beginTime;
+	private String oldBeginTime;
+	private String endTime;
 	
 	private int priorAlarmDay = EventConstant.EVENT_PRIOR_DAY_NONE;
+	private int oldPriorAlarmDay = EventConstant.EVENT_PRIOR_DAY_NONE;
 	private int priorAlarmRepeat = EventConstant.EVENT_PRIOR_REPEAT_ONE;
 	private int alarmType = 0;
 	private String location = "";
 	private String note = "";
 	private String content = "";
 	private int alarmTime = 0;
+	private String createTime = "";
+	private long lastModifiedTime;
 	private Map<Long, String> contactData = new HashMap<Long,String>();
 	
 	public static final String DATE_FORMAT = "yyyy年MM月dd日 EE";
@@ -143,7 +149,7 @@ public class EventEdit extends Activity{
 		eventId = getIntent().getLongExtra(Event._ID, -1);
 		ContentResolver cr = getContentResolver();
 
-		String[] projection = {Event.CONTENT, Event.BEGIN_TIME, Event.END_TIME, Event.LOCATION, Event.NOTE, Event.ALARM_TIME, Event.PRIOR_ALARM_DAY, Event.PRIOR_REPEAT_TIME, Event.ALARM_TYPE};
+		String[] projection = {Event.CONTENT, Event.BEGIN_TIME, Event.END_TIME, Event.LOCATION, Event.NOTE, Event.ALARM_TIME, Event.PRIOR_ALARM_DAY, Event.PRIOR_REPEAT_TIME, Event.ALARM_TYPE, Event.CREATE_TIME};
 		String selection = Event._ID + " = ? ";
 		String[] selectionArgs = {String.valueOf(eventId)};		
 		String[] eventContactProjection = {EventContact.CONTACT_ID, EventContact.DISPLAY_NAME};	
@@ -154,8 +160,6 @@ public class EventEdit extends Activity{
 		startManagingCursor(cursor);
 		startManagingCursor(eventContactCursor);
 		
-		String beginTime = null;
-		String endTime = null;
 		StringBuilder contactBuilder = new StringBuilder();
 		String contact = null;
 		Long contactId;
@@ -172,6 +176,7 @@ public class EventEdit extends Activity{
 		int priorAlarmDayColumn;
 		int priorAlarmRepeatColumn;
 		int alarmTypeColumn;
+		int createTimeColumn;
 
 		if(cursor.moveToFirst()){
 		    contentColumn = cursor.getColumnIndex(Event.CONTENT);
@@ -183,16 +188,22 @@ public class EventEdit extends Activity{
 		    priorAlarmDayColumn = cursor.getColumnIndex(Event.PRIOR_ALARM_DAY);
 		    priorAlarmRepeatColumn = cursor.getColumnIndex(Event.PRIOR_REPEAT_TIME);
 		    alarmTypeColumn = cursor.getColumnIndex(Event.ALARM_TYPE);
+		    createTimeColumn = cursor.getColumnIndex(Event.CREATE_TIME);
 
 			content = cursor.getString(contentColumn);
 			beginTime = cursor.getString(beginTimeColumn);
+			oldBeginTime = beginTime;
+			beginCalendar.setTimeInMillis(Long.valueOf(beginTime));			
 			endTime = cursor.getString(endTimeColumn);
+			endCalendar.setTimeInMillis(Long.valueOf(endTime));
 			location = cursor.getString(locationColumn);
 			note = cursor.getString(noteColumn);
 			alarmTime = Integer.valueOf(cursor.getString(alarmTimeColumn));
 			priorAlarmDay = cursor.getInt(priorAlarmDayColumn);
+			oldPriorAlarmDay = priorAlarmDay;
 			priorAlarmRepeat = cursor.getInt(priorAlarmRepeatColumn);
 			alarmType = Integer.valueOf(cursor.getString(alarmTypeColumn));
+			createTime = cursor.getString(createTimeColumn);
 		}
 
 		if (eventContactCursor.moveToFirst()) {
@@ -228,9 +239,6 @@ public class EventEdit extends Activity{
 		if(!TextUtils.isEmpty(note)){
 			noteEditText.setText(note);
 		}
-		
-		//delete contact data which refer to this event
-		cr.delete(eventContact, null, null);
 		
 	}
 	
@@ -477,7 +485,7 @@ public class EventEdit extends Activity{
 		@Override
 		public void onClick(View v) {
 			//save event and corresponding contacts
-			saveEventAndContact();				
+			modifyEventAndContact();				
 			//start alarm service here
 			startTodayAlarmService();
 			startPriorAlarmService();
@@ -491,6 +499,13 @@ public class EventEdit extends Activity{
 			AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
 			long priorRemindTimeInMillisecond = EventUtils.dayToTimeInMillisecond(priorAlarmDay);
 			long triggerAtTime = beginCalendar.getTimeInMillis() - priorRemindTimeInMillisecond;
+
+			long oldPriorRemindTimeInMillisecond = EventUtils.dayToTimeInMillisecond(oldPriorAlarmDay);
+			long oldTriggerAtTime = Long.valueOf(oldBeginTime) - oldPriorRemindTimeInMillisecond;
+			Intent priorIntent = new Intent(EventEdit.this, EventBroadcastReceiver.class);
+			priorIntent.setAction(Event.TAG + String.valueOf(oldTriggerAtTime));
+			PendingIntent priorOperation = PendingIntent.getBroadcast(EventEdit.this, 0, priorIntent, 0);
+			am.cancel(priorOperation);
 			
 			Intent intent = new Intent(EventEdit.this, EventBroadcastReceiver.class);
 			//this action is set only for distinguish, here action is event plus triggerAtTime
@@ -511,22 +526,27 @@ public class EventEdit extends Activity{
 								operation);
 		}
 
-		private void saveEventAndContact() {
+		private void modifyEventAndContact() {
 			//save all the data and store into database
 			//if necessary, start the alarm services
 			ContentResolver cr = getContentResolver();
+			
+			Uri deleteUri = ContentUris.withAppendedId(EventContact.CONTENT_URI, eventId);
+			cr.delete(deleteUri, null, null);
+			
+			
 			//store event
 			content = contentEditText.getText().toString();
 			location = locationEditText.getText().toString();
 			note = noteEditText.getText().toString();
-			
+			lastModifiedTime = now.getTimeInMillis();
 			ContentValues contentValues = EventUtils.eventUpdateToContentValues(
 																	content,
 																	String.valueOf(alarmTime), 
 																	String.valueOf(alarmType), 
 																	String.valueOf(beginCalendar.getTimeInMillis()), 
 																	String.valueOf(endCalendar.getTimeInMillis()), 
-																	String.valueOf(now.getTimeInMillis()), 
+																	String.valueOf(lastModifiedTime), 
 																	location, 
 																	note, 
 																	priorAlarmDay, 
@@ -568,12 +588,12 @@ public class EventEdit extends Activity{
 			long triggerAtTime = beginCalendar.getTimeInMillis() - remindTimeInMillisecond;
 			
 			Intent priorIntent = new Intent(EventEdit.this, EventBroadcastReceiver.class);
-			priorIntent.setAction(Event.TAG + String.valueOf(now.getTimeInMillis()));
-			PendingIntent operaIntent = PendingIntent.getBroadcast(EventEdit.this, 0, priorIntent, 0);
-			am.cancel(operaIntent);
+			priorIntent.setAction(Event.TAG + String.valueOf(createTime));
+			PendingIntent priorOperation = PendingIntent.getBroadcast(EventEdit.this, 0, priorIntent, 0);
+			am.cancel(priorOperation);
 			
 			Intent intent = new Intent(EventEdit.this, EventBroadcastReceiver.class);
-			intent.setAction(Event.TAG + String.valueOf(now.getTimeInMillis()));
+			intent.setAction(Event.TAG + String.valueOf(lastModifiedTime));
 			intent.putExtra(Event.CONTENT, content);
 			intent.putExtra(Event.ALARM_TIME, alarmTime);
 			intent.putExtra(Event.ALARM_TYPE, alarmType);
