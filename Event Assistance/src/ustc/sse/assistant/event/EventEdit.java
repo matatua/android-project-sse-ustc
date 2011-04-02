@@ -35,6 +35,7 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
@@ -57,6 +58,8 @@ import android.widget.TimePicker;
  *
  */
 public class EventEdit extends Activity{
+	public static final String TAG = "EventEdit";
+	
 	/** Called when the activity is first created. */
 	public static final int CONTACT_REQUEST_CODE = 100;
 	private long eventId;
@@ -524,6 +527,7 @@ public class EventEdit extends Activity{
 								triggerAtTime, 
 								EventUtils.priorRepeatToInterval(priorAlarmRepeat), 
 								operation);
+			Log.i(TAG, priorIntent.getAction());
 		}
 
 		private void modifyEventAndContact() {
@@ -604,7 +608,8 @@ public class EventEdit extends Activity{
 			intent.putExtra(Event.PRIOR_ALARM_DAY, priorAlarmDay);
 			intent.putExtra(Event.PRIOR_REPEAT_TIME, priorAlarmRepeat);
 			PendingIntent operation = PendingIntent.getBroadcast(EventEdit.this, 0, intent, 0);
-			am.set(AlarmManager.RTC_WAKEUP, triggerAtTime, operation);		
+			am.set(AlarmManager.RTC_WAKEUP, triggerAtTime, operation);	
+			Log.i(TAG, priorIntent.getAction());
 		}
 	};
 	

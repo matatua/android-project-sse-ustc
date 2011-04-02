@@ -355,9 +355,9 @@ public class ContactUtils {
 				ops.add(ContentProviderOperation.newUpdate(Data.CONTENT_URI)
 				          .withSelection(Data.RAW_CONTACT_ID + " = ?", new String[]{rawContactId.toString()})
 				          .withSelection(Data.MIMETYPE + " = ? ", new String[]{BirthdayConstant.TYPE})
-				          .withValue(BirthdayConstant.YEAR + " = ?", new String[]{String.valueOf(birthdayCalendar.get(Calendar.YEAR))})
-				          .withValue(BirthdayConstant.MONTH + " = ? ", new String[]{String.valueOf(birthdayCalendar.get(Calendar.MONTH))})
-				          .withValue(BirthdayConstant.DAY + " = ? ", new String[]{String.valueOf(birthdayCalendar.get(Calendar.DAY_OF_MONTH))})
+				          .withValue(BirthdayConstant.YEAR, String.valueOf(birthdayCalendar.get(Calendar.YEAR)))
+				          .withValue(BirthdayConstant.MONTH, String.valueOf(birthdayCalendar.get(Calendar.MONTH)))
+				          .withValue(BirthdayConstant.DAY, String.valueOf(birthdayCalendar.get(Calendar.DAY_OF_MONTH)))
 				          .build());
 			}
 		}

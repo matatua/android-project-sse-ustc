@@ -32,6 +32,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
@@ -54,6 +55,7 @@ import android.widget.TimePicker;
  *
  */
 public class EventAdd extends Activity{
+	public static final String TAG = "EventAdd";
 	/** Called when the activity is first created. */
 	public static final int CONTACT_REQUEST_CODE = 100;
 	
@@ -381,6 +383,7 @@ public class EventAdd extends Activity{
 								triggerAtTime, 
 								EventUtils.priorRepeatToInterval(priorAlarmRepeat), 
 								operation);
+			Log.i(TAG, intent.getAction());
 		}
 
 		private void saveEventAndContact() {
@@ -448,6 +451,7 @@ public class EventAdd extends Activity{
 			intent.putExtra(Event.PRIOR_REPEAT_TIME, priorAlarmRepeat);
 			PendingIntent operation = PendingIntent.getBroadcast(EventAdd.this, 0, intent, 0);
 			am.set(AlarmManager.RTC_WAKEUP, triggerAtTime, operation);
+			Log.i(TAG, intent.getAction());
 		}
 	};
 	
