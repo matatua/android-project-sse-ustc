@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@android:id/tabhost"
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content">
+    
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        
+        <TabWidget
+            android:id="@android:id/tabs"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+        </TabWidget>
+        
+        <FrameLayout
+            android:id="@android:id/tabcontent"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+			android:layout_marginRight="5dp" >
+           <ScrollView
+	          android:layout_width="fill_parent"
+	          android:layout_height="wrap_content" >
+           	 
+            <LinearLayout 
+	            android:id="@+id/textView01"
+			    android:orientation="vertical"
+			    android:layout_width="wrap_content"
+			    android:layout_height="fill_parent" >
+   		
+			    <TextView 
+				    android:layout_width="fill_parent" 
+				    android:layout_height="wrap_content" 
+			    	android:text="@string/contact_text"
+			    	android:textSize="20dp"
+			    	/>
+		    	<TextView
+			    	android:layout_width="wrap_content" 
+				    android:layout_height="wrap_content" 
+				    android:text="@string/help_contact_text"
+				    android:gravity="fill_horizontal"
+				    android:singleLine="false"
+			    	/>
+
+			    <TextView 
+				    android:layout_width="fill_parent" 
+				    android:layout_height="wrap_content" 
+				    android:text="@string/event_text"
+				    android:textSize="20dp"
+				    android:layout_marginTop="10dp"
+				    
+				    />
+			   	<TextView
+					android:layout_width="wrap_content" 
+				    android:layout_height="wrap_content" 
+				    android:text="@string/help_event_text"
+				    android:singleLine="false"
+				    android:gravity=""
+				    />  
+	      
+			    <TextView 
+				    android:layout_width="fill_parent" 
+				    android:layout_height="wrap_content" 
+		    		android:text="@string/setting_text"
+			    	android:textSize="20dp"
+			    	android:layout_marginTop="10dp"
+			   		 />
+			    <TextView
+					android:layout_width="fill_parent" 
+				    android:layout_height="wrap_content" 
+				    android:text="@string/help_setting_text"
+				    android:singleLine="false"
+				    />
+ 
+			    <TextView 
+				    android:layout_width="fill_parent" 
+				    android:layout_height="wrap_content"
+				    android:text="@string/calendar_text"
+				    android:textSize="20dp"
+				    android:layout_marginTop="10dp"
+				    />
+			    <TextView
+					android:layout_width="fill_parent" 
+				    android:layout_height="wrap_content" 
+				    android:text="@string/help_calendar_text"
+				    android:singleLine="false"
+				    />
+ 
+			    <TextView 
+				    android:layout_width="fill_parent" 
+				    android:layout_height="wrap_content"
+				    android:text="@string/backup_restore_text"
+				    android:textSize="20dp"
+				    android:layout_marginTop="10dp"
+				    />
+			  	<TextView
+					android:layout_width="fill_parent" 
+				    android:layout_height="wrap_content" 
+				    android:text="@string/help_backup_restore_text"
+				    android:singleLine="false"
+				    />
+ 
+			    <TextView 
+				    android:layout_width="fill_parent" 
+				    android:layout_height="wrap_content" 
+					android:text="@string/share_text"
+					android:textSize="20dp"
+					android:layout_marginTop="10dp"
+					/>
+				<TextView  
+					android:layout_width="fill_parent" 
+					android:layout_height="wrap_content" 
+					android:text="@string/help_share_text"
+					android:singleLine="false"
+					/>  	
+			   
+			</LinearLayout>
+          </ScrollView>                
+			<LinearLayout 
+           		android:id="@+id/textView02"
+	    		android:orientation="vertical"
+	    		android:layout_width="fill_parent"
+	    		android:layout_height="fill_parent" >
+ 				<ImageView
+	 				android:layout_width="fill_parent"
+	 				android:layout_height="wrap_content"
+	 				android:src="@drawable/about" 
+	 				android:maxWidth="50dp"
+	 				android:maxHeight="50dp"
+	 				android:adjustViewBounds="true"
+	 				/>
+				<TextView
+					android:text="Author: 李健   宋安琪   李宏晖   周俊"
+					android:layout_width="fill_parent" 
+				    android:layout_height="wrap_content" 
+				    android:layout_marginTop="8dp"
+				    android:layout_marginLeft="30dp"
+				    />
+			    <TextView
+			    	android:text="Version: 1.0"
+			    	android:layout_width="fill_parent" 
+				    android:layout_height="wrap_content" 
+				    android:layout_marginTop="8dp"
+				    android:layout_marginLeft="30dp"
+			    	/>
+		    	<TextView
+			    	android:text="(c) Copyright: 中国科学技术大学软件学院"
+			    	android:layout_width="fill_parent" 
+				    android:layout_height="wrap_content" 
+				    android:layout_marginTop="8dp"
+				    android:layout_marginLeft="30dp"
+			    	/>
+				    							  
+			</LinearLayout>           
+     	      	
+    	</FrameLayout>
+    	
+    </LinearLayout>
+    
+</TabHost>
