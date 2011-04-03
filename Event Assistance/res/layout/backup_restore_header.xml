@@ -52,7 +52,15 @@
  			android:id="@+id/backup_restore_do_operation"
  			android:layout_alignParentLeft="true"
  			android:layout_below="@id/backup_restore_to_date"
- 			android:text="开始备份">
+ 			android:text="本地备份">
+ 	</Button>
+ 	
+ 	<Button android:layout_width="wrap_content"
+ 			android:layout_height="wrap_content"
+ 			android:id="@+id/backup_restore_cloud_storage"
+ 			android:layout_alignTop="@id/backup_restore_do_operation"
+ 			android:layout_toRightOf="@id/backup_restore_do_operation"
+ 			android:text="云备份">
  	</Button>
  	<CheckBox android:layout_height="wrap_content"
  				 android:layout_width="wrap_content"

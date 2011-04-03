@@ -16,14 +16,17 @@ import ustc.sse.assistant.R;
 import ustc.sse.assistant.backup.util.EventToXml;
 import ustc.sse.assistant.backup.util.XmlToEvent;
 import ustc.sse.assistant.util.EventAssistantUtils;
+import ustc.sse.assistant.util.MySparseBooleanArray;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
+import android.app.backup.BackupManager;
 import android.content.DialogInterface;
 import android.database.DataSetObserver;
 import android.os.Bundle;
@@ -45,7 +48,6 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -65,11 +67,16 @@ public class BackupRestore extends Activity {
 	private static final int TO_DATE_DIALOG = 3;
 	private static final int TO_TIME_DIALOG = 4;
 	private static final int BACKUP_RESTORE = 5;
+	private static final int DELETE_BACKUP_FILES = 6;
 
 	private Button fromDateButton;
 	private Button fromTimeButton;
 	private Button toDateButton;
 	private Button toTimeButton;
+	
+	private Button selectButton;
+	private Button deleteButton;
+	private Button cloudStorageButton;
 	
 	private TextView fromTextView;
 	private TextView toTextView;
@@ -103,8 +110,43 @@ public class BackupRestore extends Activity {
 	 * initiate button bar for quickly selecting and deleting
 	 */
 	private void initiateButtonBar() {
-		//TODO 
+		 selectButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				int count = adapter.getCount();
+				if (adapter.getCheckedItems().getTrueCount() >= count) {
+					//deselect all and hide the button bar
+					for (int i = 0; i < adapter.getCheckedItems().size(); i++) {
+						int key = adapter.getCheckedItems().keyAt(i);
+						adapter.getCheckedItems().put(key, false);
+					}
+					selectButton.setText("全选");
+					buttonBars.setVisibility(View.GONE);
+				} else {
+					//select all items
+					for (int i = 0; i <adapter.getCount(); i++) {
+						adapter.getCheckedItems().put(i, true);
+					}
+					selectButton.setText("全不选");
+				}
+				//change the delete button text
+				deleteButton.setText("删除(" + adapter.getCheckedItems().getTrueCount() + ")");
+				listView.invalidateViews();
+			}
+		});
+		deleteButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				//show a dialog allowing user to delete checked backup files
+				showDialog(DELETE_BACKUP_FILES);
+			}
+		});
+		
 	}
+	
+	
 
 	/**
 	 * get all backup files and show in this listview, if no file was found, show 
@@ -240,6 +282,7 @@ public class BackupRestore extends Activity {
 					Toast.makeText(BackupRestore.this, "备份成功", Toast.LENGTH_SHORT).show();
 					//notify data have changed
 					adapter.notifyDataSetChanged();
+					buttonBars.setVisibility(View.GONE);					
 				}
 			}
 		});
@@ -253,6 +296,15 @@ public class BackupRestore extends Activity {
 				} else {
 					setHeaderComponentVisible(View.VISIBLE);
 				}
+			}
+		});
+		cloudStorageButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				BackupManager bm = new BackupManager(BackupRestore.this);
+				bm.dataChanged();
+				
 			}
 		});
 	}
@@ -279,7 +331,7 @@ public class BackupRestore extends Activity {
 			}
 			
 			BufferedOutputStream fs = new BufferedOutputStream(new FileOutputStream(backFile));
-			byte[] byteArray = new byte[sw.getBuffer().length()];
+			
 			fs.write(sw.toString().getBytes());
 			fs.flush();
 			fs.close();
@@ -314,11 +366,59 @@ public class BackupRestore extends Activity {
 			return createToTimeDialog();
 		case BACKUP_RESTORE :
 			return makeAlertDialogForBackup();
+		case DELETE_BACKUP_FILES :
+			return makeDeleteBackupFilesDialog();
 		}
 		
 		return null;
 	}
+	private void deleteBackupFiles() {
+		boolean delete = true;
+		for (int i = 0; i < adapter.getCheckedItems().size(); i++) {
+			//if checked then delete
+			if (adapter.getCheckedItems().get(adapter.getCheckedItems().keyAt(i))) {
+				File file = (File) adapter.getItem(adapter.getCheckedItems().keyAt(i));
+				if (!file.delete()) {
+					delete = false;
+					break;
+				}
+			}
+		}
+		if (delete) {
+			Toast.makeText(this, "删除成功", Toast.LENGTH_SHORT).show();
+			buttonBars.setVisibility(View.GONE);
+		} else {
+			Toast.makeText(this, "删除失败", Toast.LENGTH_SHORT).show();
+		}
+		adapter.notifyDataSetChanged();
+	}
+	private Dialog makeDeleteBackupFilesDialog() {
+		android.content.DialogInterface.OnClickListener callBack = new android.content.DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				switch (which) {
+				case Dialog.BUTTON_POSITIVE :
+					deleteBackupFiles();			
+					dialog.dismiss();
+					break;
+				case Dialog.BUTTON_NEGATIVE :
+					dialog.dismiss();
+					break;
+				}
+			}
 
+
+		};
+		
+		AlertDialog.Builder builder = new Builder(this);
+		builder.setIcon(android.R.drawable.ic_dialog_alert);
+		builder.setTitle("删除备份文件");
+		builder.setMessage("你确认要删除选中的文件吗？");
+		builder.setPositiveButton("确认", callBack);
+		builder.setNegativeButton("取消", callBack);
+		return builder.create();
+	}
 	private Dialog createFromDateDialog() {
 		OnDateSetListener callBack = new OnDateSetListener() {
 			
@@ -409,12 +509,16 @@ public class BackupRestore extends Activity {
 		backupTypeCheckBox = (CheckBox) headerView.findViewById(R.id.backup_restore_type_checkBox);
 		fromTextView = (TextView) headerView.findViewById(R.id.backup_restore_start_time_label);
 		toTextView = (TextView) headerView.findViewById(R.id.backup_restore_end_time_label);
+		
+		cloudStorageButton = (Button) headerView.findViewById(R.id.backup_restore_cloud_storage);
+		selectButton = (Button) findViewById(R.id.backup_restore_select_all);
+		deleteButton = (Button) findViewById(R.id.backup_restore_delete);
 	}
 
 
-	private static final String BACKUP_RESTORE_DIR = "/eventassistant/backup/";
-	private static final String FILE_PREFIX = "EventAssistant";
-	private static final FilenameFilter BACKUP_FILE_NAME_FILTER = new FilenameFilter() {
+	public static final String BACKUP_RESTORE_DIR = "/eventassistant/backup/";
+	public static final String FILE_PREFIX = "EventAssistant";
+	public static final FilenameFilter BACKUP_FILE_NAME_FILTER = new FilenameFilter() {
 		
 		@Override
 		public boolean accept(File arg0, String name) {
@@ -426,7 +530,7 @@ public class BackupRestore extends Activity {
 			}
 		}
 	};
-	private static final FileFilter BACKUP_FILE_FILTER = new FileFilter() {
+	public static final FileFilter BACKUP_FILE_FILTER = new FileFilter() {
 		
 		@Override
 		public boolean accept(File file) {
@@ -441,7 +545,7 @@ public class BackupRestore extends Activity {
 
 		private static final String DATE_FORMAT = "yyyy年MM月dd日 h:mmaa";
 		
-		private SparseBooleanArray checkedItems = new SparseBooleanArray();
+		private MySparseBooleanArray checkedItems = new MySparseBooleanArray();
 		private File[] backupFiles = null;
 		
 		public BackupRestoreFileAdapter() {
@@ -458,6 +562,7 @@ public class BackupRestore extends Activity {
 		}
 
 		private void initiateBackupFiles() {
+			checkedItems.clear();
 			String storageState = Environment.getExternalStorageState();
 			if (storageState.equalsIgnoreCase(Environment.MEDIA_MOUNTED)) {
 				File root = Environment.getExternalStorageDirectory();
@@ -467,11 +572,8 @@ public class BackupRestore extends Activity {
 					backupFiles = new File[0];
 				} else {
 					backupFiles = backupDir.listFiles(BACKUP_FILE_FILTER);
-				}
+				}			
 				
-				for (int i = 0; i < backupFiles.length; i++) {
-					checkedItems.put(i, false); 
-				}
 			}
 		}
 		
@@ -523,17 +625,41 @@ public class BackupRestore extends Activity {
 			return convertView;		
 		}
 		
+		public MySparseBooleanArray getCheckedItems() {
+			return checkedItems;
+		}
+		
 		OnClickListener checkImageViewListener = new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				int position = (Integer) v.getTag();
 				boolean checkState = checkedItems.get(position) ? false : true;
+				
+				//find how many values are true and false
+				int trueCount = checkedItems.getTrueCount();
+				
+				//set the buttonbar according to true and false count
+				if (checkState && 0 == trueCount) {
+					buttonBars.setVisibility(View.VISIBLE);
+				} else if (!checkState && 1 == trueCount){
+					buttonBars.setVisibility(View.GONE);
+				}
+				
 				checkedItems.put(position, checkState);
 				v.setSelected(checkState);
+				
+				//set delete button text
+				deleteButton.setText("删除(" + checkedItems.getTrueCount() + ")");
+				//set select button text
+				if (checkedItems.getTrueCount() < getCount()) {
+					selectButton.setText("全选");
+				} else if (checkedItems.getTrueCount() == getCount()) {
+					selectButton.setText("全不选");
+				}
 			}
 		};
-		
+		 
 	}
 
 }
