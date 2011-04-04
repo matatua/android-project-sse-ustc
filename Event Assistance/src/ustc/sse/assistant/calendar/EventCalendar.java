@@ -96,14 +96,6 @@ public class EventCalendar extends Activity implements OnGesturePerformedListene
 		
 		Intent eventIntent = new Intent(this, EventAdd.class);
 		Intent eventListIntent = new Intent(this, EventList.class);
-		Calendar now = Calendar.getInstance();
-		Calendar fromCalendar = Calendar.getInstance();
-		fromCalendar.set(now.get(Calendar.YEAR), now.get(Calendar.MONTH), 1, 0, 0, 0);
-		Calendar toCalendar = Calendar.getInstance();
-		toCalendar.set(now.get(Calendar.YEAR), now.get(Calendar.MONTH) + 1, 1, 0, 0, 0);
-
-		eventListIntent.putExtra(EventList.FROM_CALENDAR, fromCalendar);
-		eventListIntent.putExtra(EventList.TO_CALENDAR, toCalendar);
 		
 		menu.findItem(R.id.new_event).setIntent(eventIntent);
 		menu.findItem(R.id.event_list).setIntent(eventListIntent);
@@ -119,6 +111,25 @@ public class EventCalendar extends Activity implements OnGesturePerformedListene
 		}
 		
 		return super.onOptionsItemSelected(item);
+	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		super.onPrepareOptionsMenu(menu);
+		//set the proper calendar to MenuItem's intent extra
+		MenuItem eventListMenuItem = menu.findItem(R.id.event_list);
+		Calendar now = Calendar.getInstance();
+		now.setTimeInMillis(curCalendar.getTimeInMillis());
+		Calendar fromCalendar = Calendar.getInstance();
+		fromCalendar.set(now.get(Calendar.YEAR), now.get(Calendar.MONTH), 1, 0, 0, 0);
+		Calendar toCalendar = Calendar.getInstance();
+		toCalendar.setTimeInMillis(fromCalendar.getTimeInMillis());
+		toCalendar.add(Calendar.MONTH, 1);
+
+		eventListMenuItem.getIntent().putExtra(EventList.FROM_CALENDAR, fromCalendar);
+		eventListMenuItem.getIntent().putExtra(EventList.TO_CALENDAR, toCalendar);
+		
+		return true;
 	}
 	
 	@Override
@@ -195,12 +206,8 @@ public class EventCalendar extends Activity implements OnGesturePerformedListene
 									0, 
 									0);
 				Calendar toCalendar = Calendar.getInstance();
-				toCalendar.set(smartDate.getGregorianYear(), 
-								smartDate.getGregorianMonth() - 1, 
-								smartDate.getGregorianDay() + 1, 
-								0, 
-								0, 
-								0);				
+				toCalendar.setTimeInMillis(fromCalendar.getTimeInMillis());
+				toCalendar.add(Calendar.DAY_OF_MONTH, 1);
 				intent.putExtra(EventList.FROM_CALENDAR, fromCalendar);
 				intent.putExtra(EventList.TO_CALENDAR, toCalendar);
 				startActivity(intent);

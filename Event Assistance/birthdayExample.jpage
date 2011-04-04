@@ -1,0 +1,17 @@
+android.content.ContentResolver cr;
+Uri uri = android.provider.ContactsContract.Data.CONTENT_URI
+String selection = android.provider.ContactsContract.Data.MIMETYPE + " = ?"
+						+ ustc.sse.assistant.contact.data.BirthdayConstant.YEAR + "=?"
+						+ ustc.sse.assistant.contact.data.BirthdayConstant.MONTH + "=?"
+						+ ustc.sse.assistant.contact.data.BirthdayConstant.DAY + "=?"
+String[] projection = {ustc.sse.assistant.contact.data.BirthdayConstant.TYPE,
+						ustc.sse.assistant.contact.data.BirthdayConstant.YEAR,
+						ustc.sse.assistant.contact.data.BirthdayConstant.MONTH,
+						ustc.sse.assistant.contact.data.BirthdayConstant.DAY,
+						android.provider.ContactsContract.Data.DISPLAY_NAME,
+						android.provider.ContactsContract.Data.CONTACT_ID};
+String[] selectionArgs = {ustc.sse.assistant.contact.data.BirthdayConstant.TYPE,
+							"2011",
+							"10",
+							""20};
+cr.query(uri, projection, selection, selectionArgs, null);
