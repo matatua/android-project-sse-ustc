@@ -40,7 +40,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -85,18 +84,15 @@ public class EventEdit extends Activity{
 	private Calendar beginCalendar = Calendar.getInstance();
 	private Calendar endCalendar = Calendar.getInstance();
 	private String beginTime;
-	private String oldBeginTime;
 	private String endTime;
 	
 	private int priorAlarmDay = EventConstant.EVENT_PRIOR_DAY_NONE;
-	private int oldPriorAlarmDay = EventConstant.EVENT_PRIOR_DAY_NONE;
 	private int priorAlarmRepeat = EventConstant.EVENT_PRIOR_REPEAT_ONE;
 	private int alarmType = 0;
 	private String location = "";
 	private String note = "";
 	private String content = "";
 	private int alarmTime = 0;
-	private String createTime = "";
 	private long lastModifiedTime;
 	private Map<Long, String> contactData = new HashMap<Long,String>();
 	
@@ -195,7 +191,6 @@ public class EventEdit extends Activity{
 
 			content = cursor.getString(contentColumn);
 			beginTime = cursor.getString(beginTimeColumn);
-			oldBeginTime = beginTime;
 			beginCalendar.setTimeInMillis(Long.valueOf(beginTime));			
 			endTime = cursor.getString(endTimeColumn);
 			endCalendar.setTimeInMillis(Long.valueOf(endTime));
@@ -203,10 +198,9 @@ public class EventEdit extends Activity{
 			note = cursor.getString(noteColumn);
 			alarmTime = Integer.valueOf(cursor.getString(alarmTimeColumn));
 			priorAlarmDay = cursor.getInt(priorAlarmDayColumn);
-			oldPriorAlarmDay = priorAlarmDay;
 			priorAlarmRepeat = cursor.getInt(priorAlarmRepeatColumn);
 			alarmType = Integer.valueOf(cursor.getString(alarmTypeColumn));
-			createTime = cursor.getString(createTimeColumn);
+			cursor.getString(createTimeColumn);
 		}
 
 		if (eventContactCursor.moveToFirst()) {

@@ -33,6 +33,7 @@
         <activity android:name=".calendar.EventCalendar" android:screenOrientation="portrait"></activity>
         <activity android:name=".event.EventList"></activity>
         <activity android:name=".event.EventDetail"></activity>
+        <activity android:name=".event.BirthdayList"></activity>
         
 		<meta-data android:name="com.google.android.backup.api_key"
    		 android:value="AEdPqrEAAAAICPUk7P-5nDqULBGfNFjWUygjGdLMldleGAOnRA" />

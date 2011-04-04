@@ -10,8 +10,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import ustc.sse.assistant.R;
 import ustc.sse.assistant.event.broadcast.EventBroadcastReceiver;
@@ -37,8 +35,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.text.format.DateFormat;
-import android.text.util.Linkify;
-import android.text.util.Linkify.TransformFilter;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -90,6 +88,24 @@ public class EventList extends Activity {
 		initiateButtons();
 	}
 
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		MenuInflater menuInflater = getMenuInflater();
+		menuInflater.inflate(R.menu.event_list_menu, menu);
+		
+		Intent eventIntent = new Intent(this, EventAdd.class);
+		Intent birthdayListIntent = new Intent(this, BirthdayList.class);
+
+		Calendar birthdayFromCalendar = (Calendar) getIntent().getSerializableExtra(FROM_CALENDAR);
+		Calendar birthdayToCalendar = (Calendar) getIntent().getSerializableExtra(TO_CALENDAR);
+		birthdayToCalendar.add(Calendar.DAY_OF_YEAR, -1);
+		birthdayListIntent.putExtra(EventList.FROM_CALENDAR, birthdayFromCalendar);
+		birthdayListIntent.putExtra(EventList.TO_CALENDAR, birthdayToCalendar);
+		
+		menu.findItem(R.id.add_event).setIntent(eventIntent);
+		menu.findItem(R.id.birthday_list).setIntent(birthdayListIntent);
+		return true;
+	}
 
 	private void initiateButtons() {
 		selectButton.setOnClickListener(new OnClickListener() {
@@ -411,6 +427,5 @@ public class EventList extends Activity {
 			EventUtils.linkifyEventLocation(locationTv);
 			locationTv.setFocusable(false);
 		}
-
 	}
 }

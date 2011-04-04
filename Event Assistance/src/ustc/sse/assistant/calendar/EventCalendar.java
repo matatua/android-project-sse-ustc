@@ -23,7 +23,6 @@ import android.gesture.GestureLibrary;
 import android.gesture.GestureOverlayView;
 import android.gesture.GestureOverlayView.OnGesturePerformedListener;
 import android.gesture.Prediction;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.format.DateFormat;
@@ -44,7 +43,6 @@ import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * @author 李健、宋安琪
