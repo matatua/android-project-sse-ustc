@@ -157,6 +157,7 @@ public class XmlToEvent {
 														.build());
 						ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
 														.withValueBackReference(Data.RAW_CONTACT_ID, 0)
+														.withValue(Data.MIMETYPE, StructuredName.MIMETYPE)
 														.withValue(StructuredName.DISPLAY_NAME, ece.displayName)
 														.build());
 						try {
@@ -196,7 +197,7 @@ public class XmlToEvent {
 				&& null == currentEvent) {
 			
 			currentEvent = new EventEntity();
-		} else if (name.equalsIgnoreCase(EventXmlConstant.CONTACT)
+		} else if (name.equalsIgnoreCase(EventXmlConstant.EVENT_CONTACT_DISPLAY_NAME)
 					&& currentEvent != null) {
 			try {
 				EventContactEntity ece = new EventContactEntity();

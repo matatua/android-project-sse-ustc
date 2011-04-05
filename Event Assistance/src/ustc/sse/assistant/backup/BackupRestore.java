@@ -126,7 +126,7 @@ public class BackupRestore extends Activity {
 				} else {
 					//select all items
 					for (int i = 0; i <adapter.getCount(); i++) {
-						adapter.getCheckedItems().put(i, true);
+						adapter.getCheckedItems().put(adapter.getCheckedItems().keyAt(i), true);
 					}
 					selectButton.setText("全不选");
 				}
@@ -202,10 +202,10 @@ public class BackupRestore extends Activity {
 			public void onClick(DialogInterface dialog, int which) {
 				switch (which) {
 				case Dialog.BUTTON_POSITIVE :
-					doRestore(true);
+					doRestore(false);
 					break;
 				case Dialog.BUTTON_NEUTRAL :
-					doRestore(false);
+					doRestore(true);
 					break;
 				case Dialog.BUTTON_NEGATIVE :
 					dialog.dismiss();
@@ -573,7 +573,9 @@ public class BackupRestore extends Activity {
 				} else {
 					backupFiles = backupDir.listFiles(BACKUP_FILE_FILTER);
 				}			
-				
+				for (int i = 0; i < backupFiles.length; i++) {
+					checkedItems.put(i, false);
+				}
 			}
 		}
 		
