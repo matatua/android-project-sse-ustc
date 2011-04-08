@@ -274,7 +274,7 @@ public class ContactUtils {
 		return new String[]{phoneNumber, phoneType};
 	}
 	
-	private byte[] getPhoto(Long photoId) {
+	public byte[] getPhoto(Long photoId) {
 		Uri contactUri = ContentUris.withAppendedId(Contacts.CONTENT_URI, photoId);
 		Uri photoUri = Uri.withAppendedPath(contactUri, android.provider.ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);
 		byte[] data = null;

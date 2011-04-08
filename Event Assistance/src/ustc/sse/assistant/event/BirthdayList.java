@@ -1,18 +1,33 @@
 package ustc.sse.assistant.event;
 
 import java.util.Calendar;
+import ustc.sse.assistant.R;
+import ustc.sse.assistant.contact.data.BirthdayConstant;
+import ustc.sse.assistant.contact.data.ContactUtils;
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.provider.ContactsContract.Data;
-import ustc.sse.assistant.contact.data.BirthdayConstant;
-import ustc.sse.assistant.R;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.ResourceCursorAdapter;
+import android.widget.TextView;
 
+/**
+ * a birthday list 
+ * @author 宋安琪、李健
+ *
+ */
 public class BirthdayList extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,19 +48,6 @@ public class BirthdayList extends Activity {
 		String toDay = String.valueOf(toCalendar.get(Calendar.DAY_OF_MONTH));
 		String[] birthdayListData = null;
 		int num;
-		Log.i("birthdaylist", fromMonth);
-		Log.i("birthdaylist", toMonth);
-		Log.i("birthdaylist", fromDay);
-		Log.i("birthdaylist", toDay);
-		
-		int monthOfBirthdayColumun;
-		int dayOfBirthdayColumun;
-		int contacNameColumn;
-
-		String monthOfBirthday;
-		String dayOfBirthday;
-		String contactName;
-		String birthdayText;
 
 		ContentResolver cr = getContentResolver();
 		Uri uri = android.provider.ContactsContract.Data.CONTENT_URI;
@@ -58,7 +60,7 @@ public class BirthdayList extends Activity {
 			selection = Data.MIMETYPE + " = ? AND " + BirthdayConstant.MONTH + " = ? AND " + BirthdayConstant.DAY + " = ?";
 		}
 		
-		String[] projection = {BirthdayConstant.YEAR, BirthdayConstant.MONTH, BirthdayConstant.DAY, Data.DISPLAY_NAME, Data.CONTACT_ID };
+		String[] projection = {BirthdayConstant.YEAR, BirthdayConstant.MONTH, BirthdayConstant.DAY, Data.DISPLAY_NAME, Data.CONTACT_ID, Data._ID };
 
 		String[] selectionArgs = {ustc.sse.assistant.contact.data.BirthdayConstant.TYPE, fromMonth, fromDay};
 		Cursor cursor = cr.query(uri, projection, selection, selectionArgs, null);
@@ -68,35 +70,69 @@ public class BirthdayList extends Activity {
 		if (num != 0) {
 			birthdayListData = new String[num];
 
-			int i = 0;
-			if (cursor.moveToFirst()) {
-				monthOfBirthdayColumun = cursor
-						.getColumnIndex(ustc.sse.assistant.contact.data.BirthdayConstant.MONTH);
-				dayOfBirthdayColumun = cursor
-						.getColumnIndex(ustc.sse.assistant.contact.data.BirthdayConstant.DAY);
-				contacNameColumn = cursor
-						.getColumnIndex(android.provider.ContactsContract.Data.DISPLAY_NAME);
-
-				do {
-					monthOfBirthday = String.valueOf(cursor.getInt(monthOfBirthdayColumun) + 1);
-					dayOfBirthday = cursor.getString(dayOfBirthdayColumun);
-					contactName = cursor.getString(contacNameColumn);
-					birthdayText = monthOfBirthday + "月" + dayOfBirthday + "日" + contactName + "过生日";
-					birthdayListData[i] = birthdayText;
-					i++;
-				} while (cursor.moveToNext());
-			}
-
-			ArrayAdapter<String> birthdayListAdapter = new ArrayAdapter<String>(
-					this, android.R.layout.simple_list_item_1, birthdayListData);
-			birthdayListView.setAdapter(birthdayListAdapter);
+		BirthdayListCursorAdapter adapter = new BirthdayListCursorAdapter(this, 
+															R.layout.birthday_list_item, 
+															cursor);
+			
+			birthdayListView.setAdapter(adapter);
 		}
 		
 		else {
 			ArrayAdapter<String> birthdayListAdapter = new ArrayAdapter<String>(
-					this, android.R.layout.simple_list_item_1, new String[]{"本月没有人过生日"});
+					this, android.R.layout.simple_list_item_1, new String[]{"没有人过生日"});
 			birthdayListView.setAdapter(birthdayListAdapter);
 		}
 
+	}
+	
+	private OnItemLongClickListener itemClickListener = new OnItemLongClickListener() {
+
+		@Override
+		public boolean onItemLongClick(AdapterView<?> arg0, View view,
+				int position, long id) {
+			Long contactId = (Long) view.getTag();
+			//TODO add a dialog show sms and dial option
+			return true;
+		}
+	};
+	
+	private static class BirthdayListCursorAdapter extends ResourceCursorAdapter {
+		private Context context;
+		private ContactUtils cu;
+
+		public BirthdayListCursorAdapter(Activity activity, int layoutResId, Cursor c) {
+			super(activity, layoutResId, c);
+			this.cu = new ContactUtils(activity);
+			
+		}
+		
+		/**
+		 * this method return the contact's id not the id in Data table
+		 */
+		@Override
+		public long getItemId(int position) {
+			return super.getItemId(position);
+		}
+
+		@Override
+		public void bindView(View view, Context context, Cursor cursor) {
+			ImageView birtdayContactPortraitImageView = (ImageView) view.findViewById(R.id.birthday_list_item_contact_portrait);
+			TextView birthdayContentTextView = (TextView) view.findViewById(R.id.birthday_list_item_content);
+					
+			long id = cursor.getLong(cursor.getColumnIndex(Data.CONTACT_ID));
+			String monthOfBirthday = String.valueOf(cursor.getInt(cursor.getColumnIndex(BirthdayConstant.MONTH)) + 1);
+			String dayOfBirthday = cursor.getString(cursor.getColumnIndex(BirthdayConstant.DAY));
+			String contactName = cursor.getString(cursor.getColumnIndex(Data.DISPLAY_NAME));
+			
+			byte[] bitmapData = cu.getPhoto(id);
+			
+			if (bitmapData != null) {
+				Bitmap photo = BitmapFactory.decodeByteArray(bitmapData, 0, bitmapData.length);
+				birtdayContactPortraitImageView.setImageBitmap(photo);
+			}
+			view.setTag(id);
+			
+			birthdayContentTextView.setText(monthOfBirthday + "月" + dayOfBirthday + "日" + contactName + "过生日");
+		}
 	}
 }
