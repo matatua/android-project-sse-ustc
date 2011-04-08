@@ -6,6 +6,7 @@ package ustc.sse.assistant.backup;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -33,6 +34,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,6 +70,8 @@ public class BackupRestore extends Activity {
 	private static final int TO_TIME_DIALOG = 4;
 	private static final int BACKUP_RESTORE = 5;
 	private static final int DELETE_BACKUP_FILES = 6;
+	private static final int RESTORING = 7;
+	protected static final String TAG = "BackupRestore";
 
 	private Button fromDateButton;
 	private Button fromTimeButton;
@@ -178,21 +182,33 @@ public class BackupRestore extends Activity {
 	 * @param restoreContacts
 	 */
 	private void doRestore(final boolean restoreContacts) {
-		final ProgressDialog dialog = ProgressDialog.show(this, "还原中", "请耐心等待..", true, false);
-		Handler handler = new Handler();
-		handler.post(new Runnable() {
-			
-			@Override
+		final Toast toast = Toast.makeText(BackupRestore.this, "还原成功！", Toast.LENGTH_SHORT);
+		new Thread() {
+			Dialog dialog = ProgressDialog.show(BackupRestore.this, "还原中", "请耐心等待..", true, false);
+
 			public void run() {
-				XmlToEvent xte = new XmlToEvent(BackupRestore.this, backupFile, restoreContacts);
-				if (xte.restore()) {
-					Toast.makeText(BackupRestore.this, "还原成功！", Toast.LENGTH_SHORT).show();
-				} else {
-					Toast.makeText(BackupRestore.this, "还原失败！", Toast.LENGTH_SHORT).show();
+
+				XmlToEvent xte = null;
+				boolean restored = false;
+				try {
+					xte = new XmlToEvent(BackupRestore.this, backupFile,
+							restoreContacts);
+					restored = xte.restore();
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+					restored = false;
 				}
-				dialog.dismiss();
-			}
-		});
+				if (restored) {
+					toast.show();
+				} else {
+					toast.setText("还原失败!");
+					toast.show();
+				}
+				dialog.cancel();
+			};
+		
+		}.start();
+	
 	}
 	
 	private AlertDialog makeAlertDialogForBackup() {
@@ -275,14 +291,22 @@ public class BackupRestore extends Activity {
 					//backup date in the selected period
 					etx = new EventToXml(BackupRestore.this, fromCalendar, toCalendar);
 				}
-				StringWriter sw = etx.generateXml();
-				if (!writeXmlToExternalStorage(sw)) {
-					Toast.makeText(BackupRestore.this, "备份失败", Toast.LENGTH_SHORT).show();
-				} else {
-					Toast.makeText(BackupRestore.this, "备份成功", Toast.LENGTH_SHORT).show();
-					//notify data have changed
-					adapter.notifyDataSetChanged();
-					buttonBars.setVisibility(View.GONE);					
+				try {
+					StringWriter sw = etx.generateXml();
+					if (!writeXmlToExternalStorage(sw)) {
+						Toast.makeText(BackupRestore.this, "备份失败",
+								Toast.LENGTH_SHORT).show();
+					} else {
+						Toast.makeText(BackupRestore.this, "备份成功",
+								Toast.LENGTH_SHORT).show();
+						//notify data have changed
+						adapter.notifyDataSetChanged();
+						buttonBars.setVisibility(View.GONE);
+					}
+				} catch (IOException e) {
+					Log.e(TAG, e.getMessage());
+					Toast.makeText(BackupRestore.this, "备份失败",
+							Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
@@ -368,6 +392,9 @@ public class BackupRestore extends Activity {
 			return makeAlertDialogForBackup();
 		case DELETE_BACKUP_FILES :
 			return makeDeleteBackupFilesDialog();
+		case RESTORING : 
+			return ProgressDialog.show(this, "还原中", "请耐心等待..", true, false);
+
 		}
 		
 		return null;
@@ -572,6 +599,9 @@ public class BackupRestore extends Activity {
 					backupFiles = new File[0];
 				} else {
 					backupFiles = backupDir.listFiles(BACKUP_FILE_FILTER);
+					if (backupFiles == null) {
+						backupFiles = new File[0];
+					}
 				}			
 				for (int i = 0; i < backupFiles.length; i++) {
 					checkedItems.put(i, false);
@@ -614,7 +644,7 @@ public class BackupRestore extends Activity {
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTimeInMillis(curFile.lastModified());
 			timeTv.setText("备份于：" + DateFormat.format(DATE_FORMAT, calendar));
-			sizeTv.setText("大小：" + String.valueOf(EventAssistantUtils.bytesToMB(curFile.length())) + "M");
+			sizeTv.setText("大小：" + EventAssistantUtils.bytesToLargeUnit(curFile.length(), EventAssistantUtils.UNIT_SMART));
 			checkIv.setTag(position);
 			checkIv.setOnClickListener(checkImageViewListener);
 			

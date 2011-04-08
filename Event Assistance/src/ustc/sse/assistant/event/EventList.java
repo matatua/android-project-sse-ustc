@@ -32,7 +32,9 @@ import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Looper;
 import android.os.RemoteException;
 import android.text.format.DateFormat;
 import android.view.Menu;
@@ -245,9 +247,9 @@ public class EventList extends Activity {
 	 */
 	private void deleteSelectedEvents() {
 		//delete events
-		ContentResolver cr = getContentResolver();
-		ArrayList<ContentProviderOperation> eventOps = new ArrayList<ContentProviderOperation>();
-		ArrayList<ContentProviderOperation> eventContactOps = new ArrayList<ContentProviderOperation>();
+		final ContentResolver cr = getContentResolver();
+		final ArrayList<ContentProviderOperation> eventOps = new ArrayList<ContentProviderOperation>();
+		final ArrayList<ContentProviderOperation> eventContactOps = new ArrayList<ContentProviderOperation>();
 		ArrayList<PendingIntent> pendingIntents = new ArrayList<PendingIntent>();
 		
 		Iterator<Long> iter = selectedItemIds.iterator();
@@ -274,29 +276,36 @@ public class EventList extends Activity {
 			pendingIntents.add(pi2);
 		}
 		
-		try {
-			ProgressDialog dialog = ProgressDialog.show(this, null, "删除中...", true, false);
-			cr.applyBatch(EventAssistant.EVENT_AUTHORITY, eventOps);
-			cr.applyBatch(EventAssistant.EVENT_CONTACT_AUTHORITY, eventContactOps);
+		
+			final ProgressDialog dialog = ProgressDialog.show(this, null, "删除中...", true, false);
+			final Toast toast = Toast.makeText(EventList.this, "删除失败", Toast.LENGTH_SHORT);
+
+			new Thread() {				
 				
-			AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-			for (PendingIntent pi : pendingIntents) {
-				am.cancel(pi);
-			}
-			dialog.cancel();
+				public void run() {
+
+					try {
+					cr.applyBatch(EventAssistant.EVENT_AUTHORITY, eventOps);
+					cr.applyBatch(EventAssistant.EVENT_CONTACT_AUTHORITY, eventContactOps);											
+				
+					} catch (RemoteException e) {
+						e.printStackTrace();
+						toast.show();
+					} catch (OperationApplicationException e) {
+						e.printStackTrace();
+						toast.show();
+					}
+					
+					dialog.cancel();
+				}
+			}.start();
 			
-		} catch (RemoteException e) {
-			e.printStackTrace();
-			Toast.makeText(this, "删除失败", Toast.LENGTH_SHORT).show();
-		} catch (OperationApplicationException e) {
-			e.printStackTrace();
-			Toast.makeText(this, "删除失败", Toast.LENGTH_SHORT).show();
-		}
+		AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+		for (PendingIntent pi : pendingIntents) {
+			am.cancel(pi);
+		}	
 		selectedItemIds.clear();
 		buttonBar.setVisibility(View.INVISIBLE);
-		
-		//cancel alarm service
-		//TODO cancel alarm service
 		
 	}
 	@Override

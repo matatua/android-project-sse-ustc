@@ -10,6 +10,7 @@ import ustc.sse.assistant.calendar.EventCalendar;
 import ustc.sse.assistant.contact.ContactList;
 import ustc.sse.assistant.help.HelpActivity;
 import ustc.sse.assistant.setting.Setting;
+import ustc.sse.assistant.share.ShareEvent;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,8 +29,8 @@ public class MainScreen extends Activity {
     }
     
     private void initImageButtons() {
-    	ImageButton contactImageButton = (ImageButton) findViewById(R.id.contact_imageButton);
-    	contactImageButton.setOnClickListener(new OnClickListener() {
+    	View contactView = findViewById(R.id.main_screen_contact);
+    	contactView.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -37,9 +38,8 @@ public class MainScreen extends Activity {
 				MainScreen.this.startActivity(contactIntent);
 			}
 		});
-    	
-    	ImageButton calendarImageButton = (ImageButton) findViewById(R.id.calendar_imageButton);
-    	calendarImageButton.setOnClickListener(new OnClickListener() {
+    	View calendarView = findViewById(R.id.main_screen_calendar);
+    	calendarView.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -47,9 +47,8 @@ public class MainScreen extends Activity {
 				MainScreen.this.startActivity(eventIntent);
 			}
 		});
-    	
-    	ImageButton settingButton = (ImageButton) findViewById(R.id.setting_imageButton);
-    	settingButton.setOnClickListener(new OnClickListener() {
+    	View settingView = findViewById(R.id.main_screen_setting);
+    	settingView.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -57,8 +56,8 @@ public class MainScreen extends Activity {
 				startActivity(settingIntent);
 			}
 		});
-    	ImageButton helpButton = (ImageButton) findViewById(R.id.help_imageButton);
-    	helpButton.setOnClickListener(new OnClickListener() {
+    	View helpView = findViewById(R.id.main_screen_help);
+    	helpView.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -66,15 +65,23 @@ public class MainScreen extends Activity {
 				startActivity(helpIntent);
 			}
 		});
-    	
-    	ImageButton backupButton = (ImageButton) findViewById(R.id.backup_imageButton);
-    	backupButton.setOnClickListener(new OnClickListener() {
+    	View backupView = findViewById(R.id.main_screen_backup);
+    	backupView.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				Intent backupIntent = new Intent(MainScreen.this, BackupRestore.class);
 				startActivity(backupIntent);
 				
+			}
+		});
+    	View shareView = findViewById(R.id.main_screen_share);
+    	shareView.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent shareIntent = new Intent(MainScreen.this, ShareEvent.class);
+				startActivity(shareIntent);
 			}
 		});
     	

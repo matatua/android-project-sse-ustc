@@ -21,6 +21,8 @@ import ustc.sse.assistant.event.data.EventEntity;
 import ustc.sse.assistant.event.provider.EventAssistant;
 import ustc.sse.assistant.event.provider.EventAssistant.Event;
 import ustc.sse.assistant.event.provider.EventAssistant.EventContact;
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
 import android.content.ContentResolver;
@@ -52,23 +54,33 @@ public class XmlToEvent {
 	private Context ctx;
 	private File backupFile;
 	private boolean restoreContacts = false;
+	private boolean deleteOriginalData = true;
+	private InputStream inputStream;
 	
-	public XmlToEvent(Context context, File backupFile, boolean restoreContacts) {
+	public XmlToEvent(Context context, File backupFile, boolean restoreContacts) throws FileNotFoundException {
 		this.ctx = context;
 		this.backupFile = backupFile;
 		this.restoreContacts = restoreContacts;
+		this.inputStream = new FileInputStream(backupFile);
 	}
 	
-	public XmlToEvent(Context context, InputStream is, boolean restoreContacts) {
+	public XmlToEvent(Context context, File backupFile, boolean restoreContacts, boolean deleteOriginal) throws FileNotFoundException {
+		this(context, backupFile, restoreContacts);
+		this.deleteOriginalData = deleteOriginal;
+		
+	}
+	public XmlToEvent(Context context, InputStream is, boolean restoreContacts, boolean deleteOriginal) {
 		this.ctx = context;
 		this.restoreContacts = restoreContacts;
+		if (is == null) throw new NullPointerException("Inputstream can't be null");
+		this.inputStream = is;
 	}
 	
 	public boolean restore() {
 		if (backupFile.exists()) {
 			InputStream is;
 			try {
-				is = new BufferedInputStream(new FileInputStream(backupFile));
+				is = new BufferedInputStream(inputStream);
 				XmlPullParser xpp = Xml.newPullParser();
 				xpp.setInput(is, null);
 				
@@ -107,11 +119,12 @@ public class XmlToEvent {
 				e.printStackTrace();
 			}
 			
-			//first delete all info in database
-			ContentResolver cr = ctx.getContentResolver();
-			cr.delete(EventContact.CONTENT_URI, null, null);
-			cr.delete(Event.CONTENT_URI, null, null);
-			
+			if (deleteOriginalData) {
+				//first delete all info in database
+				ContentResolver cr = ctx.getContentResolver();
+				cr.delete(EventContact.CONTENT_URI, null, null);
+				cr.delete(Event.CONTENT_URI, null, null);
+			}
 			saveToDB();
 			return true;
 		}//end if
@@ -149,15 +162,17 @@ public class XmlToEvent {
 					if (c.getCount() <= 0) {
 						//only when the user hasn't a contact whose name is the same as the ece's
 						//we insert into the system ContactContract database
-						
+						Account account = AccountManager.get(ctx).getAccounts()[0];
 						ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
 						ops.add(ContentProviderOperation.newInsert(RawContacts.CONTENT_URI)
-														.withValue(RawContacts.ACCOUNT_TYPE, EventAssistant.EVENT_AUTHORITY)
-														.withValue(RawContacts.ACCOUNT_NAME, EventAssistant.TAG)
+														.withValue(RawContacts.ACCOUNT_TYPE, account.type)
+														.withValue(RawContacts.ACCOUNT_NAME, account.name)
 														.build());
 						ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
 														.withValueBackReference(Data.RAW_CONTACT_ID, 0)
-														.withValue(Data.MIMETYPE, StructuredName.MIMETYPE)
+														.withValue(Data.MIMETYPE, StructuredName.CONTENT_ITEM_TYPE)
+														.withValue(Data.IS_PRIMARY, 1)
+														.withValue(Data.IS_SUPER_PRIMARY, 1)
 														.withValue(StructuredName.DISPLAY_NAME, ece.displayName)
 														.build());
 						try {

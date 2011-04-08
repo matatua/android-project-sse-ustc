@@ -34,15 +34,16 @@
 	    		android:layout_height="wrap_content"
 	    		android:orientation="vertical"
 	    		android:gravity="center"
+	    		android:id="@+id/main_screen_calendar"
 	    		android:background="@color/main_screen_image_button"
 	    		android:layout_marginRight="@dimen/main_screen_button_marginRight">
-	    	<ImageButton android:src="@drawable/calendar" 
+	    	<ImageView android:src="@drawable/calendar" 
 	    		android:layout_width="wrap_content"
 	    		android:layout_height="wrap_content"
 	    		android:id="@+id/calendar_imageButton"
 	    		android:background="@android:color/transparent"
 	    		>
-	    	</ImageButton>
+	    	</ImageView>
 	    	<TextView android:layout_width="wrap_content"
 		    		android:layout_height="wrap_content"
 		    		android:gravity="center"
@@ -53,15 +54,16 @@
 	    		android:layout_height="wrap_content"
 	    		android:orientation="vertical"
 	    		android:gravity="center"
+	    		android:id="@+id/main_screen_contact"
 	    		android:background="@color/main_screen_image_button"
 	    		android:layout_marginLeft="@dimen/main_screen_button_marginLeft">
-	    	<ImageButton android:src="@drawable/contact" 
+	    	<ImageView android:src="@drawable/contact" 
 	    		android:layout_width="wrap_content"
 	    		android:layout_height="wrap_content"
 	    		android:id="@+id/contact_imageButton"
 	    		android:background="@android:color/transparent"
 	    		>
-	    	</ImageButton>    
+	    	</ImageView>    
 	    	<TextView android:layout_width="wrap_content"
 		    		android:layout_height="wrap_content"
 		    		android:gravity="center"
@@ -82,15 +84,16 @@
 	    		android:layout_height="wrap_content"
 	    		android:orientation="vertical"
 	    		android:gravity="center"
+	    		android:id="@+id/main_screen_share"
 	    		android:background="@color/main_screen_image_button"	    		
 	    		android:layout_marginRight="@dimen/main_screen_button_marginRight">  	
-	    	<ImageButton android:src="@drawable/share" 
+	    	<ImageView android:src="@drawable/share" 
 	    		android:layout_width="wrap_content"
 	    		android:layout_height="wrap_content"
 	    		android:background="@android:color/transparent"
 	    		android:id="@+id/share_imageButton"
 	    		>
-	    	</ImageButton>
+	    	</ImageView>
 	    	<TextView android:layout_width="wrap_content"
 		    		android:layout_height="wrap_content"
 		    		android:gravity="center"
@@ -102,15 +105,16 @@
 	    		android:layout_height="wrap_content"
 	    		android:orientation="vertical"
 	    		android:gravity="center"
+	    		android:id="@+id/main_screen_backup"
 	    		android:background="@color/main_screen_image_button"
 	    		android:layout_marginLeft="@dimen/main_screen_button_marginLeft">  	    
-	    	<ImageButton android:src="@drawable/backup_restore" 
+	    	<ImageView android:src="@drawable/backup_restore" 
 	    		android:layout_width="wrap_content"
 	    		android:layout_height="wrap_content"
 	    		android:background="@android:color/transparent"
 	    		android:id="@+id/backup_imageButton"
 	    		>
-	    	</ImageButton>
+	    	</ImageView>
 			<TextView android:layout_width="wrap_content"
 		    		android:layout_height="wrap_content"
 		    		android:gravity="center"
@@ -132,15 +136,16 @@
 	    		android:layout_height="wrap_content"
 	    		android:orientation="vertical"
 	    		android:gravity="center"
+	    		android:id="@+id/main_screen_setting"
 	    		android:background="@color/main_screen_image_button"
 	    		android:layout_marginRight="@dimen/main_screen_button_marginRight">	    	
-		    	<ImageButton android:src="@drawable/setting" 
+		    	<ImageView android:src="@drawable/setting" 
 		    		android:layout_width="wrap_content"
 		    		android:layout_height="wrap_content"
 	    			android:background="@android:color/transparent"
 	    			android:id="@+id/setting_imageButton"
 		    		>
-		    	</ImageButton>
+		    	</ImageView>
 		    	<TextView android:layout_width="wrap_content"
 		    		android:layout_height="wrap_content"
 		    		android:gravity="center"
@@ -151,14 +156,15 @@
 	    		android:layout_height="wrap_content"
 	    		android:orientation="vertical"
 	    		android:gravity="center"
+	    		android:id="@+id/main_screen_help"
 	    		android:layout_marginLeft="@dimen/main_screen_button_marginLeft">	    	
-		    	<ImageButton android:src="@drawable/help" 
+		    	<ImageView android:src="@drawable/help" 
 		    		android:layout_width="wrap_content"
 		    		android:layout_height="wrap_content"
 	    			android:background="@color/main_screen_image_button"
 	    			android:id="@+id/help_imageButton"
 		    		>
-		    	</ImageButton>
+		    	</ImageView>
 		    	<TextView android:layout_width="wrap_content"
 		    		android:layout_height="wrap_content"
 		    		android:gravity="center"

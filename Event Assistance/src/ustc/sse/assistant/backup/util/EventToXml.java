@@ -119,7 +119,7 @@ public class EventToXml {
 		
 	}
 	
-	public StringWriter generateXml() {
+	public StringWriter generateXml() throws IOException {
 		generateEntities();
 		
 		StringWriter sw = new StringWriter();
@@ -196,14 +196,11 @@ public class EventToXml {
 			xs.flush();
 			
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw e;
 		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw e;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw e;
 		}
 		
 		return sw;

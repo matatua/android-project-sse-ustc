@@ -1,15 +1,24 @@
 package ustc.sse.assistant.event;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ustc.sse.assistant.event.data.EventEntity;
+import ustc.sse.assistant.event.provider.EventAssistant;
 import ustc.sse.assistant.event.provider.EventAssistant.Event;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.OperationApplicationException;
 import android.os.Bundle;
+import android.os.HandlerThread;
+import android.os.RemoteException;
 import android.text.util.Linkify;
 import android.text.util.Linkify.TransformFilter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * 
@@ -172,5 +181,40 @@ public class EventUtils {
 		
 		return bundle;
 	}
-
 }
+	
+/*	public static class DeleteEventThread extends HandlerThread {
+		private ContentResolver cr;
+		private AlarmManager am;
+		private List<PendingIntent> pendingIntents;
+		
+		public DeleteEventThread(ContentResolver cr, AlarmManager am, List<PendingIntent> pendingIntents) {
+			this.cr = cr;
+			this.am = am;
+			this.pendingIntents = pendingIntents;
+			
+		}
+		 (non-Javadoc)
+		 * @see android.os.HandlerThread#run()
+		 
+		@Override
+		public void run() {
+			super.run();
+			try {
+				cr.applyBatch(EventAssistant.EVENT_AUTHORITY, eventOps);
+				cr.applyBatch(EventAssistant.EVENT_CONTACT_AUTHORITY, eventContactOps);											
+			
+				} catch (RemoteException e) {
+					e.printStackTrace();
+					toast.show();
+				} catch (OperationApplicationException e) {
+					e.printStackTrace();
+					toast.show();
+				}
+				
+				for (PendingIntent pi : pendingIntents) {
+					am.cancel(pi);
+				}	
+		}
+
+*/

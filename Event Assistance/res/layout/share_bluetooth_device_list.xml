@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  >
+   <Button android:layout_width="fill_parent"
+  			android:layout_height="wrap_content"
+  			android:layout_alignParentBottom="true"
+  			android:id="@+id/share_bluetooth_device_scan"
+  			android:text="搜索设备"
+  			>
+  </Button>
+  
+  <TextView android:layout_width="match_parent"
+  			android:layout_height="wrap_content"
+  			android:layout_alignParentTop="true"
+  			android:paddingTop="5dp"
+  			android:paddingBottom="5dp"
+  			android:paddingLeft="10dp"
+  			android:text="已配对设备"
+  			android:id="@+id/share_bluetooth_device_list_bonded_label"
+  			android:background="@color/default_light_grey_bg">
+  </TextView>
+  
+  <ListView android:layout_width="match_parent"
+  			android:layout_height="wrap_content"
+  			android:layout_below="@id/share_bluetooth_device_list_bonded_label"
+  			android:id="@+id/share_bluetooth_device_list_bonded">
+  </ListView>
+  
+  <TextView android:layout_width="match_parent"
+  			android:layout_height="wrap_content"
+  			android:layout_below="@id/share_bluetooth_device_list_bonded"
+  			android:paddingTop="5dp"
+  			android:paddingBottom="5dp"
+  			android:paddingLeft="10dp"
+  			android:text="发现的设备"
+  			android:id="@+id/share_bluetooth_device_list_found_label"
+  			android:background="@color/default_light_grey_bg">
+  </TextView>
+  <ListView android:layout_width="match_parent"
+  			android:layout_height="wrap_content"
+  			android:layout_below="@id/share_bluetooth_device_list_found_label"
+  			android:id="@+id/share_bluetooth_device_list_unbonded"
+  			android:layout_above="@id/share_bluetooth_device_scan">
+  </ListView>
+  
+ 
+   
+</RelativeLayout>
