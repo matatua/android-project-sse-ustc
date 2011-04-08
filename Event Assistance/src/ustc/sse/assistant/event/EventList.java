@@ -1,6 +1,3 @@
-/**
- * 
- */
 package ustc.sse.assistant.event;
 
 import java.util.ArrayList;
@@ -32,9 +29,7 @@ import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Looper;
 import android.os.RemoteException;
 import android.text.format.DateFormat;
 import android.view.Menu;
@@ -86,7 +81,6 @@ public class EventList extends Activity {
 		
 		getWidgets();
 		initiateEvents();
-		initiateBirthdayInfo();
 		initiateButtons();
 	}
 
@@ -148,7 +142,6 @@ public class EventList extends Activity {
 		});
 		
 	}
-
 
 	private void getWidgets() {
 		listView = (ListView) findViewById(R.id.event_list_listView);
@@ -213,8 +206,13 @@ public class EventList extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				// TODO Do nothing
-				
+				fromCalendar.add(Calendar.MONTH, 1);
+				toCalendar.add(Calendar.MONTH, 1);
+				Intent intent = new Intent(EventList.this, EventList.class);
+				intent.putExtra(EventList.FROM_CALENDAR, fromCalendar);
+				intent.putExtra(EventList.TO_CALENDAR, toCalendar);
+                startActivity(intent);
+                EventList.this.finish();
 			}
 		});
 		TextView header = new TextView(this);
@@ -224,7 +222,13 @@ public class EventList extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+				fromCalendar.add(Calendar.MONTH, -1);
+				toCalendar.add(Calendar.MONTH, -1);
+				Intent intent = new Intent(EventList.this, EventList.class);
+				intent.putExtra(EventList.FROM_CALENDAR, fromCalendar);
+				intent.putExtra(EventList.TO_CALENDAR, toCalendar);
+                startActivity(intent);
+                EventList.this.finish();
 				
 			}
 		});
@@ -237,10 +241,6 @@ public class EventList extends Activity {
 		
 	}
 
-	private void initiateBirthdayInfo() {
-		// TODO Auto-generated method stub
-		
-	}
 	/**
 	 * delete the event and eventcontact whose id in selectedItemIds
 	 * and cancel alarm service associated with these events

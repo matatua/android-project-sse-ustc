@@ -1,6 +1,3 @@
-/**
- * 
- */
 package ustc.sse.assistant.calendar;
 
 import java.util.ArrayList;
