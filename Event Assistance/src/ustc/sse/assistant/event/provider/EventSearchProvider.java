@@ -5,6 +5,7 @@ package ustc.sse.assistant.event.provider;
 
 import java.util.HashMap;
 
+import ustc.sse.assistant.event.provider.EventAssistant.Event;
 import ustc.sse.assistant.event.provider.EventAssistant.EventSearch;
 
 import android.app.SearchManager;
@@ -84,7 +85,7 @@ public class EventSearchProvider extends ContentProvider {
 		String searchSelection = EventSearch.CONTENT + " MATCH ? ";
 		String[] searchSelectionArgs = {selectionArgs[0] + "*"};
 		
-		return builder.query(db, projection, searchSelection, searchSelectionArgs, null, null, null);
+		return queryEvent(projection, searchSelection, searchSelectionArgs);
 	}
 
 	private Cursor getSuggestions(String[] selectionArgs) {
@@ -93,7 +94,16 @@ public class EventSearchProvider extends ContentProvider {
 		String searchSelection = EventSearch.CONTENT + " MATCH ?";
 		String[] searchSelectionArgs = {selectionArgs[0] + "*"};
 		
-		return searchEvent(null, projection, searchSelection, searchSelectionArgs);
+		return queryEvent(projection, searchSelection, searchSelectionArgs);
+	}
+
+	private Cursor queryEvent(String[] projection, String searchSelection, String[] searchSelectionArgs) {
+		SQLiteDatabase db = dbOpenHelper.getReadableDatabase();
+		SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+		builder.setTables(EVENT_SEARCH_TABLE);
+		builder.setProjectionMap(columnProjectionMap);
+		
+		return builder.query(db, projection, searchSelection, searchSelectionArgs, null, null, null);
 	}
 
 	@Override

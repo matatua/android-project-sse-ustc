@@ -61,9 +61,15 @@ public class EventSearchActivity extends ListActivity {
 		String[] selectionArgs = {query};
 		Cursor cursor = managedQuery(EventSearch.CONTENT_URI, projection, null, selectionArgs, null);
 		
-		EventShareCursorAdapter adapter = new EventShareCursorAdapter(this, android.R.layout.two_line_list_item, cursor);
-		setListAdapter(adapter);
-		onContentChanged();
+		if (cursor != null && cursor.getCount() > 0) {
+			EventShareCursorAdapter adapter = new EventShareCursorAdapter(this,
+					android.R.layout.two_line_list_item, cursor);
+			setListAdapter(adapter);
+			onContentChanged();
+		} else {
+			View emptyView = getLayoutInflater().inflate(R.layout.empty_view, getListView(), false);
+			getListView().setEmptyView(emptyView);
+		}
 		
 	}
 	
