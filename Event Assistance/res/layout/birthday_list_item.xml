@@ -6,6 +6,7 @@
   >
   	
   	  <ImageView android:id="@+id/birthday_list_item_contact_portrait"
+  	            android:layout_alignParentLeft="true"
 	  			android:layout_width="wrap_content"
 	  			android:layout_height="wrap_content"
 	  			android:layout_centerVertical="true"
@@ -14,7 +15,6 @@
 	  </ImageView>	   
 	  
 	  <TextView android:id="@+id/birthday_list_item_content"
-	  			android:layout_marginLeft="5dp"
 	            android:layout_width="wrap_content"
   		  		android:layout_height="wrap_content"
   		  		android:layout_centerVertical="true"
@@ -23,9 +23,9 @@
       </TextView>
 	  
 	  <ImageView android:id="@+id/birthday_list_item_image"
+	            android:layout_alignParentRight="true"
 	  			android:layout_width="wrap_content"
 	  			android:layout_height="wrap_content"
-	  			android:layout_alignParentRight="true"
 	  			android:src="@drawable/contact_detail_birthday"
 	  			android:layout_centerVertical="true"
 	  			>

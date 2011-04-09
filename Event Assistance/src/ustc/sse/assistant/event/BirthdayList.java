@@ -97,7 +97,6 @@ public class BirthdayList extends Activity {
 	};
 	
 	private static class BirthdayListCursorAdapter extends ResourceCursorAdapter {
-		private Context context;
 		private ContactUtils cu;
 
 		public BirthdayListCursorAdapter(Activity activity, int layoutResId, Cursor c) {
@@ -120,8 +119,8 @@ public class BirthdayList extends Activity {
 			TextView birthdayContentTextView = (TextView) view.findViewById(R.id.birthday_list_item_content);
 					
 			long id = cursor.getLong(cursor.getColumnIndex(Data.CONTACT_ID));
-			String monthOfBirthday = String.valueOf(cursor.getInt(cursor.getColumnIndex(BirthdayConstant.MONTH)) + 1);
-			String dayOfBirthday = cursor.getString(cursor.getColumnIndex(BirthdayConstant.DAY));
+			int monthOfBirthday = cursor.getInt(cursor.getColumnIndex(BirthdayConstant.MONTH));
+			int dayOfBirthday = cursor.getInt(cursor.getColumnIndex(BirthdayConstant.DAY));
 			String contactName = cursor.getString(cursor.getColumnIndex(Data.DISPLAY_NAME));
 			
 			byte[] bitmapData = cu.getPhoto(id);
@@ -132,7 +131,29 @@ public class BirthdayList extends Activity {
 			}
 			view.setTag(id);
 			
-			birthdayContentTextView.setText(monthOfBirthday + "月" + dayOfBirthday + "日" + contactName + "过生日");
+			Calendar today = Calendar.getInstance();
+			int monthOfToday = today.get(Calendar.MONTH);
+			int dayOfToday = today.get(Calendar.DAY_OF_MONTH);
+			
+			Calendar tomorrow = Calendar.getInstance();
+			tomorrow.add(Calendar.DAY_OF_YEAR, 1);
+			int monthOfTomorrow = tomorrow.get(Calendar.MONTH);
+			int dayOfTomorrow = tomorrow.get(Calendar.DAY_OF_MONTH);
+			
+			if(monthOfBirthday == monthOfToday && dayOfBirthday == dayOfToday){
+				birthdayContentTextView.setText("今天" + contactName + "过生日");
+				return;
+			}
+			
+			else if(monthOfBirthday == monthOfTomorrow && dayOfBirthday == dayOfTomorrow){
+				birthdayContentTextView.setText("明天" + contactName + "过生日");
+				return;
+			}
+			
+			else{
+				monthOfBirthday ++;
+				birthdayContentTextView.setText(monthOfBirthday + "月" + dayOfBirthday + "日" + contactName + "过生日");
+			}
 		}
 	}
 }
