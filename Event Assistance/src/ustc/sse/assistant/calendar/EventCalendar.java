@@ -8,12 +8,15 @@ import ustc.sse.assistant.calendar.utils.MyCalendar;
 import ustc.sse.assistant.calendar.utils.SmartDate;
 import ustc.sse.assistant.event.EventAdd;
 import ustc.sse.assistant.event.EventList;
+import ustc.sse.assistant.event.provider.EventAssistant.Event;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.gesture.Gesture;
 import android.gesture.GestureLibraries;
 import android.gesture.GestureLibrary;
@@ -355,7 +358,25 @@ public class EventCalendar extends Activity implements OnGesturePerformedListene
 				linearLayout.setBackgroundResource(R.drawable.calendar_today_highlight);
 				
 			}
-		
+		    
+			//check if there are events on this day
+			Calendar fromCalendar = Calendar.getInstance();
+			fromCalendar.set(smartDate.getGregorianYear(), (smartDate.getGregorianMonth()-1), smartDate.getGregorianDay(), 0, 0, 0);
+			Calendar toCalendar = Calendar.getInstance();
+			toCalendar.set(smartDate.getGregorianYear(), (smartDate.getGregorianMonth()-1), smartDate.getGregorianDay(), 0, 0, 0);
+			toCalendar.add(Calendar.DAY_OF_YEAR, 1);
+			ContentResolver cr = context.getContentResolver();
+			String[] projection = {Event._ID, Event.CONTENT, Event.LOCATION, Event.BEGIN_TIME, Event.END_TIME};
+			String selection = Event.BEGIN_TIME + " >=  ? AND " + Event.BEGIN_TIME + " <= ? ";
+			String[] selectionArgs = {String.valueOf(fromCalendar.getTimeInMillis()),
+										String.valueOf(toCalendar.getTimeInMillis())};
+			Cursor cursor = cr.query(Event.CONTENT_URI, projection, selection, selectionArgs, null);
+			if(cursor.moveToFirst()){
+				linearLayout.setBackgroundResource(R.drawable.calendar_event_background);
+			}
+			
+			cursor.close();
+			
 			TextView firstTv = (TextView) linearLayout.findViewById(R.id.calendar_gridview_textview1);
 			TextView secondTv = (TextView) linearLayout.findViewById(R.id.calendar_gridview_textview2);
 			
