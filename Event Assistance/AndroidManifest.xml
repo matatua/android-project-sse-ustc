@@ -35,16 +35,40 @@
         <activity android:name=".setting.Setting"></activity>
         <activity android:name=".help.HelpActivity"></activity>
         <receiver android:name=".event.broadcast.EventBroadcastReceiver"></receiver>
-        <activity android:name=".calendar.EventCalendar" android:screenOrientation="portrait"></activity>
-        <activity android:name=".event.EventList"></activity>
-        <activity android:name=".event.EventDetail"></activity>
+        <activity android:name=".calendar.EventCalendar" android:screenOrientation="portrait">
+       	  <meta-data android:name="android.app.default_searchable"
+               android:value=".event.EventSearchActivity" />
+        </activity>
+        <activity android:name=".event.EventList">
+       	  <meta-data android:name="android.app.default_searchable"
+               android:value=".event.EventSearchActivity" />
+        </activity>
+        <activity android:name=".event.EventDetail">
+      	   <meta-data android:name="android.app.default_searchable"
+               android:value=".event.EventSearchActivity" />
+        </activity>
         <activity android:name=".event.BirthdayList"></activity>
-        
-		<meta-data android:name="com.google.android.backup.api_key"
-   		 android:value="AEdPqrEAAAAICPUk7P-5nDqULBGfNFjWUygjGdLMldleGAOnRA" />
+
 		<activity android:name=".backup.BackupRestore"></activity>
 		<activity android:name=".share.ShareEvent"></activity>
 		<activity android:name=".share.BluetoothDeviceList"></activity>
+		<activity android:name=".event.EventSearchActivity" android:launchMode="singleTop">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW"></action>
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.SEARCH"></action>
+			</intent-filter>
+			
+            <!-- Points to searchable meta data. -->
+            <meta-data android:name="android.app.searchable"
+                       android:resource="@xml/searchable" />
+		</activity>		
+        
+		<meta-data android:name="com.google.android.backup.api_key"
+   		 android:value="AEdPqrEAAAAICPUk7P-5nDqULBGfNFjWUygjGdLMldleGAOnRA" />
+		<provider android:name=".event.provider.EventSearchProvider" 
+					android:authorities="@string/event_search_authority"></provider>
     </application>
 
 </manifest> 

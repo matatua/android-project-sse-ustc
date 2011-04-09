@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-  
-      	<TextView 
-			      	 xmlns:android="http://schemas.android.com/apk/res/android"
-			      	android:layout_width="match_parent"
-    				android:layout_height="wrap_content"
-    				android:text="已备份文件"
-    				android:paddingLeft="3dp"
-    				android:background="@android:color/darker_gray"
-    				android:id="@+id/backup_restore_listView_label"></TextView>
+
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent" android:layout_height="wrap_content"
+	android:text="已备份文件" android:paddingLeft="3dp" android:background="@color/default_light_grey_bg"
+	android:id="@+id/backup_restore_listView_label"></TextView>
 

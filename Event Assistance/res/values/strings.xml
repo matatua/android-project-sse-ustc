@@ -67,4 +67,10 @@
 	<string name="event_list_delete_dialog_message">确认删除选中的事件?</string>
 	<string name="event_list_delete_dialog_affirm">确认</string>
 	<string name="event_list_delete_dialog_cancel">取消</string>
+	
+	<string name="search_hint">搜索事件内容</string>
+	<string name="search_settings_description">搜索事件助手</string>
+	<string name="search_event">搜索</string>
+	
+	<string name="event_search_authority">ustc.sse.provider.EventAssistant.search</string>
 </resources> 

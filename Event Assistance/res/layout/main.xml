@@ -42,6 +42,10 @@
 	    		android:layout_height="wrap_content"
 	    		android:id="@+id/calendar_imageButton"
 	    		android:background="@android:color/transparent"
+	    		android:maxWidth="@dimen/main_screen_default_image_size"
+	    		android:maxHeight="@dimen/main_screen_default_image_size"
+	    		android:scaleType="fitCenter"
+	    		android:adjustViewBounds="true"
 	    		>
 	    	</ImageView>
 	    	<TextView android:layout_width="wrap_content"
@@ -62,6 +66,10 @@
 	    		android:layout_height="wrap_content"
 	    		android:id="@+id/contact_imageButton"
 	    		android:background="@android:color/transparent"
+	    		android:maxWidth="@dimen/main_screen_default_image_size"
+	    		android:maxHeight="@dimen/main_screen_default_image_size"
+	    		android:scaleType="fitCenter"
+	    		android:adjustViewBounds="true"
 	    		>
 	    	</ImageView>    
 	    	<TextView android:layout_width="wrap_content"
@@ -92,6 +100,10 @@
 	    		android:layout_height="wrap_content"
 	    		android:background="@android:color/transparent"
 	    		android:id="@+id/share_imageButton"
+	    		android:maxWidth="@dimen/main_screen_default_image_size"
+	    		android:maxHeight="@dimen/main_screen_default_image_size"
+	    		android:scaleType="fitCenter"
+	    		android:adjustViewBounds="true"
 	    		>
 	    	</ImageView>
 	    	<TextView android:layout_width="wrap_content"
@@ -113,6 +125,10 @@
 	    		android:layout_height="wrap_content"
 	    		android:background="@android:color/transparent"
 	    		android:id="@+id/backup_imageButton"
+	    		android:maxWidth="@dimen/main_screen_default_image_size"
+	    		android:maxHeight="@dimen/main_screen_default_image_size"
+	    		android:scaleType="fitCenter"
+	    		android:adjustViewBounds="true"
 	    		>
 	    	</ImageView>
 			<TextView android:layout_width="wrap_content"
@@ -144,6 +160,10 @@
 		    		android:layout_height="wrap_content"
 	    			android:background="@android:color/transparent"
 	    			android:id="@+id/setting_imageButton"
+		    		android:maxWidth="@dimen/main_screen_default_image_size"
+		    		android:maxHeight="@dimen/main_screen_default_image_size"
+		    		android:scaleType="fitCenter"
+		    		android:adjustViewBounds="true"
 		    		>
 		    	</ImageView>
 		    	<TextView android:layout_width="wrap_content"
@@ -163,6 +183,10 @@
 		    		android:layout_height="wrap_content"
 	    			android:background="@color/main_screen_image_button"
 	    			android:id="@+id/help_imageButton"
+	    			android:maxWidth="@dimen/main_screen_default_image_size"
+		    		android:maxHeight="@dimen/main_screen_default_image_size"
+		    		android:scaleType="fitCenter"
+		    		android:adjustViewBounds="true"
 		    		>
 		    	</ImageView>
 		    	<TextView android:layout_width="wrap_content"

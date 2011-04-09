@@ -103,6 +103,8 @@ public class EventCalendar extends Activity implements OnGesturePerformedListene
 		case R.id.event_jump_to_date :
 			showDialog(DATE_PICKER_ID);
 			return true;
+		case R.id.search_event :
+			onSearchRequested();
 		}
 		
 		return super.onOptionsItemSelected(item);

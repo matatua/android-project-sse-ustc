@@ -9,4 +9,6 @@
 	<item android:id="@+id/event_jump_to_date" android:icon="@drawable/event_jump_to_date"
 		android:title="@string/event_jump_to_date">
 	</item>
+	<item android:id="@+id/search_event" android:icon="@drawable/search_event"
+			android:title="@string/search_event"></item>
 </menu>

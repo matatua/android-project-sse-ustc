@@ -1,13 +1,20 @@
 package ustc.sse.assistant.event.provider;
 
+import android.content.ContentResolver;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+/**
+ * 
+ * @author 李健
+ *
+ */
 public class EventAssistant {
 	public static final String TAG = "EventAssistant";
 	
 	public static final String EVENT_AUTHORITY = "ustc.sse.provider.EventAssistant.event";
 	public static final String EVENT_CONTACT_AUTHORITY = "ustc.sse.provider.EventAssistant.eventcontact";
+	public static final String EVENT_SEARCH_AUTHORITY = "ustc.sse.provider.EventAssistant.search";
 	
 	public static class Event implements BaseColumns {
 		public static final String TAG = "EventAssistant.Event";
@@ -60,5 +67,21 @@ public class EventAssistant {
 		
 		public static final String DEFAULT_SORT_ORDER = _ID + " DESC";
 
+	}
+	
+	public static class EventSearch {
+		public static final String TAG = "EventSearch";
+		
+		public static final Uri CONTENT_URI = Uri.parse("content://" + EVENT_SEARCH_AUTHORITY + "/events");
+		
+		public static final String CONTENT = Event.CONTENT;
+		
+		public static final String LOCATION = Event.LOCATION;
+		
+		public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.EventAssistant.search";
+		
+		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.EventAssitant.search";
+		
+		public static final String EVENT_ID = "event_id";
 	}
 }

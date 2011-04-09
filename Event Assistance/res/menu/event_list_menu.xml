@@ -6,4 +6,6 @@
 	<item android:id="@+id/birthday_list" android:icon="@drawable/event_birthday_list"
 		android:title="@string/birthday_list">
 	</item>
+	<item android:id="@+id/search_event" android:icon="@drawable/search_event"
+			android:title="@string/search_event"></item>
 </menu>

@@ -34,6 +34,7 @@ import android.os.RemoteException;
 import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -101,6 +102,17 @@ public class EventList extends Activity {
 		menu.findItem(R.id.add_event).setIntent(eventIntent);
 		menu.findItem(R.id.birthday_list).setIntent(birthdayListIntent);
 		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.search_event :
+			onSearchRequested();
+			return true;
+		}
+		
+		return super.onOptionsItemSelected(item);
 	}
 
 	private void initiateButtons() {

@@ -6,6 +6,7 @@ package ustc.sse.assistant.event.provider;
 import java.util.HashMap;
 
 import ustc.sse.assistant.event.provider.EventAssistant.Event;
+import ustc.sse.assistant.event.provider.EventAssistant.EventSearch;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -117,6 +118,13 @@ public class EventProvider extends ContentProvider {
 		if (rowId > 0) {
 			Uri eventUri = ContentUris.withAppendedId(Event.CONTENT_URI, rowId);
 			getContext().getContentResolver().notifyChange(eventUri, null);
+			
+			//insert this event into eventsearch fts3 table
+			ContentValues searchValues = new ContentValues();
+			searchValues.put(EventSearch.CONTENT, initialValues.getAsString(Event.CONTENT));
+			searchValues.put(EventSearch.LOCATION, initialValues.getAsString(Event.LOCATION));
+			searchValues.put(EventSearch.EVENT_ID, rowId);
+			db.insert(EventSearchProvider.EVENT_SEARCH_TABLE, null, searchValues);
 			return eventUri;
 		}
 		
