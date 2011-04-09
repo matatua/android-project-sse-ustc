@@ -32,6 +32,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.text.format.DateFormat;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -214,6 +215,8 @@ public class EventList extends Activity {
 		TextView footer = new TextView(this);
 		footer.setLayoutParams(new AbsListView.LayoutParams(android.widget.AbsListView.LayoutParams.MATCH_PARENT, 50));
 		footer.setText("点击可浏览下一个月的所有事件");
+		footer.setGravity(Gravity.CENTER);
+		footer.setTextColor(R.color.event_list_header_footer_text_color);
 		footer.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -229,6 +232,8 @@ public class EventList extends Activity {
 		});
 		TextView header = new TextView(this);
 		header.setText("点击可浏览上一个月的所有事件");
+		header.setGravity(Gravity.CENTER);
+		header.setTextColor(R.color.event_list_header_footer_text_color);
 		header.setLayoutParams(new AbsListView.LayoutParams(android.widget.AbsListView.LayoutParams.MATCH_PARENT, 50));
 		header.setOnClickListener(new OnClickListener() {
 			
