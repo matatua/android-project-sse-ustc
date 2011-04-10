@@ -2,8 +2,10 @@ package ustc.sse.assistant.calendar;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 
 import ustc.sse.assistant.R;
+import ustc.sse.assistant.calendar.utils.GregorianDate;
 import ustc.sse.assistant.calendar.utils.MyCalendar;
 import ustc.sse.assistant.calendar.utils.SmartDate;
 import ustc.sse.assistant.event.EventAdd;
@@ -309,6 +311,7 @@ public class EventCalendar extends Activity implements OnGesturePerformedListene
 		private Context context;
 		private SmartDate[] data;
 		private int height;
+		private HashMap<GregorianDate, Boolean> hm = new HashMap<GregorianDate, Boolean>();
 		
 		/**
 		 * 
@@ -320,8 +323,50 @@ public class EventCalendar extends Activity implements OnGesturePerformedListene
 			this.context = ctx;
 			this.data = data;
 			this.height = height;
+
+			initialEventDate();
 		}
 		
+		private void initialEventDate() {
+			int fromYear = data[0].getGregorianYear();
+			int fromMonth = data[0].getGregorianMonth();
+			int fromDay = data[0].getGregorianDay();
+			
+			int toYear = data[data.length-1].getGregorianYear();
+			int toMonth = data[data.length-1].getGregorianMonth();
+			int toDay = data[data.length-1].getGregorianDay();
+			
+			Calendar fromCalendar = Calendar.getInstance();
+			fromCalendar.set(fromYear, fromMonth - 1, fromDay, 0, 0, 0);
+			Calendar toCalendar = Calendar.getInstance();
+			toCalendar.set(toYear, toMonth - 1, toDay, 23, 59, 59);
+			toCalendar.add(Calendar.DAY_OF_YEAR, 1);
+
+			ContentResolver cr = context.getContentResolver();
+			String[] projection = { Event.BEGIN_TIME, Event.END_TIME };
+			String selection = Event.BEGIN_TIME + " >=  ? AND "
+					+ Event.BEGIN_TIME + " <= ? ";
+			String[] selectionArgs = {
+					String.valueOf(fromCalendar.getTimeInMillis()),
+					String.valueOf(toCalendar.getTimeInMillis()) };
+			Cursor cursor = cr.query(Event.CONTENT_URI, projection, selection,
+					selectionArgs, null);
+			if (cursor.moveToFirst()) {
+				do {
+					String beginTime = cursor.getString(cursor
+							.getColumnIndex(Event.BEGIN_TIME));
+					Calendar calendar = Calendar.getInstance();
+					calendar.setTimeInMillis(Long.valueOf(beginTime));
+					GregorianDate eventDate = new GregorianDate(
+							calendar.get(Calendar.YEAR),
+							calendar.get(Calendar.MONTH) + 1,
+							calendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+					hm.put(eventDate, true);
+				} while (cursor.moveToNext());
+			}
+			cursor.close();		
+		}
+
 		@Override
 		public int getCount() {
 			return data.length;
@@ -359,24 +404,14 @@ public class EventCalendar extends Activity implements OnGesturePerformedListene
 				
 			}
 		    
-			//check if there are events on this day
-			Calendar fromCalendar = Calendar.getInstance();
-			fromCalendar.set(smartDate.getGregorianYear(), (smartDate.getGregorianMonth()-1), smartDate.getGregorianDay(), 0, 0, 0);
-			Calendar toCalendar = Calendar.getInstance();
-			toCalendar.set(smartDate.getGregorianYear(), (smartDate.getGregorianMonth()-1), smartDate.getGregorianDay(), 0, 0, 0);
-			toCalendar.add(Calendar.DAY_OF_YEAR, 1);
-			ContentResolver cr = context.getContentResolver();
-			String[] projection = {Event._ID, Event.CONTENT, Event.LOCATION, Event.BEGIN_TIME, Event.END_TIME};
-			String selection = Event.BEGIN_TIME + " >=  ? AND " + Event.BEGIN_TIME + " <= ? ";
-			String[] selectionArgs = {String.valueOf(fromCalendar.getTimeInMillis()),
-										String.valueOf(toCalendar.getTimeInMillis())};
-			Cursor cursor = cr.query(Event.CONTENT_URI, projection, selection, selectionArgs, null);
-			if(cursor.moveToFirst()){
+			// check if there are events on this day
+			GregorianDate gregorianDate = new GregorianDate(
+					smartDate.getGregorianYear(), smartDate.getGregorianMonth(),
+					smartDate.getGregorianDay(), 0, 0, 0);
+			if (hm.get(gregorianDate) != null) {
 				linearLayout.setBackgroundResource(R.drawable.calendar_event_background);
 			}
-			
-			cursor.close();
-			
+						
 			TextView firstTv = (TextView) linearLayout.findViewById(R.id.calendar_gridview_textview1);
 			TextView secondTv = (TextView) linearLayout.findViewById(R.id.calendar_gridview_textview2);
 			
@@ -387,8 +422,7 @@ public class EventCalendar extends Activity implements OnGesturePerformedListene
 			secondTv.setTextColor(context.getApplicationContext().getResources().getColor(smartDate.getLunarColorResId()));
 
 			linearLayout.setTag(smartDate);
-			return linearLayout;
-			
+			return linearLayout;			
 		}
 		
 	}
