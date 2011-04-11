@@ -11,7 +11,10 @@
   			 android:layout_width="wrap_content"
   			 android:src="@drawable/default_group_image"
   			 android:layout_gravity="left"
-  			 android:scaleType="center"
+  			 android:scaleType="fitCenter"
+  			 android:maxWidth="@dimen/contact_list_image_size"
+  			android:maxHeight="@dimen/contact_list_image_size"
+  				android:adjustViewBounds="true"
   			 android:layout_marginLeft="@dimen/contact_list_group_item_marginLeft">
   </ImageView>
   <TextView android:layout_width="wrap_content"

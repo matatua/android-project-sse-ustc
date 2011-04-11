@@ -9,7 +9,8 @@
   				android:layout_height="wrap_content"
   				android:id="@+id/contactIndividualImage"
   				android:layout_gravity="left"
-  				android:scaleType="center"
+  				android:scaleType="fitCenter"
+  				android:adjustViewBounds="true"
   				android:maxWidth="@dimen/contact_list_image_size"
   				android:maxHeight="@dimen/contact_list_image_size"
   				android:layout_marginLeft="@dimen/contact_list_individual_image_marginLeft">

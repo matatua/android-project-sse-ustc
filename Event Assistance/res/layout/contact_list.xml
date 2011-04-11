@@ -13,9 +13,10 @@
   	  			 android:layout_height="wrap_content"
   	  			 android:src="@drawable/arrow_right"
   	  			 android:layout_gravity="left"
-  	  			 android:scaleType="center"
+  	  			 android:scaleType="fitCenter"
   	  			 android:maxWidth="@dimen/contact_list_image_size"
-  	  			 android:maxHeight="@dimen/contact_list_image_size"
+  	  			 android:maxHeight="@dimen/contact_list_image_size"		 
+  	  			 android:adjustViewBounds="true"
   	  			 android:layout_marginLeft="@dimen/contact_list_group_item_marginLeft"
   	  			 android:id="@+id/groupSelectorIndicatorImage">
   	  </ImageView>

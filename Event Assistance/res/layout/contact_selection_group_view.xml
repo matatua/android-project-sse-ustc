@@ -7,6 +7,10 @@
   
   <ImageView android:layout_width="wrap_content"
   			 android:layout_height="wrap_content"
+  			  android:scaleType="fitCenter"
+  	  		 android:maxWidth="@dimen/contact_list_image_size"
+  	  		android:maxHeight="@dimen/contact_list_image_size"		 
+  	  		 android:adjustViewBounds="true"
   			 android:src="@drawable/default_group_image">
   </ImageView>
   

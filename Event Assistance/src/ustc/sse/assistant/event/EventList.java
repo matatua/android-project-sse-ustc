@@ -26,7 +26,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.OperationApplicationException;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -36,8 +38,10 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -61,6 +65,7 @@ public class EventList extends Activity {
 	public static final String TO_CALENDAR = "end_calendar";
 	
 	public static final String DATE_FORMAT = "yyyy年MM月dd日";
+	public static final String YEAR_MONTH_FORMAT = "yyyy年MM月";
 	
 	private static final int HEADER_FOOTER_NUMBER = 2;
 	private static final int DELETE_DIALOG = 100;
@@ -94,8 +99,10 @@ public class EventList extends Activity {
 		Intent eventIntent = new Intent(this, EventAdd.class);
 		Intent birthdayListIntent = new Intent(this, BirthdayList.class);
 
-		Calendar birthdayFromCalendar = (Calendar) getIntent().getSerializableExtra(FROM_CALENDAR);
-		Calendar birthdayToCalendar = (Calendar) getIntent().getSerializableExtra(TO_CALENDAR);
+		Calendar birthdayFromCalendar = Calendar.getInstance();
+		birthdayFromCalendar.setTimeInMillis(fromCalendar.getTimeInMillis());
+		Calendar birthdayToCalendar = Calendar.getInstance();
+		birthdayToCalendar.setTimeInMillis(toCalendar.getTimeInMillis());
 		birthdayToCalendar.add(Calendar.DAY_OF_YEAR, -1);
 		birthdayListIntent.putExtra(EventList.FROM_CALENDAR, birthdayFromCalendar);
 		birthdayListIntent.putExtra(EventList.TO_CALENDAR, birthdayToCalendar);
@@ -176,6 +183,8 @@ public class EventList extends Activity {
 		}
 	};
 	
+	private OnTouchListener listViewHeaderFooterOnTouchListener = new HeaderFooterOnTouchListener();
+	
 	private void initiateEvents() {
 		fromCalendar = (Calendar) getIntent().getSerializableExtra(FROM_CALENDAR);
 		toCalendar = (Calendar) getIntent().getSerializableExtra(TO_CALENDAR);
@@ -211,18 +220,30 @@ public class EventList extends Activity {
 														cursor,
 														imageViewListener,
 														imageViewList);
-		
+
 		TextView footer = new TextView(this);
 		footer.setLayoutParams(new AbsListView.LayoutParams(android.widget.AbsListView.LayoutParams.MATCH_PARENT, 50));
-		footer.setText("点击可浏览下一个月的所有事件");
-		footer.setGravity(Gravity.CENTER);
+		footer.setText("点击可浏览" + DateFormat.format(YEAR_MONTH_FORMAT, toCalendar) + "的所有事件");
+		footer.setOnTouchListener(listViewHeaderFooterOnTouchListener);
 		footer.setTextColor(R.color.event_list_header_footer_text_color);
+		footer.setGravity(Gravity.CENTER);
 		footer.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
+				v.setPressed(true);
+				//here have to set day, hour, minute, second in case of user 
+				//click one day not one month
 				fromCalendar.add(Calendar.MONTH, 1);
-				toCalendar.add(Calendar.MONTH, 1);
+				fromCalendar.set(Calendar.DAY_OF_MONTH, 1);
+				fromCalendar.set(Calendar.HOUR_OF_DAY, 0);
+				fromCalendar.set(Calendar.MINUTE, 0);
+				fromCalendar.set(Calendar.SECOND, 0);
+				toCalendar.add(Calendar.MONTH, 2);
+				toCalendar.set(Calendar.DAY_OF_MONTH, 1);
+				toCalendar.set(Calendar.HOUR_OF_DAY, 0);
+				toCalendar.set(Calendar.MINUTE, 0);
+				toCalendar.set(Calendar.SECOND, 0);
 				Intent intent = new Intent(EventList.this, EventList.class);
 				intent.putExtra(EventList.FROM_CALENDAR, fromCalendar);
 				intent.putExtra(EventList.TO_CALENDAR, toCalendar);
@@ -231,16 +252,26 @@ public class EventList extends Activity {
 			}
 		});
 		TextView header = new TextView(this);
-		header.setText("点击可浏览上一个月的所有事件");
+		header.setText("点击可浏览" + DateFormat.format(YEAR_MONTH_FORMAT, fromCalendar) + "的所有事件");
 		header.setGravity(Gravity.CENTER);
 		header.setTextColor(R.color.event_list_header_footer_text_color);
+		header.setOnTouchListener(listViewHeaderFooterOnTouchListener);
 		header.setLayoutParams(new AbsListView.LayoutParams(android.widget.AbsListView.LayoutParams.MATCH_PARENT, 50));
 		header.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
+				v.setPressed(true);
 				fromCalendar.add(Calendar.MONTH, -1);
-				toCalendar.add(Calendar.MONTH, -1);
+				fromCalendar.set(Calendar.DAY_OF_MONTH, 1);
+				fromCalendar.set(Calendar.HOUR_OF_DAY, 0);
+				fromCalendar.set(Calendar.MINUTE, 0);
+				fromCalendar.set(Calendar.SECOND, 0);
+				toCalendar.add(Calendar.MONTH, -2);
+				toCalendar.set(Calendar.DAY_OF_MONTH, 1);
+				toCalendar.set(Calendar.HOUR_OF_DAY, 0);
+				toCalendar.set(Calendar.MINUTE, 0);
+				toCalendar.set(Calendar.SECOND, 0);
 				Intent intent = new Intent(EventList.this, EventList.class);
 				intent.putExtra(EventList.FROM_CALENDAR, fromCalendar);
 				intent.putExtra(EventList.TO_CALENDAR, toCalendar);
@@ -453,5 +484,26 @@ public class EventList extends Activity {
 			EventUtils.linkifyEventLocation(locationTv);
 			locationTv.setFocusable(false);
 		}
+	}
+	
+	private static class HeaderFooterOnTouchListener implements OnTouchListener	{
+
+		@Override
+		public boolean onTouch(View v, MotionEvent event) {
+			int pressedColor = v.getContext().getResources().getColor(R.color.event_list_header_footer_font_color);
+			switch (event.getAction()) {
+			case MotionEvent.ACTION_DOWN :
+				((TextView) v).setTextColor(pressedColor);
+				break;
+			case MotionEvent.ACTION_CANCEL :
+			case MotionEvent.ACTION_UP :
+				((TextView) v).setTextColor(v.getContext().getResources().getColor(android.R.color.black));
+				break;
+			}
+			
+			
+			return false;
+		}
+		
 	}
 }

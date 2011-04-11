@@ -8,7 +8,11 @@
 
 		<ImageView android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:id="@+id/contact_detail_image"
-			android:src="@drawable/contact_detail_name">
+			android:src="@drawable/contact_detail_name"
+			android:adjustViewBounds="true"
+			android:scaleType="fitXY"
+			android:maxWidth="@dimen/contact_detail_image_size"
+			android:maxHeight="@dimen/contact_detail_image_size">
 		</ImageView>
 		<LinearLayout android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:orientation="vertical">
@@ -28,7 +32,11 @@
 		android:layout_height="wrap_content" android:orientation="horizontal">
 		<ImageView android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:id="@+id/contact_detail_birthday_image"
-			android:src="@drawable/contact_detail_birthday">
+			android:src="@drawable/contact_detail_birthday"
+						android:adjustViewBounds="true"
+			android:scaleType="fitXY"
+			android:maxWidth="@dimen/contact_detail_image_size"
+			android:maxHeight="@dimen/contact_detail_image_size">
 		</ImageView>
 
 		<LinearLayout android:layout_width="fill_parent"
@@ -49,7 +57,11 @@
 		android:layout_height="wrap_content" android:orientation="horizontal">
 		<ImageView android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:id="@+id/contact_detail_note_image"
-			android:src="@drawable/contact_detail_note">
+			android:src="@drawable/contact_detail_note"
+						android:adjustViewBounds="true"
+			android:scaleType="fitXY"
+			android:maxWidth="@dimen/contact_detail_image_size"
+			android:maxHeight="@dimen/contact_detail_image_size">
 		</ImageView>
 
 		<LinearLayout android:layout_width="fill_parent"
