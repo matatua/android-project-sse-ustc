@@ -251,8 +251,11 @@ public class EventList extends Activity {
                 EventList.this.finish();
 			}
 		});
+		Calendar tempCalendar = Calendar.getInstance();
+		tempCalendar.setTimeInMillis(fromCalendar.getTimeInMillis());
+		tempCalendar.add(Calendar.MONTH, -1);
 		TextView header = new TextView(this);
-		header.setText("点击可浏览" + DateFormat.format(YEAR_MONTH_FORMAT, fromCalendar) + "的所有事件");
+		header.setText("点击可浏览" + DateFormat.format(YEAR_MONTH_FORMAT, tempCalendar) + "的所有事件");
 		header.setGravity(Gravity.CENTER);
 		header.setTextColor(R.color.event_list_header_footer_text_color);
 		header.setOnTouchListener(listViewHeaderFooterOnTouchListener);

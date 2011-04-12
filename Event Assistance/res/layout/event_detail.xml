@@ -38,6 +38,10 @@
 					android:layout_gravity="left|center">
 				</TextView>
 			</LinearLayout>
+            
+			<ImageView android:src="@drawable/event_detail_split_line"
+				android:layout_width="match_parent" android:layout_height="wrap_content"
+				android:layout_marginTop="2dp" android:layout_marginBottom="2dp" />
 
 			<LinearLayout android:layout_width="fill_parent"
 				android:layout_height="wrap_content" android:orientation="vertical">
@@ -62,6 +66,10 @@
 					android:layout_gravity="left|center">
 				</TextView>
 			</LinearLayout>
+			
+			<ImageView android:src="@drawable/event_detail_split_line"
+				android:layout_width="match_parent" android:layout_height="wrap_content"
+				android:layout_marginTop="2dp" android:layout_marginBottom="2dp" />
 
 			<LinearLayout android:layout_width="fill_parent"
 				android:layout_height="wrap_content" android:orientation="vertical">
@@ -74,6 +82,10 @@
 					android:layout_gravity="left|center">
 				</TextView>
 			</LinearLayout>
+			
+			<ImageView android:src="@drawable/event_detail_split_line"
+				android:layout_width="match_parent" android:layout_height="wrap_content"
+				android:layout_marginTop="2dp" android:layout_marginBottom="2dp" />
 
 			<LinearLayout android:layout_width="fill_parent"
 				android:layout_height="wrap_content" android:orientation="vertical">
@@ -98,6 +110,10 @@
 					android:layout_gravity="left|center">
 				</TextView>
 			</LinearLayout>
+			
+			<ImageView android:src="@drawable/event_detail_split_line"
+				android:layout_width="match_parent" android:layout_height="wrap_content"
+				android:layout_marginTop="2dp" android:layout_marginBottom="2dp" />
 
 			<LinearLayout android:layout_width="fill_parent"
 				android:layout_height="wrap_content" android:orientation="vertical">
