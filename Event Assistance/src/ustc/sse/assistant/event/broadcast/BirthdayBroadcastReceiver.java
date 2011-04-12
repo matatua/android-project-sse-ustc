@@ -68,8 +68,6 @@ public class BirthdayBroadcastReceiver extends BroadcastReceiver {
 				super.run();
 				//check contacts whose birthday is today
 				Calendar today = Calendar.getInstance();
-				int month = today.get(Calendar.MONTH);
-				int day = today.get(Calendar.DAY_OF_MONTH);
 				Calendar tomorrow = Calendar.getInstance();
 				tomorrow.setTimeInMillis(today.getTimeInMillis());
 				tomorrow.add(Calendar.DAY_OF_MONTH, 1);
@@ -78,13 +76,17 @@ public class BirthdayBroadcastReceiver extends BroadcastReceiver {
 				nextTomorrow.add(Calendar.DAY_OF_MONTH, 1);
 				
 				ContentResolver cr = context.getContentResolver();
-				String[] projection = {Contacts.DISPLAY_NAME, Contacts.LOOKUP_KEY, BirthdayConstant.MONTH, BirthdayConstant.DAY};
-				String selection = Data.MIMETYPE + " = ? AND " + BirthdayConstant.MONTH 
-									+ " IN (?, ?) AND " + BirthdayConstant.DAY 
-									+ " IN (?, ?, ?)";
-				String[] selectionArgs = {BirthdayConstant.TYPE, String.valueOf(month),
-										  String.valueOf(today.get(Calendar.MONTH)), String.valueOf(nextTomorrow.get(Calendar.MONTH)),
-										  String.valueOf(today.get(Calendar.DAY_OF_MONTH)), String.valueOf(tomorrow.get(Calendar.DAY_OF_MONTH)), String.valueOf(nextTomorrow.get(Calendar.DAY_OF_MONTH))};
+				String[] projection = {Data.DISPLAY_NAME, Data.LOOKUP_KEY, BirthdayConstant.MONTH, BirthdayConstant.DAY};
+				String selection = Data.MIMETYPE + " = ? AND ((" + BirthdayConstant.MONTH 
+									+ " = ? AND " + BirthdayConstant.DAY + " = ?) OR " 
+									+ " ( " + BirthdayConstant.MONTH + " = ? AND " + BirthdayConstant.DAY + " = ?) OR"
+									+  " ( " + BirthdayConstant.MONTH + " = ? AND " + BirthdayConstant.DAY + " = ?))";
+								
+									
+				String[] selectionArgs = {BirthdayConstant.TYPE, String.valueOf(today.get(Calendar.MONTH)),
+										  String.valueOf(today.get(Calendar.DAY_OF_MONTH)), String.valueOf(tomorrow.get(Calendar.MONTH)),
+										  String.valueOf(tomorrow.get(Calendar.DAY_OF_MONTH)), String.valueOf(nextTomorrow.get(Calendar.MONTH)), 
+										  String.valueOf(nextTomorrow.get(Calendar.DAY_OF_MONTH))};
 				
 				Cursor cursor = cr.query(Data.CONTENT_URI, projection, selection, selectionArgs, null);
 				//if no people have birthday within three days, ignore notification
@@ -105,8 +107,8 @@ public class BirthdayBroadcastReceiver extends BroadcastReceiver {
 					String contentText = displayName + "等" + cursor.getCount() + "人在近三天过生日";
 					Intent intent = new Intent(context, BirthdayList.class);
 					// TODO set proper from and to calendar for BirthdayList
-					intent.putExtra(EventList.FROM_CALENDAR, "");
-					intent.putExtra(EventList.TO_CALENDAR, "");
+					intent.putExtra(EventList.FROM_CALENDAR, today);
+					intent.putExtra(EventList.TO_CALENDAR, nextTomorrow);
 					PendingIntent contentIntent = PendingIntent.getActivity(context, 0, intent, 0);
 					//set notification properties
 					Notification notification = new Notification(R.drawable.notification, "生日提醒", System.currentTimeMillis());

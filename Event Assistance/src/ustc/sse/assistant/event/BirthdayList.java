@@ -54,17 +54,28 @@ public class BirthdayList extends Activity {
 		ContentResolver cr = getContentResolver();
 		Uri uri = android.provider.ContactsContract.Data.CONTENT_URI;
 		String selection = null;
+		String[] selectionArgs = {ustc.sse.assistant.contact.data.BirthdayConstant.TYPE, fromMonth, fromDay};
 		
-		if(!fromDay.equals(toDay)){
-			selection = Data.MIMETYPE + " = ? AND " + BirthdayConstant.MONTH + " = ? AND " + BirthdayConstant.DAY + " >= ?";
+		if(!fromMonth.equals(toMonth)){
+			selection = Data.MIMETYPE + " = ? AND ((" + BirthdayConstant.MONTH + " = ? AND " + BirthdayConstant.DAY + " >= ? ) OR ("
+			+ BirthdayConstant.MONTH + " = ? AND " + BirthdayConstant.DAY + " <= ? ))";
+			
+			selectionArgs = new String[5];
+			selectionArgs[0] = ustc.sse.assistant.contact.data.BirthdayConstant.TYPE;
+			selectionArgs[1] = fromMonth;
+			selectionArgs[2] = fromDay;
+			selectionArgs[3] = toMonth;
+			selectionArgs[4] = toDay;			
+		}
+		else if(fromDay.equals(toDay)){
+			selection = Data.MIMETYPE + " = ? AND " + BirthdayConstant.MONTH + " = ? AND " + BirthdayConstant.DAY + " = ?";
 		}
 		else{
-			selection = Data.MIMETYPE + " = ? AND " + BirthdayConstant.MONTH + " = ? AND " + BirthdayConstant.DAY + " = ?";
+			selection = Data.MIMETYPE + " = ? AND " + BirthdayConstant.MONTH + " = ? AND " + BirthdayConstant.DAY + " >= ?";
 		}
 		
 		String[] projection = {BirthdayConstant.YEAR, BirthdayConstant.MONTH, BirthdayConstant.DAY, Data.DISPLAY_NAME, Data.CONTACT_ID, Data._ID };
 
-		String[] selectionArgs = {ustc.sse.assistant.contact.data.BirthdayConstant.TYPE, fromMonth, fromDay};
 		Cursor cursor = cr.query(uri, projection, selection, selectionArgs, null);
 		startManagingCursor(cursor);
 
