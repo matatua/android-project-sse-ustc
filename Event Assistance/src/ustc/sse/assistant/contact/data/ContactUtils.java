@@ -96,7 +96,7 @@ public class ContactUtils {
 		Uri uri = ContactsContract.Contacts.CONTENT_URI;
 		String[] projection = {Contacts._ID, Contacts.DISPLAY_NAME, Contacts.PHOTO_ID};
 		
-		cur = cr.query(uri, projection, null, null, null);
+		cur = cr.query(uri, projection, null, null, Contacts.DISPLAY_NAME);
 		activity.startManagingCursor(cur);
 		return cur;
 	}

@@ -69,6 +69,11 @@
    		 android:value="AEdPqrEAAAAICPUk7P-5nDqULBGfNFjWUygjGdLMldleGAOnRA" />
 		<provider android:name=".event.provider.EventSearchProvider" 
 					android:authorities="@string/event_search_authority"></provider>
+		<receiver android:name=".event.broadcast.BirthdayBroadcastReceiver">
+			<intent-filter>
+				<action android:name="android.intent.action.BOOT_COMPLETED"></action>
+			</intent-filter>
+		</receiver>
     </application>
 
 </manifest> 

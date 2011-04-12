@@ -208,6 +208,7 @@ public class EventList extends Activity {
 												0, 
 												0);
 		}
+		
 		ContentResolver cr = getContentResolver();
 		String[] projection = {Event._ID, Event.CONTENT, Event.LOCATION, Event.BEGIN_TIME, Event.END_TIME};
 		String selection = Event.BEGIN_TIME + " >=  ? AND " + Event.BEGIN_TIME + " <= ? ";
@@ -220,10 +221,14 @@ public class EventList extends Activity {
 														cursor,
 														imageViewListener,
 														imageViewList);
-
+		//in case of user choose one particular day
+		//this temporary calendar is used to correctly show text in footer view
+		Calendar temporaryCalendar = Calendar.getInstance();
+		temporaryCalendar.setTimeInMillis(fromCalendar.getTimeInMillis());
+		temporaryCalendar.add(Calendar.MONTH, 1);
 		TextView footer = new TextView(this);
 		footer.setLayoutParams(new AbsListView.LayoutParams(android.widget.AbsListView.LayoutParams.MATCH_PARENT, 50));
-		footer.setText("点击可浏览" + DateFormat.format(YEAR_MONTH_FORMAT, toCalendar) + "的所有事件");
+		footer.setText("点击可浏览" + DateFormat.format(YEAR_MONTH_FORMAT, temporaryCalendar) + "的所有事件");
 		footer.setOnTouchListener(listViewHeaderFooterOnTouchListener);
 		footer.setTextColor(R.color.event_list_header_footer_text_color);
 		footer.setGravity(Gravity.CENTER);
@@ -231,19 +236,14 @@ public class EventList extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				v.setPressed(true);
-				//here have to set day, hour, minute, second in case of user 
-				//click one day not one month
+				
 				fromCalendar.add(Calendar.MONTH, 1);
 				fromCalendar.set(Calendar.DAY_OF_MONTH, 1);
 				fromCalendar.set(Calendar.HOUR_OF_DAY, 0);
 				fromCalendar.set(Calendar.MINUTE, 0);
 				fromCalendar.set(Calendar.SECOND, 0);
-				toCalendar.add(Calendar.MONTH, 2);
-				toCalendar.set(Calendar.DAY_OF_MONTH, 1);
-				toCalendar.set(Calendar.HOUR_OF_DAY, 0);
-				toCalendar.set(Calendar.MINUTE, 0);
-				toCalendar.set(Calendar.SECOND, 0);
+				toCalendar.setTimeInMillis(fromCalendar.getTimeInMillis());
+				toCalendar.add(Calendar.MONTH, 1);
 				Intent intent = new Intent(EventList.this, EventList.class);
 				intent.putExtra(EventList.FROM_CALENDAR, fromCalendar);
 				intent.putExtra(EventList.TO_CALENDAR, toCalendar);
@@ -261,17 +261,15 @@ public class EventList extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				v.setPressed(true);
+
 				fromCalendar.add(Calendar.MONTH, -1);
 				fromCalendar.set(Calendar.DAY_OF_MONTH, 1);
 				fromCalendar.set(Calendar.HOUR_OF_DAY, 0);
 				fromCalendar.set(Calendar.MINUTE, 0);
 				fromCalendar.set(Calendar.SECOND, 0);
-				toCalendar.add(Calendar.MONTH, -2);
-				toCalendar.set(Calendar.DAY_OF_MONTH, 1);
-				toCalendar.set(Calendar.HOUR_OF_DAY, 0);
-				toCalendar.set(Calendar.MINUTE, 0);
-				toCalendar.set(Calendar.SECOND, 0);
+				toCalendar.setTimeInMillis(fromCalendar.getTimeInMillis());
+				toCalendar.add(Calendar.MONTH, 1);
+				
 				Intent intent = new Intent(EventList.this, EventList.class);
 				intent.putExtra(EventList.FROM_CALENDAR, fromCalendar);
 				intent.putExtra(EventList.TO_CALENDAR, toCalendar);

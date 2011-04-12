@@ -1,6 +1,7 @@
 package ustc.sse.assistant.event;
 
 import java.util.Calendar;
+
 import ustc.sse.assistant.R;
 import ustc.sse.assistant.contact.data.BirthdayConstant;
 import ustc.sse.assistant.contact.data.ContactUtils;
@@ -12,11 +13,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Data;
+import android.provider.ContactsContract.QuickContact;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -75,6 +77,7 @@ public class BirthdayList extends Activity {
 															cursor);
 			
 			birthdayListView.setAdapter(adapter);
+			birthdayListView.setOnItemClickListener(itemClickListener);
 		}
 		
 		else {
@@ -85,15 +88,30 @@ public class BirthdayList extends Activity {
 
 	}
 	
-	private OnItemLongClickListener itemClickListener = new OnItemLongClickListener() {
+	private OnItemClickListener itemClickListener = new OnItemClickListener() {
 
 		@Override
-		public boolean onItemLongClick(AdapterView<?> arg0, View view,
+		public void onItemClick(AdapterView<?> arg0, View view,
 				int position, long id) {
 			Long contactId = (Long) view.getTag();
-			//TODO add a dialog show sms and dial option
-			return true;
+			//add a dialog show sms and dial option
+			String[] projection = {Contacts.LOOKUP_KEY};
+			String selection = Contacts._ID + " = ? ";
+			String[] selectionArgs = {contactId.toString()};
+			Cursor cursor = getContentResolver().query(Contacts.CONTENT_URI, projection, selection, selectionArgs, null);
+			
+			String lookup = null;
+			if (cursor.moveToFirst()) {
+				lookup = cursor.getString(0);
+			}
+			cursor.close();
+			if (lookup != null) {
+				Uri lookupUri = Uri.withAppendedPath(Contacts.CONTENT_LOOKUP_URI, lookup + "/" + contactId.toString());
+				QuickContact.showQuickContact(BirthdayList.this, view, lookupUri, QuickContact.MODE_MEDIUM, null);
+			}
+
 		}
+
 	};
 	
 	private static class BirthdayListCursorAdapter extends ResourceCursorAdapter {

@@ -89,6 +89,13 @@ public class EventCalendar extends Activity implements OnGesturePerformedListene
 		}
 	}
 	
+	@Override
+	protected void onRestart() {
+		super.onRestart();
+		//refresh the calendar
+		initiateCalendarGridView(curCalendar);
+	}
+	
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		MenuInflater menuInflater = getMenuInflater();
