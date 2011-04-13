@@ -573,7 +573,7 @@ public class BackupRestore extends Activity {
 		private static final String DATE_FORMAT = "yyyy年MM月dd日 h:mmaa";
 		
 		private MySparseBooleanArray checkedItems = new MySparseBooleanArray();
-		private File[] backupFiles = null;
+		private File[] backupFiles = new File[0];
 		
 		public BackupRestoreFileAdapter() {
 			super();

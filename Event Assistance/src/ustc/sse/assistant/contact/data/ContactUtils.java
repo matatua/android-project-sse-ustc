@@ -77,7 +77,7 @@ public class ContactUtils {
 			if (photoId == 0 || photoId == null) {
 				continue;
 			}
-			c.setPhoto(getPhoto(photoId));
+			c.setPhoto(getPhoto(c.getContactId()));
 		}
 		
 		cur.close();
@@ -96,7 +96,7 @@ public class ContactUtils {
 		Uri uri = ContactsContract.Contacts.CONTENT_URI;
 		String[] projection = {Contacts._ID, Contacts.DISPLAY_NAME, Contacts.PHOTO_ID};
 		
-		cur = cr.query(uri, projection, null, null, Contacts.DISPLAY_NAME);
+		cur = cr.query(uri, projection, null, null, null);
 		activity.startManagingCursor(cur);
 		return cur;
 	}

@@ -62,70 +62,75 @@ public class BirthdayBroadcastReceiver extends BroadcastReceiver {
 	}
 
 	private void notifyBirthday(final Context context) {
-		new Thread() {
-			@Override
-			public void run() {
-				super.run();
-				//check contacts whose birthday is today
-				Calendar today = Calendar.getInstance();
-				Calendar tomorrow = Calendar.getInstance();
-				tomorrow.setTimeInMillis(today.getTimeInMillis());
-				tomorrow.add(Calendar.DAY_OF_MONTH, 1);
-				Calendar nextTomorrow = Calendar.getInstance();
-				nextTomorrow.setTimeInMillis(tomorrow.getTimeInMillis());
-				nextTomorrow.add(Calendar.DAY_OF_MONTH, 1);
-				
-				ContentResolver cr = context.getContentResolver();
-				String[] projection = {Data.DISPLAY_NAME, Data.LOOKUP_KEY, BirthdayConstant.MONTH, BirthdayConstant.DAY};
-				String selection = Data.MIMETYPE + " = ? AND ((" + BirthdayConstant.MONTH 
-									+ " = ? AND " + BirthdayConstant.DAY + " = ?) OR " 
-									+ " ( " + BirthdayConstant.MONTH + " = ? AND " + BirthdayConstant.DAY + " = ?) OR"
-									+  " ( " + BirthdayConstant.MONTH + " = ? AND " + BirthdayConstant.DAY + " = ?))";
-								
-									
-				String[] selectionArgs = {BirthdayConstant.TYPE, String.valueOf(today.get(Calendar.MONTH)),
-										  String.valueOf(today.get(Calendar.DAY_OF_MONTH)), String.valueOf(tomorrow.get(Calendar.MONTH)),
-										  String.valueOf(tomorrow.get(Calendar.DAY_OF_MONTH)), String.valueOf(nextTomorrow.get(Calendar.MONTH)), 
-										  String.valueOf(nextTomorrow.get(Calendar.DAY_OF_MONTH))};
-				
-				Cursor cursor = cr.query(Data.CONTENT_URI, projection, selection, selectionArgs, null);
-				//if no people have birthday within three days, ignore notification
-				if (cursor.getCount() <= 0) {
-					needNotification = false;
-					return ;
-				}
-				
-				int displayNameColumnIndex = cursor.getColumnIndex(Contacts.DISPLAY_NAME);
-				int lookupColumnIndex = cursor.getColumnIndex(Contacts.LOOKUP_KEY);
-				int monthColumnIndex = cursor.getColumnIndex(BirthdayConstant.MONTH);
-				int dayColumnIndex = cursor.getColumnIndex(BirthdayConstant.DAY);
-				if (cursor.moveToFirst()) {
-					 String displayName = cursor.getString(displayNameColumnIndex);
-					 String monthStr = cursor.getString(monthColumnIndex);
-					 String dayStr = cursor.getString(dayColumnIndex);
-					//prepare notification	 				
-					String contentText = displayName + "等" + cursor.getCount() + "人在近三天过生日";
-					Intent intent = new Intent(context, BirthdayList.class);
-					// TODO set proper from and to calendar for BirthdayList
-					intent.putExtra(EventList.FROM_CALENDAR, today);
-					intent.putExtra(EventList.TO_CALENDAR, nextTomorrow);
-					PendingIntent contentIntent = PendingIntent.getActivity(context, 0, intent, 0);
-					//set notification properties
-					Notification notification = new Notification(R.drawable.notification, "生日提醒", System.currentTimeMillis());
-					notification.defaults |= notification.DEFAULT_SOUND;
-					notification.flags |= notification.FLAG_AUTO_CANCEL;
-					notification.setLatestEventInfo(context, "事件助手", contentText, contentIntent);
-					//notify the notification
-					NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-					nm.notify(BIRTHDAY_NOTIFICATION_ID, notification);
-						
-					needNotification = true;
-				} 
-				
-			} 
-			
-			
-		}.start();
+
+		// check contacts whose birthday is today
+		Calendar today = Calendar.getInstance();
+		Calendar tomorrow = Calendar.getInstance();
+		tomorrow.setTimeInMillis(today.getTimeInMillis());
+		tomorrow.add(Calendar.DAY_OF_MONTH, 1);
+		Calendar nextTomorrow = Calendar.getInstance();
+		nextTomorrow.setTimeInMillis(tomorrow.getTimeInMillis());
+		nextTomorrow.add(Calendar.DAY_OF_MONTH, 1);
+
+		ContentResolver cr = context.getContentResolver();
+		String[] projection = { Data.DISPLAY_NAME, Data.LOOKUP_KEY,
+				BirthdayConstant.MONTH, BirthdayConstant.DAY };
+		String selection = Data.MIMETYPE + " = ? AND (("
+				+ BirthdayConstant.MONTH + " = ? AND " + BirthdayConstant.DAY
+				+ " = ?) OR " + " ( " + BirthdayConstant.MONTH + " = ? AND "
+				+ BirthdayConstant.DAY + " = ?) OR" + " ( "
+				+ BirthdayConstant.MONTH + " = ? AND " + BirthdayConstant.DAY
+				+ " = ?))";
+
+		String[] selectionArgs = { BirthdayConstant.TYPE,
+				String.valueOf(today.get(Calendar.MONTH)),
+				String.valueOf(today.get(Calendar.DAY_OF_MONTH)),
+				String.valueOf(tomorrow.get(Calendar.MONTH)),
+				String.valueOf(tomorrow.get(Calendar.DAY_OF_MONTH)),
+				String.valueOf(nextTomorrow.get(Calendar.MONTH)),
+				String.valueOf(nextTomorrow.get(Calendar.DAY_OF_MONTH)) };
+
+		Cursor cursor = cr.query(Data.CONTENT_URI, projection, selection,
+				selectionArgs, null);
+		// if no people have birthday within three days, ignore notification
+		if (cursor.getCount() <= 0) {
+			needNotification = false;
+			return;
+		}
+
+		int displayNameColumnIndex = cursor
+				.getColumnIndex(Contacts.DISPLAY_NAME);
+		int lookupColumnIndex = cursor.getColumnIndex(Contacts.LOOKUP_KEY);
+		int monthColumnIndex = cursor.getColumnIndex(BirthdayConstant.MONTH);
+		int dayColumnIndex = cursor.getColumnIndex(BirthdayConstant.DAY);
+		if (cursor.moveToFirst()) {
+			String displayName = cursor.getString(displayNameColumnIndex);
+			String monthStr = cursor.getString(monthColumnIndex);
+			String dayStr = cursor.getString(dayColumnIndex);
+			// prepare notification
+			String contentText = displayName + "等" + cursor.getCount()
+					+ "人在近三天过生日";
+			Intent intent = new Intent(context, BirthdayList.class);
+			// TODO set proper from and to calendar for BirthdayList
+			intent.putExtra(EventList.FROM_CALENDAR, today);
+			intent.putExtra(EventList.TO_CALENDAR, nextTomorrow);
+			PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
+					intent, 0);
+			// set notification properties
+			Notification notification = new Notification(
+					R.drawable.notification, "生日提醒", System.currentTimeMillis());
+			notification.defaults |= notification.DEFAULT_SOUND;
+			notification.flags |= notification.FLAG_AUTO_CANCEL;
+			notification.setLatestEventInfo(context, "事件助手", contentText,
+					contentIntent);
+			// notify the notification
+			NotificationManager nm = (NotificationManager) context
+					.getSystemService(Context.NOTIFICATION_SERVICE);
+			nm.notify(BIRTHDAY_NOTIFICATION_ID, notification);
+
+			needNotification = true;
+		}
+
 	}
 
 }

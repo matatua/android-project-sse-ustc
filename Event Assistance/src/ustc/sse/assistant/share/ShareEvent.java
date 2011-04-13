@@ -366,7 +366,8 @@ public class ShareEvent extends Activity {
 		
 		public BackupFileAdapter(Context context) {
 			if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-				throw new RuntimeException("Media isn't ready");
+				Toast.makeText(context, "SD卡未准备好", Toast.LENGTH_SHORT).show();
+				return ;
 			}
 			
 			this.context = context;
