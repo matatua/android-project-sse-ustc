@@ -38,9 +38,10 @@
 					android:layout_gravity="left|center">
 				</TextView>
 			</LinearLayout>
-            
-			<ImageView android:src="@drawable/event_detail_split_line"
-				android:layout_width="match_parent" android:layout_height="wrap_content"
+
+			<ImageView android:layout_marginLeft="2dp"
+				android:layout_marginRight="2dp" android:layout_width="match_parent"
+				android:layout_height="1dp" android:background="@color/default_light_grey_bg"
 				android:layout_marginTop="2dp" android:layout_marginBottom="2dp" />
 
 			<LinearLayout android:layout_width="fill_parent"
@@ -66,9 +67,10 @@
 					android:layout_gravity="left|center">
 				</TextView>
 			</LinearLayout>
-			
-			<ImageView android:src="@drawable/event_detail_split_line"
-				android:layout_width="match_parent" android:layout_height="wrap_content"
+
+			<ImageView android:layout_marginLeft="2dp"
+				android:layout_marginRight="2dp" android:layout_width="match_parent"
+				android:layout_height="1dp" android:background="@color/default_light_grey_bg"
 				android:layout_marginTop="2dp" android:layout_marginBottom="2dp" />
 
 			<LinearLayout android:layout_width="fill_parent"
@@ -82,9 +84,10 @@
 					android:layout_gravity="left|center">
 				</TextView>
 			</LinearLayout>
-			
-			<ImageView android:src="@drawable/event_detail_split_line"
-				android:layout_width="match_parent" android:layout_height="wrap_content"
+
+			<ImageView android:layout_marginLeft="2dp"
+				android:layout_marginRight="2dp" android:layout_width="match_parent"
+				android:layout_height="1dp" android:background="@color/default_light_grey_bg"
 				android:layout_marginTop="2dp" android:layout_marginBottom="2dp" />
 
 			<LinearLayout android:layout_width="fill_parent"
@@ -99,6 +102,11 @@
 				</TextView>
 			</LinearLayout>
 
+			<ImageView android:layout_marginLeft="2dp"
+				android:layout_marginRight="2dp" android:layout_width="match_parent"
+				android:layout_height="1dp" android:background="@color/default_light_grey_bg"
+				android:layout_marginTop="2dp" android:layout_marginBottom="2dp" />
+
 			<LinearLayout android:layout_width="fill_parent"
 				android:layout_height="wrap_content" android:orientation="vertical">
 				<TextView android:layout_width="wrap_content"
@@ -110,9 +118,10 @@
 					android:layout_gravity="left|center">
 				</TextView>
 			</LinearLayout>
-			
-			<ImageView android:src="@drawable/event_detail_split_line"
-				android:layout_width="match_parent" android:layout_height="wrap_content"
+
+			<ImageView android:layout_marginLeft="2dp"
+				android:layout_marginRight="2dp" android:layout_width="match_parent"
+				android:layout_height="1dp" android:background="@color/default_light_grey_bg"
 				android:layout_marginTop="2dp" android:layout_marginBottom="2dp" />
 
 			<LinearLayout android:layout_width="fill_parent"
@@ -125,8 +134,12 @@
 					android:layout_width="fill_parent" android:layout_height="wrap_content"
 					android:layout_gravity="left|center">
 				</TextView>
-
 			</LinearLayout>
+
+			<ImageView android:layout_marginLeft="2dp"
+				android:layout_marginRight="2dp" android:layout_width="match_parent"
+				android:layout_height="1dp" android:background="@color/default_light_grey_bg"
+				android:layout_marginTop="2dp" android:layout_marginBottom="2dp" />
 
 			<LinearLayout android:layout_width="fill_parent"
 				android:layout_height="wrap_content" android:orientation="vertical">
@@ -152,6 +165,11 @@
 					android:layout_gravity="left|center">
 				</TextView>
 			</LinearLayout>
+
+			<ImageView android:layout_marginLeft="2dp"
+				android:layout_marginRight="2dp" android:layout_width="match_parent"
+				android:layout_height="1dp" android:background="@color/default_light_grey_bg"
+				android:layout_marginTop="2dp" android:layout_marginBottom="2dp" />
 
 			<LinearLayout android:layout_width="fill_parent"
 				android:layout_height="wrap_content" android:orientation="vertical">
