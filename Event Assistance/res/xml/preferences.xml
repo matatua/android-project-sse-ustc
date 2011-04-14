@@ -3,49 +3,67 @@
   xmlns:android="http://schemas.android.com/apk/res/android">
   <PreferenceCategory android:title="默认提醒方式选择">
  	<ListPreference
-        android:key="ListPreference"
+        android:key="defaulRemindOption"
         android:title="选择你喜欢的提醒方式"
         android:dialogTitle="提醒方式"
         android:entries="@array/entries_list_alarm_type"
-        android:entryValues="@array/entriesvalue_list_alarm_type"
+        android:entryValues="@array/entriesvalue_list_alarm_type_str"
+        android:defaultValue="0"
+        
     />
    </PreferenceCategory>
+   
+   <PreferenceCategory android:title="当日提前提醒">
+   	<ListPreference android:key="todayRemind"
+   		android:title="当日提前提醒时间"
+   		android:dialogTitle="时间"
+   		android:entries="@array/entries_list_event_add_today_remind_time"
+   		android:entryValues="@array/entriesvalue_list_event_today_remind_time_str"
+   		android:defaultValue="0">
+   	</ListPreference>
+   </PreferenceCategory>
+   
    <PreferenceCategory android:title="默认前日提醒">
  	<ListPreference
-        android:key="ListPreference"
+        android:key="defaultPriorRemindDay"
         android:title="默认前日提醒天数"
         android:dialogTitle="提醒天数"
         android:entries="@array/entries_list_priori_day"
-        android:entryValues="@array/entriesvalue_list_priori_day"
+        android:entryValues="@array/entriesvalue_list_priori_day_str"
+        android:defaultValue="0" 
     />
     <ListPreference
-        android:key="ListPreference"
+        android:key="defaultPriorRemindRepeat"
         android:title="默认每天提醒次数"
         android:dialogTitle="提醒次数"
         android:entries="@array/entries_list_priori_repeat"
-        android:entryValues="@array/entriesvalue_list_priori_repeat"
+        android:entryValues="@array/entriesvalue_list_priori_repeat_str"
+        android:defaultValue="1"
     />
    </PreferenceCategory>
    <PreferenceCategory android:title="备份与还原">
         <CheckBoxPreference
-            android:key="CheckBox1"
+            android:key="backupRestore"
             android:title="自动备份开关"
             android:summaryOn="备份功能: 开启"
             android:summaryOff="备份功能: 关闭"
             android:defaultValue="true"
         />
         <ListPreference
-        	android:key="ListPreference"
+        	android:dependency="backupRestore"
+        	android:key="autoBackupInterval"
         	android:title="自动备份时间"
         	android:dialogTitle="备份时间"
         	android:entries="@array/entries_list_backup_time"
-        	android:entryValues="@array/entriesvalue_list_backup_time"
+        	android:entryValues="@array/entriesvalue_list_backup_time_str"
+        	android:defaultValue="7"
     	/>
     	<ListPreference
-        	android:key="ListPreference"
+    		android:dependency="backupRestore"
+        	android:key="backupLocation"
         	android:title="备份位置"
-        	android:dialogTitle="内插卡"
-        	android:defaultValue="0"
+        	android:dialogTitle="储存位置"
+        	android:defaultValue="sdcard"
         	android:entries="@array/entries_list_backup_location"
         	android:entryValues="@array/entriesvalue_list_backup_location"
     	/>

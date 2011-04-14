@@ -36,6 +36,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -72,6 +74,9 @@ public class EventCalendar extends Activity implements OnGesturePerformedListene
 	public static final String DATE_FORMAT_MONTH = "MM月";
 	
 	private GestureLibrary gestureLibrary;
+	private Animation slideLeft;
+	private Animation slideRight;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -87,13 +92,16 @@ public class EventCalendar extends Activity implements OnGesturePerformedListene
 			GestureOverlayView gestureOverlayView = (GestureOverlayView) findViewById(R.id.calendar_gesture_view);
 			gestureOverlayView.addOnGesturePerformedListener(this);
 		}
+		
+		slideLeft = AnimationUtils.loadAnimation(this, R.anim.slide_left);
+		slideRight = AnimationUtils.loadAnimation(this, R.anim.slide_right);
 	}
 	
 	@Override
 	protected void onRestart() {
 		super.onRestart();
 		//refresh the calendar
-		initiateCalendarGridView(curCalendar);
+		initiateCalendarGridView(curCalendar, null);
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -153,7 +161,7 @@ public class EventCalendar extends Activity implements OnGesturePerformedListene
 					preCalendar.set(year, monthOfYear - 1, dayOfMonth);
 					nextCalendar.set(year, monthOfYear + 1, dayOfMonth);
 					
-					initiateCalendarGridView(curCalendar);
+					initiateCalendarGridView(curCalendar, null);
 					setAllTabText();
 					
 				}
@@ -175,7 +183,7 @@ public class EventCalendar extends Activity implements OnGesturePerformedListene
 			
 			@Override
 			public void run() {
-				initiateCalendarGridView(curCalendar);
+				initiateCalendarGridView(curCalendar, null);
 				
 			}
 		}, 100);
@@ -235,7 +243,7 @@ public class EventCalendar extends Activity implements OnGesturePerformedListene
 			@Override
 			public void onClick(View v) {
 				rollCalendarsMonth(false);
-				initiateCalendarGridView(curCalendar);
+				initiateCalendarGridView(curCalendar, slideRight);
 				setAllTabText();
 			}
 		}; 
@@ -249,7 +257,7 @@ public class EventCalendar extends Activity implements OnGesturePerformedListene
 				if (!(curCalendar.get(Calendar.MONTH) == now.get(Calendar.MONTH)) || 
 						!(curCalendar.get(Calendar.YEAR) == now.get(Calendar.YEAR))) {
 					initiateCalendars();
-					initiateCalendarGridView(curCalendar);
+					initiateCalendarGridView(curCalendar, null);
 					
 					setAllTabText();
 				}
@@ -263,7 +271,7 @@ public class EventCalendar extends Activity implements OnGesturePerformedListene
 			@Override
 			public void onClick(View v) {
 				rollCalendarsMonth(true);
-				initiateCalendarGridView(curCalendar);
+				initiateCalendarGridView(curCalendar, slideLeft);
 				setAllTabText();
 			}
 		};
@@ -274,7 +282,7 @@ public class EventCalendar extends Activity implements OnGesturePerformedListene
 	 * using currentCalendar to initiate the gridview
 	 * @param currentCalendar
 	 */
-	private void initiateCalendarGridView(Calendar currentCalendar) {
+	private void initiateCalendarGridView(Calendar currentCalendar, Animation animation) {
 
 		int calendarHeight = calendarGridView.getHeight();
 		double cellHeight = (calendarHeight - 5) / CALENDAR_ROW_NUMBER;
@@ -284,8 +292,12 @@ public class EventCalendar extends Activity implements OnGesturePerformedListene
 		
 		ListAdapter adapter = new EventCalendarGridViewAdapter(this, data, (int) cellHeight);
 
+		
+		if (animation != null) {
+			calendarGridView.startAnimation(animation);
+		}
 		calendarGridView.setAdapter(adapter);
-		calendarGridView.startLayoutAnimation();
+		
 		
 	}
 	
@@ -448,14 +460,14 @@ public class EventCalendar extends Activity implements OnGesturePerformedListene
 					if ("prevMonthGesture".equals(prediction.name))
 					{
 						rollCalendarsMonth(false);
-						initiateCalendarGridView(curCalendar);
+						initiateCalendarGridView(curCalendar, slideRight);
 						setAllTabText();
 					} 
 					
 					if ("nextMonthGesture".equals(prediction.name))
 					{
 						rollCalendarsMonth(true);
-						initiateCalendarGridView(curCalendar);
+						initiateCalendarGridView(curCalendar, slideLeft);
 						setAllTabText();
 					} 
 				}
