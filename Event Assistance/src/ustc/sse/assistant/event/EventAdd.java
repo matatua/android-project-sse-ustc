@@ -29,9 +29,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.OperationApplicationException;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.preference.PreferenceManager;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
@@ -59,6 +61,8 @@ public class EventAdd extends Activity{
 	public static final String TAG = "EventAdd";
 	/** Called when the activity is first created. */
 	public static final int CONTACT_REQUEST_CODE = 100;
+	
+	private SharedPreferences defaultPreference;
 	
 	private Button cancelButton;
 	private Button saveButton;
@@ -105,8 +109,8 @@ public class EventAdd extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_add);
         
+        defaultPreference = PreferenceManager.getDefaultSharedPreferences(this);
         initiateWidgets();
-        
     }
 
 	private void initiateWidgets() {
@@ -133,13 +137,7 @@ public class EventAdd extends Activity{
 		
 		//initiate spinners
 		initiateSpinner();
-		//load default preference and set the corresponding spinner
-		initiatePreference();
 		
-	}
-
-	private void initiatePreference() {
-		//TODO load preference and initiate the related value.
 	}
 
 	private void initiateContactImageView() {
@@ -191,12 +189,19 @@ public class EventAdd extends Activity{
 		String[] todayRemindTimeStrArray = getApplicationContext().getResources().getStringArray(R.array.entries_list_event_add_today_remind_time);
 		int[] todayRemindTimeIntArray = getApplicationContext().getResources().getIntArray(R.array.entriesvalue_list_event_today_remind_time);
 		List<Map<String, Object>> todayRemindTimeDate = new ArrayList<Map<String,Object>>();
+		
+		String todayRemindStr = defaultPreference.getString("todayRemind", "0");
+		int todayRemind = Integer.valueOf(todayRemindStr);
+		int selectedIndex = 0;
 		for (int i = 0; i < todayRemindTimeStrArray.length; i++) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("name", todayRemindTimeStrArray[i]);
 			map.put("value", todayRemindTimeIntArray[i]);
 			todayRemindTimeDate.add(map);
 			
+			if (todayRemindTimeIntArray[i] == todayRemind) {
+				selectedIndex = i;
+			}
 		}
 		
 		SimpleAdapter adapter = new EventAddSimpleAdapter(this, 
@@ -205,6 +210,7 @@ public class EventAdd extends Activity{
 													new String[]{"name"}, 
 													new int[] {android.R.id.text1});
 		todayRemindTimeSpinner.setAdapter(adapter);
+		todayRemindTimeSpinner.setSelection(selectedIndex);
 		todayRemindTimeSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
@@ -224,12 +230,25 @@ public class EventAdd extends Activity{
 		String[] alarmTypeStringArray = getApplicationContext().getResources().getStringArray(R.array.entries_list_alarm_type);
 		int[] alarmTypeIntArray = getApplicationContext().getResources().getIntArray(R.array.entriesvalue_list_alarm_type);
 		List<Map<String, Object>> alarmTypeData = new ArrayList<Map<String,Object>>();
+	
+		String alarmTypeStr = defaultPreference.getString("defaulRemindOption", "0");
+		int alarmTypeInt = Integer.valueOf(alarmTypeStr);
+		int selectedIndex = 0;
+		
 		for (int i = 0; i < alarmTypeStringArray.length; i++) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("name", alarmTypeStringArray[i]);
 			map.put("value", alarmTypeIntArray[i]);
 			alarmTypeData.add(map);
+			
+			if (alarmTypeIntArray[i] == alarmTypeInt) {
+				selectedIndex = i;
+			}
+			
 		}
+		
+		
+		
 		SpinnerAdapter alarmTypeAdapter = new SimpleAdapter(this, 
 				alarmTypeData, 
 				R.layout.event_add_spinner_item,
@@ -237,7 +256,7 @@ public class EventAdd extends Activity{
 				new int[]{R.id.event_add_spinner_textview1, R.id.event_add_spinner_textview2});
 
 		alarmTypeSpinner.setAdapter(alarmTypeAdapter);
-		alarmTypeSpinner.setPromptId(R.string.event_alarm_type);
+		alarmTypeSpinner.setSelection(selectedIndex);
 		alarmTypeSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
@@ -259,11 +278,20 @@ public class EventAdd extends Activity{
 		String[] prioriRepeatStringArray = getApplicationContext().getResources().getStringArray(R.array.entries_list_priori_repeat);
 		int[] prioriRepeatIntArray = getApplicationContext().getResources().getIntArray(R.array.entriesvalue_list_priori_repeat);
 		List<Map<String, Integer>> prioriAlarmRepeatData = new ArrayList<Map<String,Integer>>();
+		
+		String priorAlarmRepeatStr = defaultPreference.getString("defaultPriorRemindRepeat", "1");
+		int priorAlarmRepeatInt = Integer.valueOf(priorAlarmRepeatStr);
+		int selectedIndex = 0;
+		
 		for (int i = 0; i < prioriRepeatStringArray.length; i++) {
 			Map<String, Integer> map = new HashMap<String, Integer>();
 			map.put("name", prioriRepeatIntArray[i]);
 			map.put("value", prioriRepeatIntArray[i]);
 			prioriAlarmRepeatData.add(map);
+			
+			if (prioriRepeatIntArray[i] == priorAlarmRepeatInt) {
+				selectedIndex = i;
+			}
 		}
 		SpinnerAdapter prioriAlarmRepeatAdapter = new SimpleAdapter(this, 
 				prioriAlarmRepeatData, 
@@ -271,7 +299,7 @@ public class EventAdd extends Activity{
 				new String[]{"name", "value"}, 
 				new int[]{R.id.event_add_spinner_textview1, R.id.event_add_spinner_textview2});
 		prioriAlarmRepeatSpinner.setAdapter(prioriAlarmRepeatAdapter);
-		prioriAlarmRepeatSpinner.setPromptId(R.string.event_repeat);
+		prioriAlarmRepeatSpinner.setSelection(selectedIndex);
 		prioriAlarmRepeatSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
@@ -292,12 +320,20 @@ public class EventAdd extends Activity{
 		String[] prioriDayStringArray = getApplicationContext().getResources().getStringArray(R.array.entries_list_priori_day);
 		int[] prioriDayIntArray = getApplicationContext().getResources().getIntArray(R.array.entriesvalue_list_priori_day);
 		
+		int selectedIndex = 0;		
+		String priorAlarmDayStr = defaultPreference.getString("defaultPriorRemindDay", "0");
+		int priorAlarmDayInt = Integer.valueOf(priorAlarmDayStr);
+	
 		List<Map<String, Integer>> prioriAlarmDayData = new ArrayList<Map<String,Integer>>();
 		for (int i = 0; i < prioriDayStringArray.length; i++) {
 			Map<String, Integer> map = new HashMap<String, Integer>();
 			map.put("name", prioriDayIntArray[i]);
 			map.put("value", prioriDayIntArray[i]);
 			prioriAlarmDayData.add(map);
+			
+			if (prioriDayIntArray[i] == priorAlarmDayInt) {
+				selectedIndex = i;
+			}
 		}
 		SpinnerAdapter prioriAlarmDayAdapter = new SimpleAdapter(this, 
 														prioriAlarmDayData, 
@@ -305,7 +341,7 @@ public class EventAdd extends Activity{
 														new String[]{"name", "value"}, 
 														new int[]{R.id.event_add_spinner_textview1, R.id.event_add_spinner_textview2});
 		prioriAlarmDaySpinner.setAdapter(prioriAlarmDayAdapter);
-		prioriAlarmDaySpinner.setPromptId(R.string.event_prior_alarm_day);
+		prioriAlarmDaySpinner.setSelection(selectedIndex);
 		prioriAlarmDaySpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override

@@ -3,7 +3,17 @@
  */
 package ustc.sse.assistant.backup;
 
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.Date;
+
+import ustc.sse.assistant.R;
+import ustc.sse.assistant.backup.util.BackupUtils;
+import ustc.sse.assistant.backup.util.EventToXml;
+import ustc.sse.assistant.event.EventUtils;
 import android.app.IntentService;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Intent;
 
 /**
@@ -12,15 +22,31 @@ import android.content.Intent;
  *
  */
 public class AutomaticBackupService extends IntentService {
-
+	private Notification notification;
+	private NotificationManager nm;
 	public AutomaticBackupService(String name) {
 		super(name);
-		// TODO Auto-generated constructor stub
+		nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 	}
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		// TODO Auto-generated method stub
+		WakeLockUtils.releaseWakeLock();
+		
+		if (EventUtils.haveEvent(getApplicationContext())) {
+			EventToXml etx = new EventToXml(getApplicationContext(), null, null);
+			try {
+				StringWriter writer = etx.generateXml();
+				boolean success = BackupUtils.writeToBackupFile(writer);
+				if (success) {
+					notification = new Notification(R.drawable.notification, "自动备份完成", new Date().getTime());
+					nm.notify(10, notification);
+				}
+				
+			} catch (IOException e) {
+				
+			}
+		}
 		
 	}
 	

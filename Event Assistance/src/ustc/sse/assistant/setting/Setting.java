@@ -2,10 +2,19 @@ package ustc.sse.assistant.setting;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.Calendar;
+import java.util.Date;
 
 import ustc.sse.assistant.R;
+import ustc.sse.assistant.backup.BackupRestore;
 import ustc.sse.assistant.backup.util.BackupUtils;
 import ustc.sse.assistant.backup.util.EventToXml;
+import ustc.sse.assistant.event.EventUtils;
+import ustc.sse.assistant.event.provider.EventAssistant;
+import ustc.sse.assistant.event.provider.EventAssistant.Event;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -34,7 +43,30 @@ public class Setting extends PreferenceActivity {
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				//here check last automatic backup time
 				//if the interval is less than the set one, do backup immediately
-				//TODO
+				Integer value = Integer.valueOf((String) newValue);
+				SharedPreferences sf = Setting.this.getSharedPreferences(EventAssistant.TAG, MODE_WORLD_WRITEABLE);
+				
+				long lastBackupDate = sf.getLong(BackupRestore.LAST_BACKUP_DATE, -1L);
+				if (lastBackupDate != -1L) {
+					Calendar lastBackupCalendar = Calendar.getInstance();
+					lastBackupCalendar.setTimeInMillis(lastBackupDate);
+					Calendar now = Calendar.getInstance();
+					
+					long actualInterval = now.getTimeInMillis() - lastBackupCalendar.getTimeInMillis();
+					long newBackupInterval = EventUtils.dayToTimeInMillisecond(value);
+					
+					Cursor c = Setting.this.getContentResolver().query(Event.CONTENT_URI, new String[]{Event._COUNT}, null, null, null);
+					int count = c.getCount();
+					c.close();
+					//only when we have events, then do backup, otherwise ignore backup operation
+					if (actualInterval >= newBackupInterval && count > 0) {
+						
+						new Thread(new BackupRunnable()).start();
+					}
+					
+					
+				}
+				
 				
 				return true;
 			}
@@ -48,8 +80,15 @@ public class Setting extends PreferenceActivity {
 			try {
 				StringWriter sw = etx.generateXml();
 				if (!BackupUtils.writeToBackupFile(sw)) {
+					t.setText("系统已为你自动备份");
 					t.show();
-
+					//after backup successfully, record the last_backup_date
+					SharedPreferences sf = Setting.this.getSharedPreferences(EventAssistant.TAG, MODE_WORLD_WRITEABLE);				
+					Date now = new Date();
+					Editor editor = sf.edit();
+					editor.putLong(BackupRestore.LAST_BACKUP_DATE, now.getTime());
+					editor.commit();
+					
 				}
 			} catch (IOException e) {
 				t.show();

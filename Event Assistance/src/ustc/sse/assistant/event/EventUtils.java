@@ -1,24 +1,17 @@
 package ustc.sse.assistant.event;
 
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ustc.sse.assistant.event.data.EventEntity;
-import ustc.sse.assistant.event.provider.EventAssistant;
 import ustc.sse.assistant.event.provider.EventAssistant.Event;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.OperationApplicationException;
+import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
-import android.os.HandlerThread;
-import android.os.RemoteException;
 import android.text.util.Linkify;
 import android.text.util.Linkify.TransformFilter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * 
@@ -180,6 +173,18 @@ public class EventUtils {
 		bundle.putInt(Event.PRIOR_REPEAT_TIME, priorRepeatDay);
 		
 		return bundle;
+	}
+	
+
+	/**
+	 * @param context
+	 * @return
+	 */
+	public static final boolean haveEvent(Context context) {
+		Cursor c = context.getContentResolver().query(Event.CONTENT_URI, new String[]{Event._COUNT}, null, null, null);
+		int count = c.getCount();
+		c.close();
+		return count > 0 ? true : false;
 	}
 }
 	

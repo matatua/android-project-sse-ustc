@@ -63,6 +63,7 @@ import android.widget.Toast;
 public class BackupRestore extends Activity {
 	public static final String DATE_FORMAT = "yyyy年MM月dd日 EE";
 	public static final String TIME_FORMAT = "h:mmaa";
+	public static final String LAST_BACKUP_DATE = "last_backup_time";
 	
 	private static final int FROM_DATE_DIALOG = 1;
 	private static final int FROM_TIME_DIALOG = 2;
