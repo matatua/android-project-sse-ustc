@@ -24,7 +24,9 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -87,7 +89,7 @@ public class EventDetail extends Activity{
 		String[] projection = {Event.CONTENT, Event.BEGIN_TIME, Event.END_TIME, Event.LOCATION, Event.NOTE, Event.ALARM_TIME, Event.PRIOR_ALARM_DAY, Event.PRIOR_REPEAT_TIME, Event.ALARM_TYPE};
 		String selection = Event._ID + " = ? ";
 		String[] selectionArgs = {String.valueOf(eventId)};		
-		String[] eventContactProjection = {EventContact.DISPLAY_NAME};	
+		String[] eventContactProjection = {EventContact.DISPLAY_NAME, EventContact.CONTACT_ID};	
 		Uri eventContact = ContentUris.withAppendedId(EventContact.CONTENT_URI, eventId);
 		
 		Cursor cursor = cr.query(Event.CONTENT_URI, projection, selection, selectionArgs, null);
@@ -148,11 +150,18 @@ public class EventDetail extends Activity{
 		if (eventContactCursor.moveToFirst()) {
 			int contactColumn = eventContactCursor
 					.getColumnIndex(EventContact.DISPLAY_NAME);
+			int contactIdColumn = eventContactCursor.getColumnIndex(EventContact.CONTACT_ID);
+		
 			do {
-				contact.append(eventContactCursor.getString(contactColumn)).append(" ");
+				long contactId = eventContactCursor.getLong(contactIdColumn);
+				String name = eventContactCursor.getString(contactColumn);
+				SpannableString ss = EventUtils.linkifyEventContact(name, contactId);
+				
+				contactTextView.append(ss);
+				contactTextView.append(" ");
 			} while (eventContactCursor.moveToNext());
 		}
-		contactText = contact.toString();
+		contactTextView.setMovementMethod(LinkMovementMethod.getInstance());
 		
 		Calendar calendar = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
@@ -167,8 +176,9 @@ public class EventDetail extends Activity{
 		if(TextUtils.isEmpty(location)){
 			location = "无";
 		}
-		if(TextUtils.isEmpty(contactText)){
+		if(TextUtils.isEmpty(contactTextView.getText())){
 			contactText = "无";
+			contactTextView.setText(contactText);
 		}
 		if(TextUtils.isEmpty(note)){
 			note = "无";
@@ -179,10 +189,12 @@ public class EventDetail extends Activity{
 					
 		contentTextView.setText(content);
 		beginTimeTextView.setText(beginTimeText);
-		endTimeTextView.setText(endTimeText);	
+		endTimeTextView.setText(endTimeText);
+		
 		locationTextView.setText(location);
+		EventUtils.linkifyEventLocation(locationTextView);
+		
 		noteTextView.setText(note);
-		contactTextView.setText(contactText);
 		todayRemindTimeTextView.setText(todayRemindTimeText);
 		priorAlarmDayTextView.setText(priorAlarmDay);
 		priorAlarmRepeatTextView.setText(priorAlarmRepeat);

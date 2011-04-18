@@ -5,10 +5,15 @@ import java.util.regex.Pattern;
 
 import ustc.sse.assistant.event.data.EventEntity;
 import ustc.sse.assistant.event.provider.EventAssistant.Event;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.ContactsContract.Contacts;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.text.util.Linkify.TransformFilter;
 import android.widget.TextView;
@@ -19,15 +24,23 @@ import android.widget.TextView;
  *
  */
 public class EventUtils {
+	public static final Pattern matchAll = Pattern.compile("\\w+");
 	
 	public static final void linkifyEventLocation(TextView tv) {
-		Pattern pattern = Pattern.compile("\\w+");
-		Linkify.addLinks(tv, pattern, "geo:", null, new TransformFilter() {
+		
+		Linkify.addLinks(tv, matchAll, "geo:", null, new TransformFilter() {
 			
 			public String transformUrl(Matcher match, String url) {
 				return "0,0?q=" + url;				
 			}
 		});
+	}
+	
+	public static final SpannableString linkifyEventContact(String name, final Long contactId) {
+		SpannableString ss = new SpannableString(name);
+		String url = ContentUris.withAppendedId(Contacts.CONTENT_URI, contactId).toString();
+		ss.setSpan(new URLSpan(url), 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		return ss;
 	}
 	
 	public static final long priorRepeatToInterval(int priorRepeat) {
