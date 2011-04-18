@@ -103,8 +103,6 @@ public class EventDetail extends Activity{
 		String endTime = null;
 		String endTimeText = null;
 		String location = null;
-		StringBuilder contact = new StringBuilder();
-		String contactText = null;
 		String note = null;
 		int todayRemindTime = 0;
 		String todayRemindTimeText = null;
@@ -148,8 +146,7 @@ public class EventDetail extends Activity{
 		}
 
 		if (eventContactCursor.moveToFirst()) {
-			int contactColumn = eventContactCursor
-					.getColumnIndex(EventContact.DISPLAY_NAME);
+			int contactColumn = eventContactCursor.getColumnIndex(EventContact.DISPLAY_NAME);
 			int contactIdColumn = eventContactCursor.getColumnIndex(EventContact.CONTACT_ID);
 		
 			do {
@@ -160,8 +157,11 @@ public class EventDetail extends Activity{
 				contactTextView.append(ss);
 				contactTextView.append(" ");
 			} while (eventContactCursor.moveToNext());
+			contactTextView.setMovementMethod(LinkMovementMethod.getInstance());
 		}
-		contactTextView.setMovementMethod(LinkMovementMethod.getInstance());
+		
+		else
+			contactTextView.setText("无");
 		
 		Calendar calendar = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
@@ -173,13 +173,16 @@ public class EventDetail extends Activity{
 		if(TextUtils.isEmpty(content)){
 			content = "无";
 		}
+		
 		if(TextUtils.isEmpty(location)){
-			location = "无";
+			locationTextView.setText("无");
 		}
-		if(TextUtils.isEmpty(contactTextView.getText())){
-			contactText = "无";
-			contactTextView.setText(contactText);
+		
+		else{
+			locationTextView.setText(location);
+			EventUtils.linkifyEventLocation(locationTextView);
 		}
+		
 		if(TextUtils.isEmpty(note)){
 			note = "无";
 		}
@@ -189,11 +192,7 @@ public class EventDetail extends Activity{
 					
 		contentTextView.setText(content);
 		beginTimeTextView.setText(beginTimeText);
-		endTimeTextView.setText(endTimeText);
-		
-		locationTextView.setText(location);
-		EventUtils.linkifyEventLocation(locationTextView);
-		
+		endTimeTextView.setText(endTimeText);		
 		noteTextView.setText(note);
 		todayRemindTimeTextView.setText(todayRemindTimeText);
 		priorAlarmDayTextView.setText(priorAlarmDay);
