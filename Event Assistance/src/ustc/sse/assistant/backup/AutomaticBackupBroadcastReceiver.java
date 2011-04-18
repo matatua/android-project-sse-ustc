@@ -60,7 +60,8 @@ public class AutomaticBackupBroadcastReceiver extends BroadcastReceiver {
 					//set Alarm to do operation at future time
 					AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 					Intent backupIntent = new Intent(context, AutomaticBackupService.class);
-					PendingIntent pi = PendingIntent.getService(context, 0, backupIntent, 0);
+					backupIntent.setAction(BackupRestore.ACTION_AUTOMATIC_BACKUP);
+					PendingIntent pi = PendingIntent.getService(context, 0, backupIntent, PendingIntent.FLAG_ONE_SHOT);
 					
 					long triggerAtTime = lastBackupDate + setBackupInterval;
 					am.set(AlarmManager.RTC_WAKEUP, triggerAtTime, pi);

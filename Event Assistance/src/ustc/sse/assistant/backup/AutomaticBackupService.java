@@ -15,6 +15,9 @@ import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.util.Log;
 
 /**
  * @author 李健
@@ -22,10 +25,19 @@ import android.content.Intent;
  *
  */
 public class AutomaticBackupService extends IntentService {
+	
+	public static final String TAG = "AutomaticBackupService";
+	
 	private Notification notification;
 	private NotificationManager nm;
+	
+	public AutomaticBackupService() {
+		this(TAG);
+	}
+	
 	public AutomaticBackupService(String name) {
 		super(name);
+		Log.i(TAG, "Initialize AutomaticBackupService");
 		nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 	}
 
@@ -42,6 +54,9 @@ public class AutomaticBackupService extends IntentService {
 					notification = new Notification(R.drawable.notification, "自动备份完成", new Date().getTime());
 					nm.notify(10, notification);
 				}
+				//record last backup date
+				SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+				sp.edit().putLong(BackupRestore.LAST_BACKUP_DATE, new Date().getTime()).commit();
 				
 			} catch (IOException e) {
 				

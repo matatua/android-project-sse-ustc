@@ -6,12 +6,16 @@ import java.util.Calendar;
 import java.util.Date;
 
 import ustc.sse.assistant.R;
+import ustc.sse.assistant.backup.AutomaticBackupService;
 import ustc.sse.assistant.backup.BackupRestore;
 import ustc.sse.assistant.backup.util.BackupUtils;
 import ustc.sse.assistant.backup.util.EventToXml;
 import ustc.sse.assistant.event.EventUtils;
 import ustc.sse.assistant.event.provider.EventAssistant;
 import ustc.sse.assistant.event.provider.EventAssistant.Event;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
@@ -62,6 +66,15 @@ public class Setting extends PreferenceActivity {
 					if (actualInterval >= newBackupInterval && count > 0) {
 						
 						new Thread(new BackupRunnable()).start();
+					} else {
+						//else set a proper time to do automatic backup
+						AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+						Intent i = new Intent(Setting.this, AutomaticBackupService.class);
+						i.setAction(BackupRestore.ACTION_AUTOMATIC_BACKUP);
+						PendingIntent operation = PendingIntent.getService(Setting.this, 0, i, PendingIntent.FLAG_ONE_SHOT);
+						long triggerAtTime = lastBackupDate + newBackupInterval;
+				
+						am.set(AlarmManager.RTC_WAKEUP, triggerAtTime, operation);
 					}
 					
 					

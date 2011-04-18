@@ -568,6 +568,7 @@ public class BackupRestore extends Activity {
 			return false;
 		}
 	};
+	public static final String ACTION_AUTOMATIC_BACKUP = "action_automatic_backup";
 	
 	private class BackupRestoreFileAdapter extends BaseAdapter {
 
