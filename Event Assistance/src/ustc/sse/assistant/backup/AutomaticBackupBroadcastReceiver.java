@@ -17,6 +17,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.PowerManager.WakeLock;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 
 /**
  * @author 李健
@@ -31,51 +32,72 @@ public class AutomaticBackupBroadcastReceiver extends BroadcastReceiver {
 		SharedPreferences sf = context.getSharedPreferences(EventAssistant.TAG, Context.MODE_WORLD_WRITEABLE);
 		long lastBackupDate = sf.getLong(BackupRestore.LAST_BACKUP_DATE, -1L);
 		
-		if (lastBackupDate == -1L) {
-			//check whether there are events, true backup, false do nothing
-			int count = haveEvent(context);
-			if (count > 0) {
-				//start a service to do backup
-			}
-			
-		} else {
-			//check the time interval
-			Calendar now = Calendar.getInstance();
-			long actualInterval = now.getTimeInMillis() - lastBackupDate;
-			SharedPreferences defaultSf = PreferenceManager.getDefaultSharedPreferences(context);
-			boolean isBackupOn = defaultSf.getBoolean("backupRestore", false);
-			String setBackupIntervalStr = defaultSf.getString("autoBackupInterval", "");
-			long setBackupInterval = EventUtils.dayToTimeInMillisecond(Integer.valueOf(setBackupIntervalStr));
+		Calendar now = Calendar.getInstance();
+		long actualInterval = now.getTimeInMillis() - lastBackupDate;
+		SharedPreferences defaultSf = PreferenceManager.getDefaultSharedPreferences(context);
+		boolean isBackupOn = defaultSf.getBoolean("backupRestore", false);
+		String setBackupIntervalStr = defaultSf.getString("autoBackupInterval", "");
+		long setBackupInterval = TextUtils.isEmpty(setBackupIntervalStr) ? 0 : EventUtils.dayToTimeInMillisecond(Integer.valueOf(setBackupIntervalStr));
 
-			if (isBackupOn) {
+		if (isBackupOn) {
+			if (lastBackupDate == -1L) {
+				//check whether there are events, true backup, false do nothing
+				int count = haveEvent(context);
+				if (count > 0) {
+					//start a service to do backup
+					WakeLockUtils.getWakeLock(context);
+					startBackupNow(context);
+				} 
+
+			} else {
+				//check the time interval
+				
 				//if backup is on, then we need to continue
 				int count = haveEvent(context);
-				if (!setBackupIntervalStr.equals("") && actualInterval >= setBackupInterval
-						&& count > 0) {
+				if (!setBackupIntervalStr.equals("")
+						&& actualInterval >= setBackupInterval && count > 0) {
 					WakeLockUtils.getWakeLock(context);
-					Intent service = new Intent(context, AutomaticBackupService.class);
-					context.startService(service);
-					
-				} else {
-					//set Alarm to do operation at future time
-					AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-					Intent backupIntent = new Intent(context, AutomaticBackupService.class);
-					backupIntent.setAction(BackupRestore.ACTION_AUTOMATIC_BACKUP);
-					PendingIntent pi = PendingIntent.getService(context, 0, backupIntent, PendingIntent.FLAG_ONE_SHOT);
-					
-					long triggerAtTime = lastBackupDate + setBackupInterval;
-					am.set(AlarmManager.RTC_WAKEUP, triggerAtTime, pi);
-				}
+					startBackupNow(context);
+
+				} 
 			}
+						
 		}
+		
+		doBackupInFuture(context, now.getTimeInMillis() + setBackupInterval);
 	}
+
+	/**
+	 * @param context
+	 */
+	private void startBackupNow(Context context) {
+		Intent service = new Intent(context, AutomaticBackupService.class);
+		context.startService(service);
+	}
+
+	/**
+	 * @param context
+	 * @param lastBackupDate
+	 * @param setBackupInterval
+	 */
+	private void doBackupInFuture(Context context, long triggerAtTime) {
+		//set Alarm to do operation at future time
+		AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+		Intent backupIntent = new Intent(context, this.getClass());
+		backupIntent.setAction(BackupRestore.ACTION_AUTOMATIC_BACKUP);
+		PendingIntent pi = PendingIntent.getBroadcast(context, 0, backupIntent, PendingIntent.FLAG_ONE_SHOT);
+		
+		am.set(AlarmManager.RTC_WAKEUP, triggerAtTime, pi);
+	}
+	
+	
 
 	/**
 	 * @param context
 	 * @return
 	 */
 	private int haveEvent(Context context) {
-		Cursor c = context.getContentResolver().query(Event.CONTENT_URI, new String[]{Event._COUNT}, null, null, null);
+		Cursor c = context.getContentResolver().query(Event.CONTENT_URI, new String[]{Event._ID}, null, null, null);
 		int count = c.getCount();
 		c.close();
 		return count;

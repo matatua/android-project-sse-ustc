@@ -15,13 +15,14 @@ import java.util.Calendar;
 import ustc.sse.assistant.backup.BackupRestore;
 
 import android.os.Environment;
+import android.util.Log;
 
 /**
  * @author 李健
  *
  */
 public class BackupUtils {
-
+	public static final String TAG = "BackupUtils";
 	public static boolean writeToBackupFile(StringWriter writer) {
 		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
 			File root = Environment.getExternalStorageDirectory();
@@ -41,11 +42,14 @@ public class BackupUtils {
 				bo.write(writer.toString().getBytes());
 				bo.flush();
 				bo.close();
+				Log.i(TAG, "backup write success");
 				return true;
 				
 			} catch (FileNotFoundException e) {
+				Log.i(TAG, "backup write fail");
 				return false;
 			} catch (IOException e) {
+				Log.i(TAG, "backup write fail");
 				return false;
 			}
 		}

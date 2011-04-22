@@ -18,6 +18,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Html.TagHandler;
+import android.util.Log;
 
 /**
  * @author 李健
@@ -72,8 +74,8 @@ public class EventBTService {
 			connectedThread = null;
 		}
 		if (connectThread != null) {
-			connectedThread.cancel();
-			connectedThread = null;
+			connectThread.cancel();
+			connectThread = null;
 		}
 		if (acceptThread != null) {
 			acceptThread.cancel();
@@ -118,10 +120,6 @@ public class EventBTService {
 	}
 	
 	public synchronized void stop() {
-		if (acceptThread != null) {
-			acceptThread.cancel();
-			acceptThread = null;
-		}
 		if (connectThread != null) {
 			connectThread.cancel();
 			connectThread = null;
@@ -130,6 +128,11 @@ public class EventBTService {
 			connectedThread.cancel();
 			connectedThread = null;
 		}
+		if (acceptThread != null) {
+			acceptThread.cancel();
+			acceptThread = null;
+		}
+
 		setState(STATE_NONE);
 	}
 	
@@ -229,7 +232,7 @@ public class EventBTService {
 				inputStream = btSocket.getInputStream();
 				outputStream = btSocket.getOutputStream();
 			} catch (IOException e) {
-				// TODO: handle exception
+				Log.e("EventBTService", "failure in getting input or output stream ", e);
 			}
 		}
 		
@@ -237,6 +240,7 @@ public class EventBTService {
 		public void run() {
 			ByteArrayOutputStream bo = new ByteArrayOutputStream();
 			byte[] data = new byte[1024];
+			boolean error = false;
 			while (true) {
 				while (true) {
 					try {
@@ -249,8 +253,12 @@ public class EventBTService {
 						}
 					} catch (IOException e) {
 						connectionLost();
+						error = true;
+						break;
 					}
 				}
+				
+				if (error) break;
 				//tell the main activity we have received a xml and user can deal with some options
 				handler.obtainMessage(ShareEvent.MESSAGE_READ, bo.size(), -1, bo.toByteArray()).sendToTarget();
 				
@@ -262,17 +270,24 @@ public class EventBTService {
 
 		public void send(byte[] data) {
 			try {
+
 				outputStream.write(data);
 				handler.obtainMessage(ShareEvent.MESSAGE_SEND, -1, -1, data).sendToTarget();
-				Message s = handler.obtainMessage(ShareEvent.MESSAGE_TOAST);
-				s.getData().putString(ShareEvent.TOAST, "传送完毕");
+				Message s = handler.obtainMessage(ShareEvent.MESSAGE_DISMISS_PROGRESSBAR);
+				s.getData().putString(ShareEvent.PROGRESSBAR_TEXT, "传送完毕");
+				s.sendToTarget();
 			} catch (Exception e) {
-				// TODO: handle exception
+				handler.obtainMessage(ShareEvent.MESSAGE_DISMISS_PROGRESSBAR).sendToTarget();
+				Message s = handler.obtainMessage(ShareEvent.MESSAGE_TOAST);
+				s.getData().putString(ShareEvent.TOAST, "传输失败");
+				s.sendToTarget();
 			}
 		}
 		
 		public void cancel() {
 			try {
+				inputStream.close();
+				outputStream.close();
 				btSocket.close();
 			} catch (IOException e) {
 				//do nothing;
@@ -311,6 +326,9 @@ public class EventBTService {
 							case STATE_CONNECTING :
 							case STATE_LISTENING :
 								connected(btSocket, btSocket.getRemoteDevice());
+								Message s = handler.obtainMessage(ShareEvent.MESSAGE_TOAST);
+								s.getData().putString(ShareEvent.TOAST, "连接中...");
+								s.sendToTarget();
 								break;
 							case STATE_CONNECTED :
 							case STATE_NONE :

@@ -194,7 +194,7 @@ public class EventUtils {
 	 * @return
 	 */
 	public static final boolean haveEvent(Context context) {
-		Cursor c = context.getContentResolver().query(Event.CONTENT_URI, new String[]{Event._COUNT}, null, null, null);
+		Cursor c = context.getContentResolver().query(Event.CONTENT_URI, new String[]{Event._ID}, null, null, null);
 		int count = c.getCount();
 		c.close();
 		return count > 0 ? true : false;

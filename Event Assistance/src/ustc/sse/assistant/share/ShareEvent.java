@@ -59,12 +59,19 @@ public class ShareEvent extends Activity {
 	public static final int MESSAGE_TOAST = 0;
 	public static final int MESSAGE_DEVICE_NAME = 3;
 	public static final String TOAST = "toast";
+	public static final int MESSAGE_SHOW_PROGRESSBAR = 4;
+	public static final int MESSAGE_DISMISS_PROGRESSBAR = 5;
+	
 	public static final String DEVICE_NAME = "device_name";
 	
 	public static final int REQUEST_ENABLE_BT = 100;
 	public static final int REQUEST_CONNECT_DEVICE = 101;
 	private static final int RESTORE_OPTION = 10;
 	private static final int PROCESSING = 9;
+
+	public static final String PROGRESSBAR_TEXT = "progressbar_text";
+
+	
 	
 	private ListView listView;
 	private BluetoothAdapter btAdapter;
@@ -169,6 +176,7 @@ public class ShareEvent extends Activity {
 		final Toast toast = Toast.makeText(this, "共享成功", Toast.LENGTH_SHORT);
 		new Thread() {
 			public void run() {
+				
 				showDialog(PROCESSING);
 				InputStream is = new ByteArrayInputStream(receivedData);
 				XmlToEvent xte = new XmlToEvent(ShareEvent.this, is, restoreContacts, false);
@@ -195,6 +203,19 @@ public class ShareEvent extends Activity {
 			return makeProcessingDialog();
 		}
 		return super.onCreateDialog(id);
+	}
+	
+	@Override
+	protected void onPrepareDialog(int id, Dialog dialog, Bundle bundle) {
+		super.onPrepareDialog(id, dialog);
+		
+		switch (id) {
+		case PROCESSING :
+			String message = bundle.getString(PROGRESSBAR_TEXT);
+			if (null != message) {
+				((ProgressDialog) dialog).setMessage(message);
+			}
+		}
 	}
 	
 	private Dialog makeProcessingDialog() {
@@ -243,6 +264,7 @@ public class ShareEvent extends Activity {
 			case MESSAGE_DEVICE_NAME :
 				//TODO set title to device name
 				String name = msg.getData().getString(TOAST);
+				if (name == null) name = "";
 				setTitle(name + "已连接");
 				break;
 			case MESSAGE_READ :
@@ -257,6 +279,13 @@ public class ShareEvent extends Activity {
 				String text = msg.getData().getString(ShareEvent.TOAST);
 				Toast.makeText(ShareEvent.this, text, Toast.LENGTH_SHORT).show();
 				break;
+				
+			case MESSAGE_SHOW_PROGRESSBAR :
+				Bundle bundle = msg.getData();
+				showDialog(PROCESSING, bundle);
+				break;
+			case MESSAGE_DISMISS_PROGRESSBAR :
+				dismissDialog(PROCESSING);
 			}
 			
 		};
@@ -271,6 +300,7 @@ public class ShareEvent extends Activity {
 			if (resultCode == RESULT_OK) {
 				String address = data.getStringExtra(BluetoothDeviceList.EXTRA_DEVICE_ADDRESS);
 				BluetoothDevice btDevice = btAdapter.getRemoteDevice(address);
+				
 				service.connect(btDevice);
 			}
 			break;
@@ -322,6 +352,7 @@ public class ShareEvent extends Activity {
 					public void run() {
 						if (position == 0) {
 							//make a new xml and transfer it to remote device
+							handler.obtainMessage(MESSAGE_SHOW_PROGRESSBAR).sendToTarget();
 							EventToXml etx = new EventToXml(ShareEvent.this, null, null);
 							try {
 								send(etx.generateXml().toString().getBytes());
@@ -333,7 +364,7 @@ public class ShareEvent extends Activity {
 							}
 						} else {
 							
-							showDialog(PROCESSING);
+							handler.obtainMessage(MESSAGE_SHOW_PROGRESSBAR).sendToTarget();
 							File file = (File) parent.getAdapter().getItem(position);
 							byte[] buffer = new byte[1024];
 							int length = -1;
@@ -349,7 +380,7 @@ public class ShareEvent extends Activity {
 							} catch (IOException e) {
 								
 							}
-							dismissDialog(PROCESSING);
+							
 						}
 					}
 				}.start();

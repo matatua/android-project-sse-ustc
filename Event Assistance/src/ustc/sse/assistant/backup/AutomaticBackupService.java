@@ -38,6 +38,12 @@ public class AutomaticBackupService extends IntentService {
 	public AutomaticBackupService(String name) {
 		super(name);
 		Log.i(TAG, "Initialize AutomaticBackupService");
+		
+	}
+	
+	@Override
+	public void onCreate() {
+		super.onCreate();
 		nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 	}
 
@@ -46,20 +52,21 @@ public class AutomaticBackupService extends IntentService {
 		WakeLockUtils.releaseWakeLock();
 		
 		if (EventUtils.haveEvent(getApplicationContext())) {
-			EventToXml etx = new EventToXml(getApplicationContext(), null, null);
+			EventToXml etx = new EventToXml(this, null, null);
 			try {
 				StringWriter writer = etx.generateXml();
 				boolean success = BackupUtils.writeToBackupFile(writer);
 				if (success) {
 					notification = new Notification(R.drawable.notification, "自动备份完成", new Date().getTime());
 					nm.notify(10, notification);
+					//record last backup date
+					SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+					sp.edit().putLong(BackupRestore.LAST_BACKUP_DATE, new Date().getTime()).commit();
+					Log.i(TAG, "automatic backup service success");				
 				}
-				//record last backup date
-				SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-				sp.edit().putLong(BackupRestore.LAST_BACKUP_DATE, new Date().getTime()).commit();
-				
+							
 			} catch (IOException e) {
-				
+				Log.i(TAG, "auto backup fail");
 			}
 		}
 		

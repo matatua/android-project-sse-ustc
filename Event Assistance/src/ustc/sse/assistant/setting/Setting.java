@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import ustc.sse.assistant.R;
+import ustc.sse.assistant.backup.AutomaticBackupBroadcastReceiver;
 import ustc.sse.assistant.backup.AutomaticBackupService;
 import ustc.sse.assistant.backup.BackupRestore;
 import ustc.sse.assistant.backup.util.BackupUtils;
@@ -69,9 +70,10 @@ public class Setting extends PreferenceActivity {
 					} else {
 						//else set a proper time to do automatic backup
 						AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-						Intent i = new Intent(Setting.this, AutomaticBackupService.class);
+						Intent i = new Intent(Setting.this, AutomaticBackupBroadcastReceiver.class);
 						i.setAction(BackupRestore.ACTION_AUTOMATIC_BACKUP);
-						PendingIntent operation = PendingIntent.getService(Setting.this, 0, i, PendingIntent.FLAG_ONE_SHOT);
+						
+						PendingIntent operation = PendingIntent.getBroadcast(Setting.this, 0, i, PendingIntent.FLAG_ONE_SHOT);
 						long triggerAtTime = lastBackupDate + newBackupInterval;
 				
 						am.set(AlarmManager.RTC_WAKEUP, triggerAtTime, operation);

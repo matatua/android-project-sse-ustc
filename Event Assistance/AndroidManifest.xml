@@ -12,6 +12,7 @@
 <uses-permission android:name="android.permission.BLUETOOTH"></uses-permission>
 <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"></uses-permission>
 <uses-permission android:name="android.permission.GET_ACCOUNTS"></uses-permission>
+<uses-permission android:name="android.permission.WAKE_LOCK"></uses-permission>
     <application android:icon="@drawable/icon" android:label="@string/app_name" 
     			android:debuggable="true" android:theme="@android:style/Theme.Light.NoTitleBar" android:restoreNeedsApplication="true" android:allowBackup="true"
     			android:backupAgent=".backup.EventBackupAgent">
