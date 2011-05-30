@@ -4,6 +4,7 @@
 package ustc.sse.assistant.share;
 
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -148,7 +149,7 @@ public class EventBTService {
 	private void connectionLost() {
 		Message m = handler.obtainMessage(ShareEvent.MESSAGE_TOAST);
 		Bundle bundle = new Bundle();
-		bundle.putString(ShareEvent.TOAST, "连接丢失");
+		bundle.putString(ShareEvent.TOAST, "连接已断开");
 		
 		m.setData(bundle);
 		m.sendToTarget();
@@ -239,31 +240,54 @@ public class EventBTService {
 		@Override
 		public void run() {
 			ByteArrayOutputStream bo = new ByteArrayOutputStream();
-			byte[] data = new byte[1024];
+			DataInputStream dis = new DataInputStream(inputStream);
+			
 			boolean error = false;
-			while (true) {
-				while (true) {
+			byte[] data = new byte[1024];
+			
+			while (true) {//outer loop read file data length
+				long dataLength = 0;
+				try {
+					dataLength = dis.readLong();
+				} catch (IOException e1) {
+					Log.e("EventBTService", "read data length fail", e1);
+					connectionLost();
+					return ;
+				}
+				long readLength = 0;
+				
+				while (true) {//inner loop read a amount of data bytes indicating by datalength
 					try {
-						//TODO receive totall xml data
-						int length = inputStream.read(data);
-						bo.write(data, 0, length);				
-						
-						if (length < 0) {
+						// TODO receive totall xml data
+						int length = dis.read(data);
+						readLength += length;
+						bo.write(data, 0, length);
+	
+						// here are three possiblity
+						// first the inputstream has reached the end
+						// second the inputstream has no available input now
+						// third the inputstream read less than 1024 byte
+						if (length < 0 || readLength == dataLength) {
+							// tell the main activity we have received a xml and user can
+							// deal with some options
+							handler.obtainMessage(ShareEvent.MESSAGE_READ, bo.size(), -1,
+									bo.toByteArray()).sendToTarget();
 							break;
+							
 						}
 					} catch (IOException e) {
-						connectionLost();
+						connectionLost();	
 						error = true;
 						break;
 					}
+					
 				}
 				
-				if (error) break;
-				//tell the main activity we have received a xml and user can deal with some options
-				handler.obtainMessage(ShareEvent.MESSAGE_READ, bo.size(), -1, bo.toByteArray()).sendToTarget();
-				
-
+				if (error) {
+					break;
+				}
 			}
+		
 			
 		}
 
@@ -276,6 +300,8 @@ public class EventBTService {
 				Message s = handler.obtainMessage(ShareEvent.MESSAGE_DISMISS_PROGRESSBAR);
 				s.getData().putString(ShareEvent.PROGRESSBAR_TEXT, "传送完毕");
 				s.sendToTarget();
+				Message m = handler.obtainMessage(ShareEvent.MESSAGE_TOAST);
+				m.getData().putString(ShareEvent.TOAST, "传送完毕");
 			} catch (Exception e) {
 				handler.obtainMessage(ShareEvent.MESSAGE_DISMISS_PROGRESSBAR).sendToTarget();
 				Message s = handler.obtainMessage(ShareEvent.MESSAGE_TOAST);

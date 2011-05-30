@@ -77,7 +77,6 @@ public class XmlToEvent {
 	}
 	
 	public boolean restore() {
-		if (backupFile.exists()) {
 			InputStream is;
 			try {
 				is = new BufferedInputStream(inputStream);
@@ -109,14 +108,11 @@ public class XmlToEvent {
 					
 				
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				return false;
 			} catch (XmlPullParserException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				return false;
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				return false;
 			}
 			
 			if (deleteOriginalData) {
@@ -125,14 +121,11 @@ public class XmlToEvent {
 				cr.delete(EventContact.CONTENT_URI, null, null);
 				cr.delete(Event.CONTENT_URI, null, null);
 			}
-			saveToDB();
-			return true;
-		}//end if
-		
-		return false;
+			return saveToDB();
+			
 	}
 
-	private void saveToDB() {
+	private boolean saveToDB() {
 		ContentResolver cr = ctx.getContentResolver();
 		//first restore all events info
 		for (EventEntity ee : events) {
@@ -183,9 +176,9 @@ public class XmlToEvent {
 								contactId = newRawContactCursor.getLong(0);
 							}
 						} catch (RemoteException e) {		
-							e.printStackTrace();
+							return false;
 						} catch (OperationApplicationException e) {
-							e.printStackTrace();
+							return false;
 						}
 						
 					} else {
@@ -203,6 +196,8 @@ public class XmlToEvent {
 				}//end foreach on every contact
 			}//end if restoreContact
 		}//end foreach on events
+		
+		return true;
 	
 	}
 

@@ -5,12 +5,17 @@ package ustc.sse.assistant.share;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.locks.LockSupport;
+import java.util.concurrent.locks.ReentrantLock;
 
 import ustc.sse.assistant.R;
 import ustc.sse.assistant.backup.BackupRestore;
@@ -61,6 +66,7 @@ public class ShareEvent extends Activity {
 	public static final String TOAST = "toast";
 	public static final int MESSAGE_SHOW_PROGRESSBAR = 4;
 	public static final int MESSAGE_DISMISS_PROGRESSBAR = 5;
+	public static final int MESSAGE_RELEASE_RECIEVE_LOCK = 6;
 	
 	public static final String DEVICE_NAME = "device_name";
 	
@@ -72,11 +78,15 @@ public class ShareEvent extends Activity {
 	public static final String PROGRESSBAR_TEXT = "progressbar_text";
 
 	
+
+	
 	
 	private ListView listView;
 	private BluetoothAdapter btAdapter;
 	private byte[] receivedData;
 	private String currentDeviceName;
+	
+	private Semaphore receiveSemaphore = new Semaphore(1);
 	
 	private EventBTService service;
 	
@@ -167,7 +177,19 @@ public class ShareEvent extends Activity {
 	//send a event xml file
 	private synchronized void send(byte[] data) {
 		if (service != null && data.length > 0) {
-			service.send(data);
+	
+			try {
+				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				DataOutputStream dos = new DataOutputStream(bos);
+				dos.writeLong(data.length);
+				dos.write(data);
+				
+				service.send(bos.toByteArray());
+			} catch (IOException e) {
+				Log.e(TAG, "send fail", e);
+			}
+			
+			
 		}
 	}
 	//when receive a remote xml file
@@ -177,17 +199,19 @@ public class ShareEvent extends Activity {
 		new Thread() {
 			public void run() {
 				
-				showDialog(PROCESSING);
+				handler.obtainMessage(MESSAGE_SHOW_PROGRESSBAR).sendToTarget();
 				InputStream is = new ByteArrayInputStream(receivedData);
 				XmlToEvent xte = new XmlToEvent(ShareEvent.this, is, restoreContacts, false);
 				boolean success = xte.restore();
-				dismissDialog(PROCESSING);
+				handler.obtainMessage(MESSAGE_DISMISS_PROGRESSBAR).sendToTarget();
 				if (success) {
 					toast.show();
 				} else {
 					toast.setText("共享失败");
 					toast.show();
 				}
+				
+				handler.obtainMessage(MESSAGE_RELEASE_RECIEVE_LOCK).sendToTarget();
 			};
 		}.start();
 	
@@ -235,12 +259,15 @@ public class ShareEvent extends Activity {
 				switch (which) {
 				case Dialog.BUTTON_POSITIVE :
 					receive(false);
+					dialog.dismiss();
 					break;
 				case Dialog.BUTTON_NEUTRAL :
 					receive(true);
+					dialog.dismiss();
 					break;
 				case Dialog.BUTTON_NEGATIVE :
 					dialog.dismiss();
+					receiveSemaphore.release();
 					break;
 				}
 			}
@@ -268,9 +295,16 @@ public class ShareEvent extends Activity {
 				setTitle(name + "已连接");
 				break;
 			case MESSAGE_READ :
-				byte[] data = (byte[]) msg.obj;
-				receivedData = data;
-				showDialog(RESTORE_OPTION);
+				
+				try {
+					receiveSemaphore.acquire();
+					byte[] data = (byte[]) msg.obj;
+					receivedData = data;
+
+				} catch (InterruptedException e) {
+					
+				}
+				
 				break;
 			case MESSAGE_SEND :
 				break;
@@ -286,6 +320,10 @@ public class ShareEvent extends Activity {
 				break;
 			case MESSAGE_DISMISS_PROGRESSBAR :
 				dismissDialog(PROCESSING);
+				break;
+			case MESSAGE_RELEASE_RECIEVE_LOCK :
+				receiveSemaphore.release();
+				break;
 			}
 			
 		};

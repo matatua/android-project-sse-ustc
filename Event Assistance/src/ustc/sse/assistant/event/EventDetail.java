@@ -3,6 +3,8 @@ package ustc.sse.assistant.event;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+
 import ustc.sse.assistant.R;
 import ustc.sse.assistant.event.broadcast.EventBroadcastReceiver;
 import ustc.sse.assistant.event.provider.EventAssistant;
@@ -27,6 +29,8 @@ import android.os.RemoteException;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -56,6 +60,8 @@ public class EventDetail extends Activity{
 	private TextView priorAlarmDayTextView;
 	private TextView priorAlarmRepeatTextView;
 	private TextView alarmTypeTextView;
+	
+//	private List<Long> contactsId = new ArrayList<Long>();
 	
 			
     @Override
@@ -253,6 +259,15 @@ public class EventDetail extends Activity{
 		}		
 		return null;		
 	}
+	
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		if (!TextUtils.isEmpty(contactTextView.getText())) {
+//			MenuItem item = menu.add(0, 0, 0, "短信息");
+//			item.setIcon(R.drawable.sms);
+//			item.setIntent(intent);
+//		}
+//	}
 	
 	private void deleteEvent() {
 		ContentResolver cr = getContentResolver();

@@ -11,9 +11,11 @@ import ustc.sse.assistant.R;
 import ustc.sse.assistant.backup.util.BackupUtils;
 import ustc.sse.assistant.backup.util.EventToXml;
 import ustc.sse.assistant.event.EventUtils;
+import ustc.sse.assistant.event.provider.EventAssistant;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -58,10 +60,14 @@ public class AutomaticBackupService extends IntentService {
 				boolean success = BackupUtils.writeToBackupFile(writer);
 				if (success) {
 					notification = new Notification(R.drawable.notification, "自动备份完成", new Date().getTime());
+					Intent i = new Intent(this, BackupRestore.class);
+					PendingIntent contentIntent = PendingIntent.getActivity(this, 0, i, PendingIntent.FLAG_ONE_SHOT);
+					notification.setLatestEventInfo(this, "事件助手", "自动备份完成", contentIntent);
 					nm.notify(10, notification);
+					
 					//record last backup date
-					SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-					sp.edit().putLong(BackupRestore.LAST_BACKUP_DATE, new Date().getTime()).commit();
+					SharedPreferences sp = this.getSharedPreferences(EventAssistant.TAG, MODE_WORLD_WRITEABLE);
+					sp.edit().putLong(BackupRestore.LAST_BACKUP_DATE, (new Date()).getTime()).commit();
 					Log.i(TAG, "automatic backup service success");				
 				}
 							

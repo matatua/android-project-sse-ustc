@@ -94,7 +94,7 @@ public class Setting extends PreferenceActivity {
 			EventToXml etx = new EventToXml(Setting.this, null, null);
 			try {
 				StringWriter sw = etx.generateXml();
-				if (!BackupUtils.writeToBackupFile(sw)) {
+				if (BackupUtils.writeToBackupFile(sw)) {
 					t.setText("系统已为你自动备份");
 					t.show();
 					//after backup successfully, record the last_backup_date
