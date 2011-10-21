@@ -5,7 +5,6 @@ package ustc.sse.assistant.event.provider;
 
 import java.util.HashMap;
 
-import ustc.sse.assistant.event.provider.EventAssistant.Event;
 import ustc.sse.assistant.event.provider.EventAssistant.EventSearch;
 
 import android.app.SearchManager;
@@ -77,7 +76,6 @@ public class EventSearchProvider extends ContentProvider {
 	}
 
 	private Cursor searchEvent(Uri uri, String[] projection, String selection, String[] selectionArgs) {
-		SQLiteDatabase db = dbOpenHelper.getReadableDatabase();
 		SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
 		builder.setTables(EVENT_SEARCH_TABLE);
 		builder.setProjectionMap(columnProjectionMap);

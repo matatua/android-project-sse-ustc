@@ -21,7 +21,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageButton;
 
 public class MainScreen extends Activity {
 	
@@ -47,7 +46,6 @@ public class MainScreen extends Activity {
     	View contactView = findViewById(R.id.main_screen_contact);
     	contactView.setOnClickListener(new OnClickListener() {
 			
-			@Override
 			public void onClick(View v) {
 				Intent contactIntent = new Intent(MainScreen.this, ContactList.class);
 				MainScreen.this.startActivity(contactIntent);
@@ -56,7 +54,6 @@ public class MainScreen extends Activity {
     	View calendarView = findViewById(R.id.main_screen_calendar);
     	calendarView.setOnClickListener(new OnClickListener() {
 			
-			@Override
 			public void onClick(View v) {
 				Intent eventIntent = new Intent(MainScreen.this, EventCalendar.class);
 				MainScreen.this.startActivity(eventIntent);
@@ -65,7 +62,6 @@ public class MainScreen extends Activity {
     	View settingView = findViewById(R.id.main_screen_setting);
     	settingView.setOnClickListener(new OnClickListener() {
 			
-			@Override
 			public void onClick(View v) {
 				Intent settingIntent = new Intent(MainScreen.this, Setting.class);
 				startActivity(settingIntent);
@@ -74,7 +70,6 @@ public class MainScreen extends Activity {
     	View helpView = findViewById(R.id.main_screen_help);
     	helpView.setOnClickListener(new OnClickListener() {
 			
-			@Override
 			public void onClick(View v) {
 				Intent helpIntent = new Intent(MainScreen.this, HelpActivity.class);
 				startActivity(helpIntent);
@@ -83,7 +78,6 @@ public class MainScreen extends Activity {
     	View backupView = findViewById(R.id.main_screen_backup);
     	backupView.setOnClickListener(new OnClickListener() {
 			
-			@Override
 			public void onClick(View v) {
 				Intent backupIntent = new Intent(MainScreen.this, BackupRestore.class);
 				startActivity(backupIntent);
@@ -93,7 +87,6 @@ public class MainScreen extends Activity {
     	View shareView = findViewById(R.id.main_screen_share);
     	shareView.setOnClickListener(new OnClickListener() {
 			
-			@Override
 			public void onClick(View v) {
 				Intent shareIntent = new Intent(MainScreen.this, ShareEvent.class);
 				startActivity(shareIntent);

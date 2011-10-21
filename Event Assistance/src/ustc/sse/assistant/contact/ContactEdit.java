@@ -18,7 +18,6 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.provider.ContactsContract.Contacts;
-import android.provider.ContactsContract.RawContacts;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -88,7 +87,6 @@ public class ContactEdit extends Activity {
 		Button cancelButton = (Button) findViewById(R.id.contact_edit_cancel_button);		
 		saveButton.setOnClickListener(new OnClickListener() {
 			//update the information and close this activity
-			@Override
 			public void onClick(View arg0) {
 				try {
 					cu.updateContact(ContactUtils.contactsIntoList(contact), birthdayNull);
@@ -103,7 +101,6 @@ public class ContactEdit extends Activity {
 		//finish this activity
 		cancelButton.setOnClickListener(new OnClickListener() {
 			
-			@Override
 			public void onClick(View arg0) {
 				ContactEdit.this.finish();
 			}
@@ -111,7 +108,6 @@ public class ContactEdit extends Activity {
 		//pop up the date picker dialog
 		birthdayChooseButton.setOnClickListener(new OnClickListener() {
 			
-			@Override
 			public void onClick(View arg0) {
 				showDialog(BIRTHDAY_DATE_PICKER);
 				
@@ -134,7 +130,6 @@ public class ContactEdit extends Activity {
 	private DatePickerDialog createBirthdayDatePickerDialog() {
 		OnDateSetListener callBack = new OnDateSetListener() {
 			//set the birthday date picker button and the contact's birthday
-			@Override
 			public void onDateSet(DatePicker view, int year, int month, int day) {
 				Calendar inDate = Calendar.getInstance();
 				inDate.set(year, month, day);

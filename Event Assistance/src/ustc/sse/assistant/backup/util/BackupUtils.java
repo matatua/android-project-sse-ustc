@@ -9,7 +9,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.io.Writer;
 import java.util.Calendar;
 
 import ustc.sse.assistant.backup.BackupRestore;

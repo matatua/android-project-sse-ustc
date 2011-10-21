@@ -246,7 +246,6 @@ public class EventEdit extends Activity{
 	private void initiateContactImageView() {
 		contactImageButton.setOnClickListener(new OnClickListener() {
 			
-			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(EventEdit.this, ContactSelection.class);
 				startActivityForResult(intent, CONTACT_REQUEST_CODE);
@@ -316,13 +315,11 @@ public class EventEdit extends Activity{
 		todayRemindTimeSpinner.setSelection(selectedIndex, true);
 		todayRemindTimeSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
-			@Override
 			public void onItemSelected(AdapterView<?> parent, View view,
 					int position, long id) {
 				alarmTime = (Integer) view.getTag();
 			}
 
-			@Override
 			public void onNothingSelected(AdapterView<?> parent) {
 				
 			}
@@ -359,14 +356,12 @@ public class EventEdit extends Activity{
 		alarmTypeSpinner.setSelection(selectedIndex, true);
 		alarmTypeSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
-			@Override
 			public void onItemSelected(AdapterView<?> parent, View view,
 					int position, long id) {
 				TextView tv = (TextView) view.findViewById(R.id.event_edit_spinner_textview2);
 				alarmType = Integer.valueOf(tv.getText().toString());
 			}
 
-			@Override
 			public void onNothingSelected(AdapterView<?> parent) {
 				// TODO Auto-generated method stub
 				
@@ -403,14 +398,12 @@ public class EventEdit extends Activity{
 		prioriAlarmRepeatSpinner.setSelection(selectedIndex, true);
 		prioriAlarmRepeatSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
-			@Override
 			public void onItemSelected(AdapterView<?> parent, View view,
 					int position, long id) {
 				TextView tv = (TextView) view.findViewById(R.id.event_edit_spinner_textview2);
 				priorAlarmRepeat = Integer.valueOf(tv.getText().toString());
 			}
 
-			@Override
 			public void onNothingSelected(AdapterView<?> parent) {
 			}
 		
@@ -446,13 +439,11 @@ public class EventEdit extends Activity{
 		prioriAlarmDaySpinner.setSelection(selectedIndex, true);
 		prioriAlarmDaySpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
-			@Override
 			public void onItemSelected(AdapterView<?> parent, View view,
 					int position, long id) {
 				TextView tv = (TextView) view.findViewById(R.id.event_edit_spinner_textview2);
 				priorAlarmDay = Integer.valueOf(tv.getText().toString());
 			}
-			@Override
 			public void onNothingSelected(AdapterView<?> parent) {
 			}
 		});
@@ -471,7 +462,6 @@ public class EventEdit extends Activity{
 	
 	private OnClickListener cancelButtonListener = new OnClickListener() {
 		
-		@Override
 		public void onClick(View v) {
 			EventEdit.this.finish();
 		}
@@ -479,7 +469,6 @@ public class EventEdit extends Activity{
 	private OnClickListener saveButtonListener = new OnClickListener() {
 		//this calendar is used to set createTime and lastModifyTime
 		Calendar now = Calendar.getInstance();
-		@Override
 		public void onClick(View v) {
 			//save event and corresponding contacts
 			modifyEventAndContact();				
@@ -618,28 +607,24 @@ public class EventEdit extends Activity{
 	
 	private OnClickListener beginDateListener = new OnClickListener() {
 		
-		@Override
 		public void onClick(View v) {
 			showDialog(BEGIN_DATE_DIALOG);
 		}
 	};
 	private OnClickListener beginTimeListener = new OnClickListener() {
 		
-		@Override
 		public void onClick(View v) {
 			showDialog(BEGIN_TIME_DIALOG);
 		}
 	};
 	private OnClickListener endDateListener = new OnClickListener() {
 		
-		@Override
 		public void onClick(View v) {
 			showDialog(END_DATE_DIALOG);			
 		}
 	};
 	private OnClickListener endTimeListener = new OnClickListener() {
 		
-		@Override
 		public void onClick(View v) {
 			showDialog(END_TIME_DIALOG);
 		}
@@ -657,7 +642,6 @@ public class EventEdit extends Activity{
 		Calendar today = Calendar.getInstance();
 		OnDateSetListener beginDateCallBack = new OnDateSetListener() {
 			
-			@Override
 			public void onDateSet(DatePicker view, int year, int monthOfYear,
 					int dayOfMonth) {
 				Calendar compareCalendar = Calendar.getInstance();
@@ -677,7 +661,6 @@ public class EventEdit extends Activity{
 		
 		OnTimeSetListener beginTimeCallBack = new OnTimeSetListener() {
 			
-			@Override
 			public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 				Calendar compareCalendar = Calendar.getInstance();
 				compareCalendar.setTimeInMillis(endCalendar.getTimeInMillis());
@@ -698,7 +681,6 @@ public class EventEdit extends Activity{
 		
 		OnDateSetListener endDateCallBack = new OnDateSetListener() {
 			
-			@Override
 			public void onDateSet(DatePicker view, int year, int monthOfYear,
 					int dayOfMonth) {
 				Calendar calendar = Calendar.getInstance();
@@ -714,7 +696,6 @@ public class EventEdit extends Activity{
 		
 		OnTimeSetListener endTimeCallback = new OnTimeSetListener() {
 			
-			@Override
 			public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 				Calendar calendar = Calendar.getInstance();
 				calendar.setTimeInMillis(endCalendar.getTimeInMillis());

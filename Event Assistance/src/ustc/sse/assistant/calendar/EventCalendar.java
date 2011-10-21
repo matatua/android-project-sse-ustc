@@ -154,7 +154,6 @@ public class EventCalendar extends Activity implements OnGesturePerformedListene
 		if (DATE_PICKER_ID == id) {
 			OnDateSetListener callBack = new OnDateSetListener() {
 				
-				@Override
 				public void onDateSet(DatePicker view, int year, int monthOfYear,
 						int dayOfMonth) {
 					curCalendar.set(year, monthOfYear, dayOfMonth);
@@ -181,7 +180,6 @@ public class EventCalendar extends Activity implements OnGesturePerformedListene
 		Handler handler = new Handler();
 		handler.postDelayed(new Runnable() {
 			
-			@Override
 			public void run() {
 				initiateCalendarGridView(curCalendar, null);
 				
@@ -210,7 +208,6 @@ public class EventCalendar extends Activity implements OnGesturePerformedListene
 		
 		calendarGridView.setOnItemClickListener(new OnItemClickListener() {
 
-			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				SmartDate smartDate = (SmartDate) view.getTag();
@@ -240,7 +237,6 @@ public class EventCalendar extends Activity implements OnGesturePerformedListene
 	private void initiateTabListener() {
 		OnClickListener leftTabListener = new OnClickListener() {
 			
-			@Override
 			public void onClick(View v) {
 				rollCalendarsMonth(false);
 				initiateCalendarGridView(curCalendar, slideRight);
@@ -251,7 +247,6 @@ public class EventCalendar extends Activity implements OnGesturePerformedListene
 		
 		OnClickListener centerTabListener = new OnClickListener() {
 			
-			@Override
 			public void onClick(View v) {
 				Calendar now = Calendar.getInstance();
 				if (!(curCalendar.get(Calendar.MONTH) == now.get(Calendar.MONTH)) || 
@@ -268,7 +263,6 @@ public class EventCalendar extends Activity implements OnGesturePerformedListene
 	
 		OnClickListener rightTabListener = new OnClickListener() {
 			
-			@Override
 			public void onClick(View v) {
 				rollCalendarsMonth(true);
 				initiateCalendarGridView(curCalendar, slideLeft);
@@ -386,22 +380,18 @@ public class EventCalendar extends Activity implements OnGesturePerformedListene
 			cursor.close();		
 		}
 
-		@Override
 		public int getCount() {
 			return data.length;
 		}
 
-		@Override
 		public Object getItem(int position) {
 			return data[position];
 		}
 
-		@Override
 		public long getItemId(int position) {
 			return position;
 		}
 
-		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			
 			LinearLayout linearLayout = null;

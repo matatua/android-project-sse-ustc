@@ -28,13 +28,11 @@ public class ContactSelection extends Activity {
 	public static final Boolean IS_CONTAIN_GROUP = true;
 	public static final String  CONTAIN_GROUP = "contain_group";
 	public static final String GROUP_ID	= "gorup_id";
-	private static final int WAITING_CONTACT_ID = 100;
 	public static final String SELECTED_CONTACT_IDS = "selected_contact_ids";
 	public static final String SELECTED_CONTACT_DISPLAY_NAME = "selected_contact_display_name";
 	
 	private boolean allSelected = false;
 	private ContactUtils contactUtils;
-	private GroupUtils groupUtils;
 	private ListView listView;
 	private Button selectAllButton;
 	private Button addButton;
@@ -47,14 +45,13 @@ public class ContactSelection extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.contact_selection);
 		contactUtils = new ContactUtils(this);
-		groupUtils = new GroupUtils(this);
+		new GroupUtils(this);
 		checkedItemPositions = new HashMap<Integer, Long>();
 		
 		listView = (ListView) findViewById(R.id.contact_selection_list_view);
 		listView.setSmoothScrollbarEnabled(true);
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
-			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				ContactSelection.this.addButton.setText("Add (" + ContactSelection.this.listView.getCheckedItemIds().length + ")");
@@ -96,7 +93,6 @@ public class ContactSelection extends Activity {
 		addButton = (Button) findViewById(R.id.contact_selection_add);
 		selectAllButton.setOnClickListener(new OnClickListener() {
 			
-			@Override
 			public void onClick(View v) {
 				//select all the contact
 				if (!allSelected) {
@@ -122,7 +118,6 @@ public class ContactSelection extends Activity {
 		
 		addButton.setOnClickListener(new OnClickListener() {
 			
-			@Override
 			public void onClick(View v) {
 				List<Long> checkedItemIds = new ArrayList<Long>();
 				List<String> checkedItemsDisplayName = new ArrayList<String>();

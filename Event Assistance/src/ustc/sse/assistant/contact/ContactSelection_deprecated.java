@@ -13,18 +13,11 @@ import ustc.sse.assistant.contact.data.GroupUtils;
 import android.app.ExpandableListActivity;
 import android.content.Context;
 import android.os.Bundle;
-import android.provider.ContactsContract.CommonDataKinds.StructuredName;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Groups;
-import android.provider.ContactsContract.RawContacts;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.ExpandableListView;
 import android.widget.SimpleExpandableListAdapter;
-import android.widget.Toast;
 
 /**
  * 
@@ -61,24 +54,6 @@ public class ContactSelection_deprecated extends ExpandableListActivity {
 	private void initialAllMembersGroup() {
 		// TODO Auto-generated method stub
 		
-	}
-
-	/**
-	 * initiate group and child checkbox
-	 */
-	private void initialCheckBox() {
-		ExpandableListView listView = this.getExpandableListView();
-		CheckBox groupCheckbox = (CheckBox) listView.findViewById(R.id.contact_selection_group_check);
-	
-//		groupCheckbox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-//			
-//			@Override
-//			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//				if (isChecked) {
-//					Toast.makeText(ContactSelection.this, "Check", Toast.LENGTH_SHORT).show();
-//				}
-//			}
-//		});
 	}
 
 	/**

@@ -2,7 +2,6 @@ package ustc.sse.assistant.event.provider;
 
 import java.util.HashMap;
 
-import ustc.sse.assistant.event.provider.EventAssistant.Event;
 import ustc.sse.assistant.event.provider.EventAssistant.EventContact;
 
 import android.content.ContentProvider;
@@ -14,7 +13,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.widget.SeekBar;
 
 /**
  * this provider support query, insert and delete operation.

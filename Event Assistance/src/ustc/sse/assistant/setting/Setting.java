@@ -7,7 +7,6 @@ import java.util.Date;
 
 import ustc.sse.assistant.R;
 import ustc.sse.assistant.backup.AutomaticBackupBroadcastReceiver;
-import ustc.sse.assistant.backup.AutomaticBackupService;
 import ustc.sse.assistant.backup.BackupRestore;
 import ustc.sse.assistant.backup.util.BackupUtils;
 import ustc.sse.assistant.backup.util.EventToXml;
@@ -44,7 +43,6 @@ public class Setting extends PreferenceActivity {
     	 backupInterval = (ListPreference) findPreference("autoBackupInterval");
     	 backupInterval.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			
-			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				//here check last automatic backup time
 				//if the interval is less than the set one, do backup immediately

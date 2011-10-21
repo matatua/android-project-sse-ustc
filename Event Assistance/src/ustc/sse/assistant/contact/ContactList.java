@@ -94,7 +94,6 @@ public class ContactList extends Activity {
 		//when this selector is clicked, the groupListView will become visible
 		groupSelector.setOnClickListener(new OnClickListener() {
 			
-			@Override
 			public void onClick(View arg0) {
 				if (groupListView.getVisibility() == View.INVISIBLE) {
 					//set the arrow image which directing below
@@ -111,7 +110,6 @@ public class ContactList extends Activity {
 		//and the contactListView will change too.
 		groupListView.setOnItemClickListener(new OnItemClickListener() {
 
-			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				
 				//change selector indicator image and group title and summary count
@@ -133,7 +131,6 @@ public class ContactList extends Activity {
 		});
 		contactListView.setOnItemClickListener(new OnItemClickListener() {
 
-			@Override
 			public void onItemClick(AdapterView<?> parentView, View view, int position,
 					long rowId) {
 				LinearLayout linearLayout = (LinearLayout) view;

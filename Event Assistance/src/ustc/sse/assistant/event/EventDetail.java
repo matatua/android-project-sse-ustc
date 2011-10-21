@@ -3,8 +3,6 @@ package ustc.sse.assistant.event;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
-
 import ustc.sse.assistant.R;
 import ustc.sse.assistant.event.broadcast.EventBroadcastReceiver;
 import ustc.sse.assistant.event.provider.EventAssistant;
@@ -29,8 +27,6 @@ import android.os.RemoteException;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -209,7 +205,6 @@ public class EventDetail extends Activity{
 	private void initiateButtons() {
 		editButton.setOnClickListener(new OnClickListener() {
 			
-			@Override
 			public void onClick(View v) {
 				Intent i = new Intent(EventDetail.this, EventEdit.class);
 				i.putExtra(Event._ID, eventId);
@@ -220,7 +215,6 @@ public class EventDetail extends Activity{
 		
 		deleteButton.setOnClickListener(new OnClickListener() {
 			
-			@Override
 			public void onClick(View v) {
 				showDialog(DELETE_DIALOG);
 				//Toast.makeText(EventDetail.this, "delete", Toast.LENGTH_SHORT).show();	
@@ -234,7 +228,6 @@ public class EventDetail extends Activity{
 			
 			 DialogInterface.OnClickListener dialogListener = new DialogInterface.OnClickListener() {
 					
-					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						switch (which) {
 						case DialogInterface.BUTTON_POSITIVE :

@@ -19,7 +19,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Html.TagHandler;
 import android.util.Log;
 
 /**
@@ -30,8 +29,6 @@ public class EventBTService {
 	public static final UUID MY_UUID = UUID.fromString("ce395900-31a4-41f2-b4f5-79d7ac4189a6");
 	
 	private Handler handler;
-	private Context context;
-	
 	private BluetoothAdapter btAdapter;
 	private int state = STATE_NONE;
 	
@@ -47,8 +44,6 @@ public class EventBTService {
 	
 	public EventBTService(Context context, Handler handler) {
 		this.handler = handler;
-		this.context = context;
-		
 		btAdapter = BluetoothAdapter.getDefaultAdapter();
 	}
 	

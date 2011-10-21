@@ -5,7 +5,6 @@ package ustc.sse.assistant.share;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,9 +13,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.locks.LockSupport;
-import java.util.concurrent.locks.ReentrantLock;
-
 import ustc.sse.assistant.R;
 import ustc.sse.assistant.backup.BackupRestore;
 import ustc.sse.assistant.backup.util.EventToXml;
@@ -84,8 +80,6 @@ public class ShareEvent extends Activity {
 	private ListView listView;
 	private BluetoothAdapter btAdapter;
 	private byte[] receivedData;
-	private String currentDeviceName;
-	
 	private Semaphore receiveSemaphore = new Semaphore(1);
 	
 	private EventBTService service;
@@ -254,7 +248,6 @@ public class ShareEvent extends Activity {
 	private Dialog makeRestoreOptionDialog() {
 		android.content.DialogInterface.OnClickListener callBack = new DialogInterface.OnClickListener() {
 			
-			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				switch (which) {
 				case Dialog.BUTTON_POSITIVE :
@@ -356,8 +349,6 @@ public class ShareEvent extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.share_menu, menu);
-		MenuItem deviceListItem = menu.findItem(R.id.share_event_menu_device_list);
-		
 		return true;
 	}
 	
@@ -379,7 +370,6 @@ public class ShareEvent extends Activity {
 	//
 	private OnItemClickListener backupFileClickListener = new OnItemClickListener() {
 
-		@Override
 		public void onItemClick(final AdapterView<?> parent, View view, final int position,
 				long id) {
 			if (service == null || service.getState() != EventBTService.STATE_CONNECTED) {
@@ -452,22 +442,18 @@ public class ShareEvent extends Activity {
 			}
 		}
 		
-		@Override
 		public int getCount() {
 			return backupFiles.length;
 		}
 
-		@Override
 		public Object getItem(int position) {
 			return backupFiles[position];
 		}
 
-		@Override
 		public long getItemId(int position) {
 			return position;
 		}
 
-		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			if (convertView == null) {
 				LayoutInflater inflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);

@@ -30,7 +30,6 @@ public class BirthdayBroadcastReceiver extends BroadcastReceiver {
 	public static final int BIRTHDAY_NOTIFICATION_ID = 200;
 	public static final String ACTION_BIRTHDAY_NOTIFICATION = "action_birthday_notification";
 	
-	private boolean needNotification = false;
 	@Override
 	public void onReceive(final Context context, Intent intent) {
 		if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED) ||
@@ -94,19 +93,13 @@ public class BirthdayBroadcastReceiver extends BroadcastReceiver {
 				selectionArgs, null);
 		// if no people have birthday within three days, ignore notification
 		if (cursor.getCount() <= 0) {
-			needNotification = false;
 			return;
 		}
 
 		int displayNameColumnIndex = cursor
 				.getColumnIndex(Contacts.DISPLAY_NAME);
-		int lookupColumnIndex = cursor.getColumnIndex(Contacts.LOOKUP_KEY);
-		int monthColumnIndex = cursor.getColumnIndex(BirthdayConstant.MONTH);
-		int dayColumnIndex = cursor.getColumnIndex(BirthdayConstant.DAY);
 		if (cursor.moveToFirst()) {
 			String displayName = cursor.getString(displayNameColumnIndex);
-			String monthStr = cursor.getString(monthColumnIndex);
-			String dayStr = cursor.getString(dayColumnIndex);
 			// prepare notification
 			String contentText = displayName + "等" + cursor.getCount()
 					+ "人在近三天过生日";
@@ -127,8 +120,6 @@ public class BirthdayBroadcastReceiver extends BroadcastReceiver {
 			NotificationManager nm = (NotificationManager) context
 					.getSystemService(Context.NOTIFICATION_SERVICE);
 			nm.notify(BIRTHDAY_NOTIFICATION_ID, notification);
-
-			needNotification = true;
 		}
 
 	}

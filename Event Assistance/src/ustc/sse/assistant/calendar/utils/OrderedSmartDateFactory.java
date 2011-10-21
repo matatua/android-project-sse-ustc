@@ -15,7 +15,6 @@ public class OrderedSmartDateFactory implements SmartDateFactory {
 		dateMapping = DateMapping.getInstance();
 	}
 	
-	@Override
 	public SmartDate createSmartDate(Integer year, Integer month, Integer day) {
 		//check lunar calendar change the year,month and day into lunar year, month and day
 		Lunar.setLunar(year, month, day);

@@ -26,9 +26,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.OperationApplicationException;
-import android.content.res.ColorStateList;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -126,7 +124,6 @@ public class EventList extends Activity {
 	private void initiateButtons() {
 		selectButton.setOnClickListener(new OnClickListener() {
 			
-			@Override
 			public void onClick(View v) {
 				int count = listView.getAdapter().getCount() - HEADER_FOOTER_NUMBER;
 				int size = selectedItemIds.size();
@@ -155,7 +152,6 @@ public class EventList extends Activity {
 		
 		deleteButton.setOnClickListener(new OnClickListener() {
 			
-			@Override
 			public void onClick(View v) {
 				showDialog(DELETE_DIALOG);
 			}
@@ -172,7 +168,6 @@ public class EventList extends Activity {
 	
 	private OnItemClickListener listViewItemListener = new OnItemClickListener() {
 
-		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
 			Intent i = new Intent(EventList.this, EventDetail.class);
@@ -234,7 +229,6 @@ public class EventList extends Activity {
 		footer.setGravity(Gravity.CENTER);
 		footer.setOnClickListener(new OnClickListener() {
 			
-			@Override
 			public void onClick(View v) {
 				
 				fromCalendar.add(Calendar.MONTH, 1);
@@ -262,7 +256,6 @@ public class EventList extends Activity {
 		header.setLayoutParams(new AbsListView.LayoutParams(android.widget.AbsListView.LayoutParams.MATCH_PARENT, 50));
 		header.setOnClickListener(new OnClickListener() {
 			
-			@Override
 			public void onClick(View v) {
 
 				fromCalendar.add(Calendar.MONTH, -1);
@@ -364,7 +357,6 @@ public class EventList extends Activity {
 			
 			 DialogInterface.OnClickListener dialogListener = new DialogInterface.OnClickListener() {
 					
-					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						switch (which) {
 						case DialogInterface.BUTTON_POSITIVE :
@@ -398,7 +390,6 @@ public class EventList extends Activity {
 	//this listener is used by the check image view only
 	private OnClickListener imageViewListener = new OnClickListener() {
 		
-		@Override
 		public void onClick(View v) {
 			int count = listView.getAdapter().getCount() - HEADER_FOOTER_NUMBER;
 			int size = selectedItemIds.size();
@@ -436,13 +427,11 @@ public class EventList extends Activity {
 	};
 
 	private static class EventListCursorAdapter extends ResourceCursorAdapter {
-		private Context context;
 		private OnClickListener imageViewListener;
 		private List<ImageView> imageViews;
 
 		public EventListCursorAdapter(Context context, int layout, Cursor c, OnClickListener l, List<ImageView> imageViews) {
 			super(context, layout, c);
-			this.context = context;
 			this.imageViewListener = l;
 			this.imageViews = imageViews;
 			
@@ -489,7 +478,6 @@ public class EventList extends Activity {
 	
 	private static class HeaderFooterOnTouchListener implements OnTouchListener	{
 
-		@Override
 		public boolean onTouch(View v, MotionEvent event) {
 			int pressedColor = v.getContext().getResources().getColor(R.color.event_list_header_footer_font_color);
 			switch (event.getAction()) {

@@ -15,7 +15,6 @@ import android.widget.TextView;
  */
 public class ContactIndividualViewBinder implements ViewBinder {
 
-	@Override
 	public boolean setViewValue(View view, Object data, String textRepresentation) {
 		if (view instanceof ImageView) {
 			ImageView iv = (ImageView) view;

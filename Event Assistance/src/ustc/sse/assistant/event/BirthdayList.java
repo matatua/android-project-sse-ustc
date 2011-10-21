@@ -41,14 +41,11 @@ public class BirthdayList extends Activity {
 				EventList.FROM_CALENDAR);
 		Calendar toCalendar = (Calendar) getIntent().getSerializableExtra(
 				EventList.TO_CALENDAR);
-		String fromYear = String.valueOf(fromCalendar.get(Calendar.YEAR));
 		String fromMonth = String.valueOf(fromCalendar.get(Calendar.MONTH));
 		String fromDay = String
 				.valueOf(fromCalendar.get(Calendar.DAY_OF_MONTH));
-		String toYear = String.valueOf(toCalendar.get(Calendar.YEAR));
 		String toMonth = String.valueOf(toCalendar.get(Calendar.MONTH));
 		String toDay = String.valueOf(toCalendar.get(Calendar.DAY_OF_MONTH));
-		String[] birthdayListData = null;
 		int num;
 
 		ContentResolver cr = getContentResolver();
@@ -81,9 +78,7 @@ public class BirthdayList extends Activity {
 
 		num = cursor.getCount();
 		if (num != 0) {
-			birthdayListData = new String[num];
-
-		BirthdayListCursorAdapter adapter = new BirthdayListCursorAdapter(this, 
+			BirthdayListCursorAdapter adapter = new BirthdayListCursorAdapter(this, 
 															R.layout.birthday_list_item, 
 															cursor);
 			
@@ -101,7 +96,6 @@ public class BirthdayList extends Activity {
 	
 	private OnItemClickListener itemClickListener = new OnItemClickListener() {
 
-		@Override
 		public void onItemClick(AdapterView<?> arg0, View view,
 				int position, long id) {
 			Long contactId = (Long) view.getTag();

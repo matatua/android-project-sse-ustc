@@ -32,10 +32,8 @@ import android.content.DialogInterface;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.text.format.DateFormat;
 import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -117,7 +115,6 @@ public class BackupRestore extends Activity {
 	private void initiateButtonBar() {
 		 selectButton.setOnClickListener(new OnClickListener() {
 			
-			@Override
 			public void onClick(View v) {
 				int count = adapter.getCount();
 				if (adapter.getCheckedItems().getTrueCount() >= count) {
@@ -142,7 +139,6 @@ public class BackupRestore extends Activity {
 		});
 		deleteButton.setOnClickListener(new OnClickListener() {
 			
-			@Override
 			public void onClick(View v) {
 				//show a dialog allowing user to delete checked backup files
 				showDialog(DELETE_BACKUP_FILES);
@@ -166,7 +162,6 @@ public class BackupRestore extends Activity {
 		listView.setAdapter(adapter);
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
-			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				//show a dialog and ask user whether to restore the 
@@ -215,7 +210,6 @@ public class BackupRestore extends Activity {
 	private AlertDialog makeAlertDialogForBackup() {
 		android.content.DialogInterface.OnClickListener callBack = new android.content.DialogInterface.OnClickListener() {
 			
-			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				switch (which) {
 				case Dialog.BUTTON_POSITIVE :
@@ -252,21 +246,18 @@ public class BackupRestore extends Activity {
 		
 		fromDateButton.setOnClickListener(new OnClickListener() {
 			
-			@Override
 			public void onClick(View v) {
 				showDialog(FROM_DATE_DIALOG);
 			}
 		});
 		fromTimeButton.setOnClickListener(new OnClickListener() {
 			
-			@Override
 			public void onClick(View v) {
 				showDialog(FROM_TIME_DIALOG);
 			}
 		});
 		toDateButton.setOnClickListener(new OnClickListener() {
 			
-			@Override
 			public void onClick(View v) {
 				showDialog(TO_DATE_DIALOG);
 				
@@ -274,7 +265,6 @@ public class BackupRestore extends Activity {
 		});
 		toTimeButton.setOnClickListener(new OnClickListener() {
 			
-			@Override
 			public void onClick(View v) {
 				showDialog(TO_TIME_DIALOG);
 			}
@@ -282,7 +272,6 @@ public class BackupRestore extends Activity {
 	
 		doOperationButton.setOnClickListener(new OnClickListener() {
 			
-			@Override
 			public void onClick(View v) {
 				EventToXml etx;
 				if (backupTypeCheckBox.isChecked()) {
@@ -314,7 +303,6 @@ public class BackupRestore extends Activity {
 		
 		backupTypeCheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
-			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if (isChecked) {
 					setHeaderComponentVisible(View.GONE);					
@@ -325,7 +313,6 @@ public class BackupRestore extends Activity {
 		});
 		cloudStorageButton.setOnClickListener(new OnClickListener() {
 			
-			@Override
 			public void onClick(View v) {
 				BackupManager bm = new BackupManager(BackupRestore.this);
 				bm.dataChanged();
@@ -423,7 +410,6 @@ public class BackupRestore extends Activity {
 	private Dialog makeDeleteBackupFilesDialog() {
 		android.content.DialogInterface.OnClickListener callBack = new android.content.DialogInterface.OnClickListener() {
 			
-			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				switch (which) {
 				case Dialog.BUTTON_POSITIVE :
@@ -450,7 +436,6 @@ public class BackupRestore extends Activity {
 	private Dialog createFromDateDialog() {
 		OnDateSetListener callBack = new OnDateSetListener() {
 			
-			@Override
 			public void onDateSet(DatePicker view, int year, int monthOfYear,
 					int dayOfMonth) {
 				fromCalendar.set(year, monthOfYear, dayOfMonth);
@@ -468,7 +453,6 @@ public class BackupRestore extends Activity {
 	private Dialog createFromTimeDialog() {
 		OnTimeSetListener callBack = new OnTimeSetListener() {
 			
-			@Override
 			public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 				fromCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
 				fromCalendar.set(Calendar.MINUTE, minute);
@@ -486,7 +470,6 @@ public class BackupRestore extends Activity {
 	private Dialog createToDateDialog() {
 		OnDateSetListener callBack = new OnDateSetListener() {
 			
-			@Override
 			public void onDateSet(DatePicker view, int year, int monthOfYear,
 					int dayOfMonth) {
 				toCalendar.set(year, monthOfYear, dayOfMonth);
@@ -503,7 +486,6 @@ public class BackupRestore extends Activity {
 	private Dialog createToTimeDialog() {
 		OnTimeSetListener callBack = new OnTimeSetListener() {
 			
-			@Override
 			public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 				toCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
 				toCalendar.set(Calendar.MINUTE, minute);
@@ -548,7 +530,6 @@ public class BackupRestore extends Activity {
 	public static final String FILE_PREFIX = "EventAssistant";
 	public static final FilenameFilter BACKUP_FILE_NAME_FILTER = new FilenameFilter() {
 		
-		@Override
 		public boolean accept(File arg0, String name) {
 			if (name.startsWith(FILE_PREFIX)) {
 				return true;
@@ -560,7 +541,6 @@ public class BackupRestore extends Activity {
 	};
 	public static final FileFilter BACKUP_FILE_FILTER = new FileFilter() {
 		
-		@Override
 		public boolean accept(File file) {
 			if (file.getName().startsWith(FILE_PREFIX) && file.isFile()) {
 				return true;
@@ -611,13 +591,12 @@ public class BackupRestore extends Activity {
 			}
 		}
 		
-		@Override
 		public int getCount() {
 			return backupFiles.length;
 		}
 
 
-		@Override
+		
 		/**
 		 * return the file instance in a given position
 		 */
@@ -625,12 +604,10 @@ public class BackupRestore extends Activity {
 			return backupFiles[position];
 		}
 
-		@Override
 		public long getItemId(int position) {
 			return position;
 		}
 
-		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			if (convertView == null) {
 				LayoutInflater inflater = getLayoutInflater();
@@ -665,7 +642,6 @@ public class BackupRestore extends Activity {
 		
 		OnClickListener checkImageViewListener = new OnClickListener() {
 			
-			@Override
 			public void onClick(View v) {
 				int position = (Integer) v.getTag();
 				boolean checkState = checkedItems.get(position) ? false : true;

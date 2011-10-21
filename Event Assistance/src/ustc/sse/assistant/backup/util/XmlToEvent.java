@@ -9,7 +9,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Struct;
 import java.util.ArrayList;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -18,7 +17,6 @@ import org.xmlpull.v1.XmlPullParserException;
 import ustc.sse.assistant.event.EventUtils;
 import ustc.sse.assistant.event.data.EventContactEntity;
 import ustc.sse.assistant.event.data.EventEntity;
-import ustc.sse.assistant.event.provider.EventAssistant;
 import ustc.sse.assistant.event.provider.EventAssistant.Event;
 import ustc.sse.assistant.event.provider.EventAssistant.EventContact;
 import android.accounts.Account;
@@ -52,14 +50,12 @@ public class XmlToEvent {
 	private EventEntity currentEvent = null;
 	
 	private Context ctx;
-	private File backupFile;
 	private boolean restoreContacts = false;
 	private boolean deleteOriginalData = true;
 	private InputStream inputStream;
 	
 	public XmlToEvent(Context context, File backupFile, boolean restoreContacts) throws FileNotFoundException {
 		this.ctx = context;
-		this.backupFile = backupFile;
 		this.restoreContacts = restoreContacts;
 		this.inputStream = new FileInputStream(backupFile);
 	}

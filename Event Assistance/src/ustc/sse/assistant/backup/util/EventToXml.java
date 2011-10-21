@@ -8,7 +8,6 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlSerializer;
 
 import ustc.sse.assistant.event.data.EventContactEntity;
